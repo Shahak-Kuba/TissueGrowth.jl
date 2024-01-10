@@ -3,10 +3,24 @@ using ElasticArrays
 
 
 """
-SimResults_t(btype,t,u,∑F, ρ, V, Ω)
+    SimResults_t
+
+A data structure representing the results of a simulation.
+
+This structure contains various fields that store the results and relevant data from a simulation process. It includes the type of simulation, time steps, state vectors, forces, densities, and other relevant quantities.
+
+# Fields
+- `btype`: A `String` indicating the type of simulation or boundary condition.
+- `t`: A `Vector{Float64}` representing the time steps at which the simulation results are recorded.
+- `u`: A `Vector` of `ElasticMatrix{Float64,Vector{Float64}}` representing the state of the system at each time step.
+- `∑F`: A `Vector` of `ElasticVector{Float64,Vector{Float64}}`, representing the sum of forces at each time step.
+- `Density`: A `Vector` of `ElasticMatrix{Float64,Vector{Float64}}` representing the density of the system at each time step.
+- `Vₙ`: A `Vector{Vector{Float64}}` representing the normal velocity at each time step.
+- `Ω`: A `Vector{Float64}` representing the void area within the pore at each time step.
+- `ψ`: A `Vector` of `ElasticMatrix{Float64,Vector{Float64}}`, representing the stress of the springs/ cells at each time step.
+- `Κ`: A `Vector` of `ElasticMatrix{Float64,Vector{Float64}}`, representing the approximate curvature of the moving boundary at each time step.
 
 """
-
 struct SimResults_t
     btype::String
     t::Vector{Float64}

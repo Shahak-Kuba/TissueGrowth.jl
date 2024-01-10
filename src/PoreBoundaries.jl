@@ -1,6 +1,20 @@
 using DifferentialEquations
 using LinearAlgebra
 
+"""
+    X(R,θ), Y(R,θ), Xₜ(R,T), Yₜ(R,T), ...
+
+Define boundary functions for various shapes like circles, triangles, squares, and hexagons.
+
+These functions calculate the x and y coordinates for points on the boundary of these shapes based on given parameters.
+
+# Arguments
+- `R`: Radius or a characteristic length scale of the shape.
+- `θ` or `T`: Parametric variable(s) used to define the position on the boundary.
+
+# Returns
+The x and y coordinates of a point on the boundary of the shape.
+"""
 # Circular Boundary
 X(R,θ) = R*cos(θ);
 Y(R,θ) = R*sin(θ);
@@ -56,7 +70,26 @@ Yₕ(R,T) = ((0<=T) & (T<=1)) * (Vertex(R)[2,1] +
 Xᵩ(T) = T
 Yᵩ(T) = 2 + 0.5*cos(3*T)
 
+##########################################################################################################################################################################
 
+
+"""
+    initial_pos_1D(u0, N, η, kf, l₀), initial_pos_2D(u0, N, η, kf, l₀)
+
+Calculate the initial positions for 1D simulations.
+
+These functions solve an ODE problem to determine the initial positions of particles or cells for the given simulation parameters.
+
+# Arguments
+- `u0`: Initial state vector.
+- `N`: Number of particles or cells.
+- `η`: Viscosity or a related parameter.
+- `kf`: Growth factor or a related parameter.
+- `l₀`: Characteristic length scale.
+
+# Returns
+The calculated initial positions for the simulation.
+"""
 function initial_pos_1D(u0,N,η,kf,l₀)
     kₛ = 2*N
     η = η/N
@@ -71,6 +104,23 @@ function initial_pos_1D(u0,N,η,kf,l₀)
     return init_pos.u[2]
 end
 
+"""
+    initial_pos_2D(u0, N, η, kf, l₀)
+
+Calculate the initial positions for 2D simulations.
+
+These functions solve an ODE problem to determine the initial positions of particles or cells for the given simulation parameters.
+
+# Arguments
+- `u0`: Initial state vector.
+- `N`: Number of particles or cells.
+- `η`: Viscosity or a related parameter.
+- `kf`: Growth factor or a related parameter.
+- `l₀`: Characteristic length scale.
+
+# Returns
+The calculated initial positions for the simulation.
+"""
 function initial_pos_2D(u0,N,η,kf,l₀)
     kₛ = 1
     η = η/N
@@ -86,6 +136,22 @@ function initial_pos_2D(u0,N,η,kf,l₀)
     return init_pos.u[2]
 end
 
+"""
+    u0SetUp(btype, R₀, N, dist_type)
+
+Set up initial conditions for simulations based on the boundary type and distribution.
+
+This function initializes the positions of particles or cells based on the specified boundary type and distribution.
+
+# Arguments
+- `btype`: Type of boundary (e.g., 'circle', 'triangle').
+- `R₀`: Initial radius or characteristic length.
+- `N`: Number of points or particles.
+- `dist_type`: Type of distribution for the points.
+
+# Returns
+An array of initial positions.
+"""
 function u0SetUp(btype,R₀,N,dist_type)
     # setting up initial conditions
     #θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
@@ -135,7 +201,20 @@ function u0SetUp(btype,R₀,N,dist_type)
     return u0
 end
 
+"""
+    NodeDistribution(start, stop, length, type)
 
+Generate a distribution of nodes between `start` and `stop` with a specified distribution type.
+
+# Arguments
+- `start`: Starting value of the range.
+- `stop`: Ending value of the range.
+- `length`: Number of points in the distribution.
+- `type`: Type of distribution (e.g., 'Linear', 'exp', 'sine').
+
+# Returns
+A range or array of distributed values.
+"""
 function NodeDistribution(start,stop,length,type)
     if type == "Linear"
         return LinRange(start, stop, length)
@@ -143,6 +222,77 @@ function NodeDistribution(start,stop,length,type)
         return nonLinearRange(start, stop, length, type)
     end
 end
+
+"""
+    nonLinearRange(start, stop, length, dist_type)
+
+Generate a non-linear range of values between `start` and `stop`.
+
+This function creates a range of values with various non-linear distributions like exponential, sinusoidal, etc.
+
+# Arguments
+- `start`: Starting value of the range.
+- `stop`: Ending value of the range.
+- `length`: Number of points in the range.
+- `dist_type`: Type of non-linear distribution.
+
+# Returns
+A range of non-linearly distributed values.
+"""
+function nonLinearRange(start, stop, length, dist_type)
+    linear_range = LinRange(0, 1, length)
+
+    # Applying different distribution types
+    if dist_type == "exp"
+        # Exponential scaling
+        return start .+ (exp.(linear_range .* log(1 + stop - start)) .- 1)
+    elseif dist_type == "sine"
+        # Sinusoidal scaling
+        return start .+ (sin.((π/2) .* linear_range) .* (stop - start))
+    elseif dist_type == "cosine"
+        # Cosine scaling
+        return start .+ ((1 .- cos.((π/2) .* linear_range)) .* (stop - start))
+    elseif dist_type == "quad"
+        # Quadratic scaling
+        return start .+ (linear_range .^ 2 .* (stop - start))
+    elseif dist_type == "cubic"
+        # Cubic scaling
+        return start .+ (linear_range .^ 3 .* (stop - start))
+    elseif dist_type == "sigmoid"
+        # Sigmoid scaling
+        linear_range = LinRange(-1, 1, length)
+        k = 5; # slope steepness
+        sigmoid_range = 1 ./ (1 .+ exp.(-k.*(linear_range)))
+        return start .+ (sigmoid_range .* (stop - start))
+    elseif dist_type == "2sigmoid"
+        # Piecewise sigmoid scaling
+        k1 = 10;  k2 = 10;
+        x01 = 0.5;  x02 = 0.5;
+        piecewise_sigmoid = [x < 0.5 ? 0.5 * (1 / (1 + exp(-k1 * (2x - x01)))) : 0.5 + 0.5 * (1 / (1 + exp(-k2 * (2x - 1 - x02)))) for x in linear_range]
+        return start .+ (piecewise_sigmoid * (stop - start))
+    elseif dist_type == "4sigmoid"
+        # Parameters for the sigmoid functions
+        k = 20
+        # Adjust midpoints for the full sigmoid in the first and last segments
+        x0 = [0.125, 0.375, 0.625, 0.875]
+
+        # Piecewise sigmoid scaling with 4 segments
+        piecewise_sigmoid = [if x < 0.25
+                                (1 / (1 + exp(-k * (4x - x0[1])))) * 0.25
+                             elseif x < 0.5
+                                0.25 + (1 / (1 + exp(-k * (4x - 1 - x0[2])))) * 0.25
+                             elseif x < 0.75
+                                0.5 + (1 / (1 + exp(-k * (4x - 2 - x0[3])))) * 0.25
+                             else
+                                0.75 + (1 / (1 + exp(-k * (4x - 3 - x0[4])))) * 0.25
+                             end for x in linear_range]
+
+        return start .+ (piecewise_sigmoid .* (stop - start))
+    else
+        error("Unsupported distribution type")
+    end
+end
+
 
 ##############################################################################################
 

@@ -1,25 +1,130 @@
 using LinearAlgebra
 
+"""
+    calc_spring_densities(uᵢ)
+
+Calculate the spring densities for a given state vector `uᵢ`.
+
+This function computes the inverse of the distance between each pair of adjacent elements in `uᵢ`. The calculation involves shifting `uᵢ` and then applying the δ function to each pair.
+
+# Arguments
+- `uᵢ`: A state vector representing the positions of particles or cells.
+
+# Returns
+A vector of spring densities, where each element is the inverse of the distance between adjacent elements in `uᵢ`.
+"""
 function calc_spring_densities(uᵢ)
     uᵢ₊₁ = circshift(uᵢ',1)
     return 1 ./ δ(uᵢ₊₁, uᵢ')
 end
 
+"""
+    calc_cell_densities(u, m)
+
+Calculate the cell densities over a window of size `m` for a given state vector `u`.
+
+This function first computes the spring densities using `calc_spring_densities` and then calculates the sum of these densities over a sliding window of size `m`. 
+
+# Arguments
+- `u`: A state vector representing the positions of particles or cells.
+- `m`: The size of the window over which to calculate the densities.
+
+# Returns
+A vector of cell densities, each computed over a window of size `m`.
+"""
 function calc_cell_densities(u,m)
     array = calc_spring_densities(u)
     return [sum(array[i:i+m-1]) for i in 1:m:length(array)-m+1]
 end
 
+"""
+    P(event, ρ, α)
 
+Calculate the probability of proliferation occurring, given the density `ρ` and the parameter `α`.
+
+If the proliferation event is considered to occur (`event` is `true`), the probability is calculated as the product of `ρ` and `α`. Otherwise, a vector of zeros is returned.
+
+# Arguments
+- `event`: A boolean indicating whether the proliferation event is considered to occur.
+- `ρ`: A vector representing densities.
+- `α`: Parameter for scaling the proliferation probability.
+
+# Returns
+A vector representing the calculated probabilities for proliferation.
+"""
 P(event,ρ,α) = event ? α.*ρ : zeros(size(ρ))
+
+"""
+    A(event, ρ, β)
+
+Calculate the probability of apoptosis (cell death) occurring, given the density `ρ` and the parameter `β`.
+
+If the apoptosis event is considered to occur (`event` is `true`), the probability is calculated as the product of `ρ` and `β`. Otherwise, a vector of zeros is returned.
+
+# Arguments
+- `event`: A boolean indicating whether the apoptosis event is considered to occur.
+- `ρ`: A vector representing densities.
+- `β`: Parameter for scaling the apoptosis probability.
+
+# Returns
+A vector representing the calculated probabilities for apoptosis.
+"""
 A(event,ρ,β) = event ? β.*ρ : zeros(size(ρ))
+
+"""
+    E(event, ρ, γ)
+
+Calculate the probability of embedding occurring, given the density `ρ` and the parameter `γ`.
+
+If the embedding event is considered to occur (`event` is `true`), the probability is calculated as the product of `ρ` and `γ`. Otherwise, a vector of zeros is returned.
+
+# Arguments
+- `event`: A boolean indicating whether the embedding event is considered to occur.
+- `ρ`: A vector representing densities.
+- `γ`: Parameter for scaling the embedding probability.
+
+# Returns
+A vector representing the calculated probabilities for embedding.
+"""
 E(event,ρ,γ) = event ? γ.*ρ : zeros(size(ρ))
 
+"""
+    cell_probs(uᵢ, m, δt, prolif, death, embed, α, β, γ)
+
+Calculate the probabilities for cell-related events (proliferation, death, embedding) based on the current state vector `uᵢ`.
+
+This function uses `calc_cell_densities` to calculate cell densities and then computes the probabilities for proliferation, death, and embedding events.
+
+# Arguments
+- `uᵢ`: A state vector representing the positions of particles or cells.
+- `m`: The size of the window over which to calculate the densities.
+- `δt`: Time step size.
+- `prolif`, `death`, `embed`: Boolean flags indicating whether the respective event is considered to occur.
+- `α, β, γ`: Parameters for scaling the probabilities.
+
+# Returns
+A tuple containing three vectors representing the probabilities for proliferation, death, and embedding.
+"""
 function cell_probs(uᵢ,m,δt,prolif,death,embed,α,β,γ)
     ρ = calc_cell_densities(uᵢ,m)
     return (P(prolif,ρ,α).*δt, A(death, ρ,β).*δt, E(embed, ρ,γ).*δt)
 end
 
+"""
+    find_cell_index(arr::Vector{Float64}, threshold::Float64)
+
+Find the index in `arr` where the cumulative sum first exceeds or equals `threshold`.
+
+This function is typically used in stochastic processes to determine an outcome based on a probability distribution.
+
+# Arguments
+- `arr`: A vector of probabilities.
+- `threshold`: A threshold value used to find the corresponding index in `arr`.
+
+# Returns
+The index in `arr` where the cumulative sum first exceeds or equals `threshold`. If the threshold is not met, the length of `arr` is returned.
+
+"""
 function find_cell_index(arr::Vector{Float64}, threshold::Float64)
     cum_sum = cumsum(arr)
     index = findfirst(cum_sum .>= threshold)
@@ -29,8 +134,19 @@ function find_cell_index(arr::Vector{Float64}, threshold::Float64)
     return index
 end
 
+"""
+    affect!(integrator)
 
+Update the state of `integrator` based on probabilistic cellular events.
 
+This function modifies `integrator` in place. It uses the parameters and state from `integrator` to compute probabilities for different cellular events: proliferation (`prolif`), death (`death`), and embedding (`embed`). Based on these probabilities and random draws, it updates the state of `integrator`.
+
+# Arguments
+- `integrator`: The integrator object containing the current state and parameters. The parameters are expected to be a tuple containing:
+
+# Returns
+`nothing`. The function modifies `integrator` in place.
+"""
 function affect!(integrator)
     (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ) = integrator.p
     u = integrator.u

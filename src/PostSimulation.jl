@@ -1,3 +1,17 @@
+"""
+    PostCalcs1D(u, p)
+
+Perform post-calculation for 1D simulation data.
+
+This function computes various physical quantities like force, density, velocity, stress, and curvature for a given state `u` and parameters `p`.
+
+# Arguments
+- `u`: A state vector representing the positions of particles or cells.
+- `p`: A tuple of parameters used in the calculations.
+
+# Returns
+A tuple containing the sum of forces, normal velocity, density, stress, and curvature for each element in the state vector.
+"""
 function PostCalcs1D(u, p)
     N, kₛ, η, kf, l₀, δt = p
     dom = 2*pi
@@ -24,12 +38,21 @@ function PostCalcs1D(u, p)
 end
 
 
-""" 
-postSimulation1D()
-
-Function to perform post simulation calculations which returns a data structure which contains all data
 """
+    postSimulation1D(btype, sol, p)
 
+Perform post simulation calculations for 1D simulation and return a comprehensive data structure with all relevant data.
+
+This function processes the solution from a 1D simulation, calculating physical quantities and organizing them into a `SimResults_t` data structure.
+
+# Arguments
+- `btype`: The type of boundary condition or simulation.
+- `sol`: The solution object from the simulation.
+- `p`: Parameters used in the post calculations.
+
+# Returns
+An instance of `SimResults_t` containing the calculated data.
+"""
 function postSimulation1D(btype, sol, p)
 
     c = size(sol.t, 1)
@@ -59,7 +82,20 @@ end
 
 ###################################################################################################
 
+"""
+    PostCalcs2D(u, p)
 
+Perform post-calculation for 2D simulation data.
+
+This function is similar to `PostCalcs1D`, but it is tailored for 2D simulation data. It calculates force, density, velocity, stress, and curvature in a 2D context.
+
+# Arguments
+- `u`: A 2D state vector representing the positions of particles or cells.
+- `p`: A tuple of parameters used in the calculations.
+
+# Returns
+A tuple containing the sum of forces, normal velocity, density, stress, and curvature for each element in the state vector.
+"""
 function PostCalcs2D(u, p)
     N, kₛ, η, kf, l₀, δt = p
 
@@ -86,12 +122,21 @@ function PostCalcs2D(u, p)
     return ∑F, vₙ, density, ψ, Κ
 end
 
-""" 
-postSimulation2D()
-
-Function to perform post simulation calculations which returns a data structure which contains all data
 """
+    postSimulation2D(btype, sol, p)
 
+Perform post simulation calculations for 2D simulation and return a comprehensive data structure with all relevant data.
+
+This function processes the solution from a 2D simulation, similarly to `postSimulation1D`, but adapted for 2D data.
+
+# Arguments
+- `btype`: The type of boundary condition or simulation.
+- `sol`: The solution object from the simulation.
+- `p`: Parameters used in the post calculations.
+
+# Returns
+An instance of `SimResults_t` containing the calculated data.
+"""
 function postSimulation2D(btype, sol, p)
 
     c = size(sol.t, 1)
@@ -119,6 +164,22 @@ function postSimulation2D(btype, sol, p)
     return SimResults_t(btype, sol.t, u, ∑F, DENSITY, vₙ, Area, ψ, Κ)
 end
 
+
+"""
+    postSimulation2D_Elastic(btype, sol, p)
+
+Perform post simulation calculations for a 2D Elastic simulation and return a data structure with all relevant data.
+
+This function is specifically designed for handling the results of 2D Elastic simulations. It calculates and organizes the data into a `SimResults_Elastic_t` structure.
+
+# Arguments
+- `btype`: The type of boundary condition or simulation.
+- `sol`: The solution object from the simulation.
+- `p`: Parameters used in the post calculations.
+
+# Returns
+An instance of `SimResults_Elastic_t` containing the calculated data.
+"""
 function postSimulation2D_Elastic(btype, sol, p)
 
     c = size(sol.t, 1)

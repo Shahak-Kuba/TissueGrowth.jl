@@ -1,5 +1,39 @@
 using BenchmarkTools
 
+"""
+    sim2D()
+
+Execute a series of 2D mechanical relaxation simulations.
+
+This function sets up and runs 2D simulations for different stiffness coefficients and boundary types. It iterates over arrays of stiffness coefficients and boundary types, sets up the corresponding ODE problem for each case, solves it using a specified numerical method with periodic callbacks, and collects the results.
+
+# Simulation Parameters
+- `N`: Number of cells in the simulation.
+- `m`: Number of springs per cell.
+- `M`: Total number of springs along the interface.
+- `R₀`: Radius or characteristic length of the initial shape.
+- `D`: Array of diffuision coefficients used to calculate cell stiffness.
+- `l₀`: Resting length of the spring per cell.
+- `kf`: Tissue production rate per cell.
+- `η`: Viscosity or damping coefficient per cell.
+- `growth_dir`: Direction of tissue growth ('inward' or 'outward').
+- `Tmax`: Total simulation time (in days).
+- `δt`: Time step for the numerical integration.
+- `btypes`: Types of boundary conditions (e.g., 'circle', 'triangle').
+- `dist_type`: Distribution type for node placement (e.g., 'Linear', 'sigmoid').
+- `prolif`, `death`, `embed`: Boolean flags indicating cell behaviors.
+- `α`, `β`, `γ`: Parameters for cell behaviors.
+- `event_δt`: Time interval for periodic callback events.
+- `savetimes`: Time points at which to save the simulation results.
+
+# Returns
+A vector of vectors of `SimResults_t` objects. Each inner vector represents the simulation results for different boundary types under a specific stiffness coefficient.
+
+# Example
+```julia
+all_results = sim2D()
+```
+"""
 function sim2D()
     # setting up simulation parameters
     N = 180 # number of cells
