@@ -43,26 +43,6 @@ function plotResults2D_Velocity(u, var, cmap)
 end
 
 
-function plotResults1D(u, var)
-    #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-    #    resolution=(500, 500))
-    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        resolution=(1000, 800))
-    ga = f[1, 1] = GridLayout()
-    #gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
-    gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 1, 8), aspect=DataAspect(), xlabel="x", ylabel="y")
-    CRange = findMinMax(var)
-    #CRange = (0.05,0.2)
-    for i in eachindex(u)
-        lines!(gaxmain, u[i][:,1], u[i][:,2], color=var[i].data, colorrange=CRange,
-            colormap=:jet, linewidth=5)
-    end
-    Colorbar(f[1, 2], limits=CRange, colormap=:jet,
-        flipaxis=false, label="v [mm/day]") 
-    return f
-end
-
-
 function plotAreaVStime(sols)
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         resolution=(700, 500))

@@ -4,7 +4,20 @@ CurrentModule = TissueGrowth
 
 # TissueGrowth.jl
 
-Documentation for [TissueGrowth]
+TissueGrowth.jl is a open source project package developed to simulate the evoluition of biological tissue interface during tissue growth. Our model considers mechanical interactions between neighbouring cells and a secretion rate of new tissue material that is proportional to cell density. In this project we include cell proliferation, apoptosis (death) and embedment as stochastic processes. Below is a discription of our model.
+
+# Model Description
+
+Calculates the mechanical relaxation and normal velocity in a 1D system with periodic boundary conditions. The derivatives are based on spring forces and mechanical properties defined in `p`. Using the discrete equation:
+
+```math
+\frac{\text{d}\mathbf{u}ᵢ}{\text{d}t} = \frac{1}{η}\bigg((\mathbf{F}ₛ⁺ - \mathbf{F}ₛ⁻)\cdot\bm{τ}\bigg)\bm{τ} + Vₙ\mathbf{n} 
+```
+where,
+```math
+\mathbf{F}ₛ⁺ = f(\lVert \mathbf{u}ᵢ₊₁ - \mathbf{u}ᵢ \rVert) \frac{\mathbf{u}ᵢ₊₁ - \mathbf{u}ᵢ}{\lVert \mathbf{u}ᵢ₊₁ - \mathbf{u}ᵢ \rVert}, \hspace{0.5cm} \mathbf{F}ₛ⁻ = f(\lVert \mathbf{u}ᵢ - \mathbf{u}ᵢ₋₁ \rVert) \frac{\mathbf{u}ᵢ - \mathbf{u}ᵢ₋₁}{\lVert \mathbf{u}ᵢ - \mathbf{u}ᵢ₋₁ \rVert}
+```
+given `f` is the restoration force function and `Vₙ` is the velocity in the normal direction.
 
 ```@index
 ```
@@ -56,4 +69,8 @@ TissueGrowth.E(event,ρ,γ)
 TissueGrowth.affect!(integrator)
 ```
 
-
+# Custom modifier functions
+```@docs
+Base.insert!
+Base.deleteat!
+```

@@ -29,7 +29,7 @@ end
 """
     ODE_fnc_1D!(du, u, p, t)
 
-Define the ODE system for 1D mechanical relaxation with initial conditions. This function computes the derivatives `du` based on the current state `u` and parameters `p`.
+Define the ODE system for 1D mechanical relaxation with initial conditions. This function computes the derivatives `du` based on the current state `u` and parameters `p`. In this system there is a periodic boundary condition such that `x ∈ [0,2π]` with `i` spring boundary nodes and `u₋₁ = uₙ`, `uₙ₊₁ = u₁`
 
 # Arguments
 - `du`: Array to store the derivatives of `u`.
@@ -76,21 +76,18 @@ function ODE_fnc_2D_init!(du,u,p,t)
 end
 
 """
-    ODE_fnc_1D!(du, u, p, t)
+    ODE_fnc_2D!(du, u, p, t)
 
 Define the ODE system for 2D mechanical relaxation with initial conditions. This function computes the derivatives `du` based on the current state `u` and parameters `p`.
 
 # Arguments
 - `du`: Array to store the derivatives of `u`.
-- `u`: Current state array.
+- `u`: Current position array of all spring boundary nodes.
 - `p`: Parameters tuple `(N, kₛ, η, kf, l₀, δt, growth_dir)`.
 - `t`: Current time.
 
 # Description
-Calculates the mechanical relaxation and normal velocity in a 1D system with periodic boundary conditions. The derivatives are based on spring forces and mechanical properties defined in `p`. Using the discrete equation:
-```math
-duᵢ/dt = 1/η(Fₛ⁺ - Fₛ⁻)τ + Vₙn 
-```
+Calculates the mechanical relaxation and normal velocity in a 1D system with periodic boundary conditions. The derivatives are based on spring forces and mechanical properties defined in `p`.
 """
 function ODE_fnc_2D!(du,u,p,t) 
     N,kₛ,η,kf,l₀,δt,growth_dir = p
