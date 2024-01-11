@@ -1,6 +1,8 @@
 using Documenter
 using TissueGrowth
 
+push!(LOAD_PATH,"../src/")
+
 makedocs(
     sitename = "TissueGrowth.jl",
     modules = [TissueGrowth],
