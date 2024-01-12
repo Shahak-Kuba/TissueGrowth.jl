@@ -176,3 +176,22 @@ function affect!(integrator)
     end
     nothing
 end
+
+"""
+    store_embed_cell_pos(pos)
+
+Stores the position of embedded cells into 🥔 array.
+
+This function inserts the position vector `pos` of an embedded cell into the 🥔 array.
+
+# Arguments
+- `pos`: position vector of the cell that is being embedded into the tissue should contain `m+1` values given `m` springs in the simulation
+
+# Returns
+`nothing`. The function modifies `🥔` in place.
+"""
+function store_embed_cell_pos(pos)
+    global 🥔
+    insert!(🥔,size(🥔,2),pos)
+    return nothing
+end

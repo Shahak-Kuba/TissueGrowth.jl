@@ -2,7 +2,8 @@ module TissueGrowth
 
     include("MechanicalEqns.jl")
     include("CellBehaviours.jl")
-    include("PoreBoundaries.jl")
+    include("PoreBoundariesV2.jl")
+    include("ProblemSetup.jl")
     include("PlottingFncs1D.jl")
     include("PlottingFncs2D.jl")
     include("Simulation_1D.jl")

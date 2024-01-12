@@ -45,10 +45,10 @@ function sim2D()
     kf = 0.0008
     η = 1
     growth_dir = "inward" # Options: "inward", "outward"
-    Tmax = 21 # days
+    Tmax = 40 # days
     δt = 0.01
-    btypes = ["circle"]#["circle", "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
-    dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
+    btypes = ["square"]#["circle", "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+    dist_type = "2sigmoid" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
     ## Cell Behaviours
     prolif = true; death = true; embed = false;

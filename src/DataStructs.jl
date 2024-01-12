@@ -5,7 +5,7 @@ using ElasticArrays
 """
     SimResults_t
 
-A data structure representing the results of a simulation.
+A data structure representing the results of a simulation which can then be used for visualisation with the plotting code `PlottingFncs1D.jl` and `PlottingFncs2D.jl`.
 
 This structure contains various fields that store the results and relevant data from a simulation process. It includes the type of simulation, time steps, state vectors, forces, densities, and other relevant quantities.
 

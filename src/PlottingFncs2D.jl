@@ -27,12 +27,12 @@ function plotResults2D_Velocity(u, var, cmap)
     #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
     #    resolution=(500, 500))
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        resolution=(1000, 800))
+        size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
     #gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 1, 8), aspect=DataAspect(), xlabel="x", ylabel="y")
     #CRange = findMinMax(var)
-    CRange = (0,0.05)
+    CRange = (0,0.05)  
     for i in eachindex(u)
         lines!(gaxmain, [u[i][:, 1]; u[i][1,1]], [u[i][:, 2]; u[i][1,2]], color=[var[i]; var[i][1]], colorrange=CRange,
             colormap=cmap, linewidth=5)
