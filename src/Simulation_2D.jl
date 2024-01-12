@@ -1,7 +1,7 @@
 using BenchmarkTools
 
 """
-    sim2D()
+    sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,prolif,death,embed,α,β,γ,event_δt,seed)
 
 Execute a series of 2D mechanical relaxation simulations.
 
@@ -10,7 +10,6 @@ This function sets up and runs 2D simulations for different stiffness coefficien
 # Simulation Parameters
 - `N`: Number of cells in the simulation.
 - `m`: Number of springs per cell.
-- `M`: Total number of springs along the interface.
 - `R₀`: Radius or characteristic length of the initial shape.
 - `D`: Array of diffuision coefficients used to calculate cell stiffness.
 - `l₀`: Resting length of the spring per cell.
@@ -24,37 +23,22 @@ This function sets up and runs 2D simulations for different stiffness coefficien
 - `prolif`, `death`, `embed`: Boolean flags indicating cell behaviors.
 - `α`, `β`, `γ`: Parameters for cell behaviors.
 - `event_δt`: Time interval for periodic callback events.
-- `savetimes`: Time points at which to save the simulation results.
+- `seed`: Seed number for reproducability with stochastic simulations.
 
 # Returns
 A vector of vectors of `SimResults_t` objects. Each inner vector represents the simulation results for different boundary types under a specific stiffness coefficient.
 
 # Example
 ```julia
-all_results = sim2D()
+all_results = sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
+                        prolif, death, embed, α, β, γ, event_δt, seed);
 ```
 """
-function sim2D()
-    # setting up simulation parameters
-    N = 180 # number of cells
-    m = 1 # number of springs per cell
+function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
+    prolif, death, embed, α, β, γ, event_δt, seed);
+
+    Set_Random_Seed(seed)
     M = Int(m*N) # total number of springs along the interface
-    R₀ = 1  # shape radius
-    D = [0.0001, 0.0075, 0.015]
-    l₀ = 1
-    kf = 0.0008
-    η = 1
-    growth_dir = "inward" # Options: "inward", "outward"
-    Tmax = 40 # days
-    δt = 0.01
-    btypes = ["square"]#["circle", "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
-    dist_type = "2sigmoid" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
-
-    ## Cell Behaviours
-    prolif = true; death = true; embed = false;
-       α = 0.01;        β = 0.1;      γ = 0.01;
-    event_δt = 0.3
-
     savetimes = LinRange(0, Tmax, 8)
 
     all_results = Vector{Vector{SimResults_t}}(undef, 0)

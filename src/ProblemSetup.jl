@@ -26,14 +26,16 @@ function u0SetUp(btype,R₀,N,dist_type)
         pop!(θ)
         @views u0 .= [X(R,θ)'; Y(R,θ)'];
     elseif btype == "triangle"
-        R = √((2*π*R₀^2)/sin(π/3))
+        #R = √((2*π*R₀^2)/sin(π/3))
+        R = √((π*R₀^2)/(√(3)*cos(π/6)^2))
         # calc verticies
         vertices = polygon_vertices(3, R, -π/2)
         # calc number of nodes per segment 
         w = Int64(N/3) + 1
         @views u0 .= position_vectors_polygon(vertices, w, dist_type)
     elseif btype == "square"
-        R = √(π*(R₀^2)) # to produce identical areas
+        #R = √(π*(R₀^2)) # to produce identical areas
+        R = (R₀√(2π))/2
         # calc verticies
         vertices = polygon_vertices(4, R, -π/4)
         # calc number of nodes per segment 
@@ -52,7 +54,7 @@ function u0SetUp(btype,R₀,N,dist_type)
         rotation_angle = Rotation_Angle + pi/star_points
         vertices = StarVerticies(star_points, R₀, Rotation_Angle, rotation_angle)
         w = Int64(N/(2star_points)) + 1
-        u0 = position_vectors_polygon(vertices, w, dist_type)
+        u0 .= position_vectors_polygon(vertices, w, dist_type)
     elseif btype == "cross"
         side_length = √((π*R₀^2)/5)
         offset = side_length/2

@@ -1,4 +1,9 @@
 using LinearAlgebra
+using Random
+
+function Set_Random_Seed(seednum=123)
+    Random.seed!(seednum)
+end
 
 """
     calc_spring_densities(uᵢ)
@@ -155,14 +160,14 @@ function affect!(integrator)
     if r1 < (sum(p) + sum(a) + sum(e)) # check if event has occurred
         if r2 < sum(p) / (sum(p) + sum(a) + sum(e)) # prolif occurs
             idx = find_cell_index(p, r3 * sum(p))
-            println("inserted at: ",idx)
+            #println("inserted at: ",idx)
             insert!(u,idx,((circshift(u',1)'[:,idx] + u[:,idx])/2))
             # Perform operations based on prolif occurrence if needed
  
 
         elseif sum(p) / (sum(p) + sum(a) + sum(e)) < r2 < (sum(p) + sum(a)) / (sum(p) + sum(a) + sum(e)) # death occurs
             idx = find_cell_index(a, r3 * sum(a))
-            println("deleted at: ",idx)
+            #println("deleted at: ",idx)
             deleteat!(u,idx)
             resize!(integrator,(2,size(integrator.u,2)))
             # Remove the cell from u based on death occurrence

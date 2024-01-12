@@ -16,10 +16,10 @@ FilePaths = "8fc22ac5-c921-52a6-82fd-178b2807b824"
 JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 
 [compat]
-julia = "1.9"
 BenchmarkTools = "1.4.0"
 CairoMakie = "0.11.5"
 ColorSchemes = "3.24.0"
@@ -31,7 +31,7 @@ ElasticArrays = "1.2.12"
 FilePaths = "0.8.3"
 JLD2 = "0.4.41"
 Revise = "3.5.13"
-
+julia = "1.9"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
