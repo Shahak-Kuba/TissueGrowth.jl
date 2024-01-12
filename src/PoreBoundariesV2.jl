@@ -25,6 +25,62 @@ function interpolate_segment(p1, p2, w, dist_type)
     [((1 - t) .* p1 .+ t .* p2) for t in NodeDistribution(0, 1, w, dist_type)]
 end
 
+# for irregular polygons
+function CrossVertecies(side_length, offset)
+    CrossVerts = []
+    push!(CrossVerts,(side_length + offset, offset))
+    push!(CrossVerts,(offset, offset))
+    push!(CrossVerts,(offset, offset + side_length))
+    push!(CrossVerts,(-offset, offset + side_length))
+    push!(CrossVerts,(-offset, offset))
+    push!(CrossVerts,(-offset - side_length, offset))
+    push!(CrossVerts,(-offset - side_length, -offset))
+    push!(CrossVerts,(-offset, -offset))
+    push!(CrossVerts,(-offset, -offset - side_length))
+    push!(CrossVerts,(offset, -offset - side_length))
+    push!(CrossVerts,(offset, -offset))
+    push!(CrossVerts,(offset + side_length, -offset))
+    #push!(CrossVerts,(side_length + offset, offset))
+
+    #return hcat(CrossVerts...)'
+    return CrossVerts
+end
+
+function StarVerticies(N, R, Rotation_Angle, rotation_angle)
+    # finding R such that areas will match with formula A = 2N(0.5*R₀*rₒ*sin(θ))
+    R₀ = √((4*π*(R^2))/(2*N*sin(π/N)))
+    rₒ = R₀/2
+    # empty vector
+    StarVerts = []
+    # generating verticies for outside polygon
+    VERTS = regular_polygon_vertices(N, R₀, Rotation_Angle)
+    # generating verticies for inside polygon
+    verts = regular_polygon_vertices(N, rₒ, rotation_angle)
+
+    # combining the two
+    for i in 1:N
+        push!(StarVerts, (VERTS[i,1], VERTS[i,2]))
+        push!(StarVerts, (verts[i,1], verts[i,2]))
+    end
+    #push!(StarVerts, VERTS[1,:])
+
+    #return hcat(StarVerts...)'
+    return StarVerts
+end
+
+function regular_polygon_vertices(N, R, rotation_angle)
+    vertices = Vector{Float64}[]
+
+    for i in 0:N-1
+        angle = 2π * i / N + rotation_angle
+        x = R * cos(angle)
+        y = R * sin(angle)
+        push!(vertices, [x, y])
+    end
+
+    return hcat(vertices...)'
+end
+
 function position_vectors_polygon(vertices, N, dist_type)
     V = length(vertices)
     all_x = Float64[]
@@ -41,7 +97,7 @@ function position_vectors_polygon(vertices, N, dist_type)
             push!(all_y, point[2])
         end
     end
-    return [all_x[1:end]'; all_y[1:end]']
+    return [all_x'; all_y']
 end
 
 """

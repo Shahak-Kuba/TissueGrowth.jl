@@ -46,30 +46,22 @@ function u0SetUp(btype,R₀,N,dist_type)
         # calc number of nodes per segment 
         w = Int64(N/6) + 1
         @views u0 .= position_vectors_polygon(vertices, w, dist_type)
-    """ NEED TO FIX"
-    elseif btype == "SineWave" # length from (0→2π) ≈ 8.984
-        θ = collect(LinRange(0.0, 2*π, N+1))  # just use collect(θ) to convert into a vector
-        #pop!(θ)
-        @views u0[:,i] .= [Xᵩ(θ[i]), Yᵩ(θ[i])];
     elseif btype == "star"
         star_points = 5
-        r₀ = R₀/2 
         Rotation_Angle = pi/2
         rotation_angle = Rotation_Angle + pi/star_points
-        verts = StarVerticies(star_points, R₀, Rotation_Angle, r₀, rotation_angle)
-        u0 = interpolate_vertices(verts, Int( round(N/(2*star_points))))'
+        vertices = StarVerticies(star_points, R₀, Rotation_Angle, rotation_angle)
+        w = Int64(N/(2star_points)) + 1
+        u0 = position_vectors_polygon(vertices, w, dist_type)
     elseif btype == "cross"
         side_length = √((π*R₀^2)/5)
         offset = side_length/2
-        verts = CrossVertecies(side_length, offset)
-        u0 = interpolate_vertices(verts, Int( round(N/12)))'
-        """
+        vertices = CrossVertecies(side_length, offset)
+        w = Int64(N/12) + 1
+        @views u0 .= position_vectors_polygon(vertices, w, dist_type)
     end
-
-
     return u0
 end
-
 
 """
     SetupODEproblem1D(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir, dist_type)
