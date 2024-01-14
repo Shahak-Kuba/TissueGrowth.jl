@@ -43,6 +43,8 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
 
     all_results = Vector{Vector{SimResults_t}}(undef, 0)
 
+    cb = PeriodicCallback(affect!,event_δt; save_positions=(false, false))
+
     for jj in eachindex(D)
         @views kₛ = D[jj]*(η)/((l₀)^2)
         #sol_array = Array{ODESolution}(undef,length(btypes));
@@ -53,7 +55,6 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
             @views btype = btypes[ii]
             prob, p = SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
                                         growth_dir,prolif,death,embed,α,β,γ,dist_type)
-            cb = PeriodicCallback(affect!,event_δt; save_positions=(false, false))
             @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cb)
             push!(results, postSimulation2D(btype, sol, p))
             printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D[jj])

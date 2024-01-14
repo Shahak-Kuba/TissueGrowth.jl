@@ -19,6 +19,7 @@ This structure contains various fields that store the results and relevant data 
 - `Ω`: A `Vector{Float64}` representing the void area within the pore at each time step.
 - `ψ`: A `Vector` of `ElasticMatrix{Float64,Vector{Float64}}`, representing the stress of the springs/ cells at each time step.
 - `Κ`: A `Vector` of `ElasticMatrix{Float64,Vector{Float64}}`, representing the approximate curvature of the moving boundary at each time step.
+- `CellCount`: A `Vector{Int64}` representing the amount of active cells at a give time `t`.
 
 """
 struct SimResults_t
@@ -31,4 +32,5 @@ struct SimResults_t
     Ω::Vector{Float64}
     ψ::Vector{ElasticMatrix{Float64,Vector{Float64}}}
     Κ::Vector{ElasticMatrix{Float64,Vector{Float64}}}
+    CellCount::Vector{Int64}
 end

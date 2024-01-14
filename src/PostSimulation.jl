@@ -142,6 +142,7 @@ function postSimulation2D(btype, sol, p)
     c = size(sol.t, 1)
 
     Area = Vector{Float64}(undef, c)
+    Cell_Count = Vector{Float64}(undef, c)
     ∑F = Vector{Vector{Float64}}(undef, 0)
     ψ = Vector{Matrix{Float64}}(undef, 0)
     DENSITY = Vector{Matrix{Float64}}(undef, 0)
@@ -152,7 +153,7 @@ function postSimulation2D(btype, sol, p)
 
     for ii in axes(u, 1)
         Area[ii] = Ω(u[ii]) # area calculation
-        #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
+        Cell_Count[ii] = size(u[ii],1)
         Fnet, nV, den, stre, kap = PostCalcs2D(u[ii], p)
         push!(∑F, Fnet)
         push!(vₙ, nV)
@@ -161,47 +162,6 @@ function postSimulation2D(btype, sol, p)
         push!(Κ, kap)
     end
 
-    return SimResults_t(btype, sol.t, u, ∑F, DENSITY, vₙ, Area, ψ, Κ)
+    return SimResults_t(btype, sol.t, u, ∑F, DENSITY, vₙ, Area, ψ, Κ, Cell_Count)
 end
 
-
-"""
-    postSimulation2D_Elastic(btype, sol, p)
-
-Perform post simulation calculations for a 2D Elastic simulation and return a data structure with all relevant data.
-
-This function is specifically designed for handling the results of 2D Elastic simulations. It calculates and organizes the data into a `SimResults_Elastic_t` structure.
-
-# Arguments
-- `btype`: The type of boundary condition or simulation.
-- `sol`: The solution object from the simulation.
-- `p`: Parameters used in the post calculations.
-
-# Returns
-An instance of `SimResults_Elastic_t` containing the calculated data.
-"""
-function postSimulation2D_Elastic(btype, sol, p)
-
-    c = size(sol.t, 1)
-
-    Area = Vector{Float64}(undef, c)
-    ∑F = Vector{ElasticVector{Float64,Vector{Float64}}}(undef, 0)
-    ψ = Vector{ElasticMatrix{Float64,Vector{Float64}}}(undef, 0)
-    DENSITY = Vector{ElasticMatrix{Float64,Float64}}(undef, 0)
-    vₙ = Vector{Vector{Float64}}(undef, 0)
-    Κ = Vector{ElasticMatrix{Float64,Vector{Float64}}}(undef, 0)
-
-
-    for ii in axes(u, 1)
-        Area[ii] = Ω(u[ii]) # area calculation
-        #append!(sol.u[ii], sol.u[ii][:,1]) # closing the domain Ω
-        Fnet, nV, den, stre, kap = PostCalcs2D(u[ii], p)
-        push!(∑F, Fnet)
-        push!(vₙ, nV)
-        push!(DENSITY, den)
-        push!(ψ, stre)
-        push!(Κ, kap)
-    end
-
-    return SimResults_Elastic_t(btype, sol.t, u, ∑F, DENSITY, vₙ, Area, ψ, Κ)
-end

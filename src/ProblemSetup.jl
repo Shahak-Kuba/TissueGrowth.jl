@@ -18,7 +18,7 @@ An array of initial positions.
 """
 function u0SetUp(btype,R₀,N,dist_type)
     # setting up initial conditions
-    u0 = ElasticArray{Float64}(undef,2,N)
+    u0 = ElasticMatrix{Float64}(undef,2,N)
     
     if btype == "circle"
         R = R₀ # to produce identical areas

@@ -174,7 +174,9 @@ function affect!(integrator)
 
 
         else # embed occurs
+            global 🥔
             idx = find_cell_index(e, r3 * sum(e))
+            
             # Perform operations based on embed occurrence if needed
         end
         resize!(integrator,(2,size(integrator.u,2)))
