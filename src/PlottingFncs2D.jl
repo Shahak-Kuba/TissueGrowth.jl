@@ -4,22 +4,23 @@ using ColorSchemes
 using Colors
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
-function plotResults2D(u, var, cmap)
+function plotResults2D(u, desnity, cmap)
     #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
     #    resolution=(500, 500))
+    txtSize = 30;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xlabel="x", ylabel="y")
+    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xlabel="x", xlabelsize=txtSize, ylabel="y", ylabelsize=txtSize)
     #gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 1, 8), aspect=DataAspect(), xlabel="x", ylabel="y")
     #CRange = findMinMax(var)
-    CRange = (0,120)
+    CRange = (0,200)
     for i in eachindex(u)
-        lines!(gaxmain, [u[i][:, 1]; u[i][1,1]], [u[i][:, 2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
+        lines!(gaxmain, [u[i][:, 1]; u[i][1,1]], [u[i][:, 2]; u[i][1,2]], color=[desnity[i].data; desnity[i].data[1]], colorrange=CRange,
             colormap=cmap, linewidth=5)
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
-        flipaxis=false, label="ρ [1/μm]")
+    Colorbar(f[1, 2], limits=CRange, size=20, ticklabelsize = txtSize, colormap=cmap,
+        flipaxis=false, label="Density ρ [cell/length]", labelsize=txtSize)
     return f
 end
 

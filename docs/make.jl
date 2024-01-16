@@ -7,9 +7,13 @@ makedocs(
     sitename = "TissueGrowth.jl",
     modules = [TissueGrowth],
     pages = [
-        "Home" => "index.md"
+        "Home" => "index.md",
+        "ForUser.md",
+        "Equations.md",
+        "Example.md"
     ],
-warnonly = Documenter.except()
+warnonly = Documenter.except(),
+format = Documenter.HTML(prettyurls = false)
 )
 
 deploydocs(;
