@@ -4,6 +4,7 @@ include("SolverFncs.jl")
 
 # simulation parameters
 D = 0.02;
+kf = 1.0
 A = 0.0;
 growth_dir = "inward"
 
@@ -19,7 +20,7 @@ t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
 M = 200
 Δx = (Xmax - X₀)/M
-x = LinRange(X₀,Xmax,Int64(round((Xmax - X₀)/Δx)))
+x = LinRange(X₀,Xmax,M+1)
 
 # initialise all derivatives and variables
 h = zeros(N+1,M+1)
@@ -40,7 +41,7 @@ d₋₁ = zeros(1,M-1)
 
 
 # set initial conditions for h and ρ
-h[1,1:end-1] = 2.0 .+ 0.5.*cos.(3*x)
+h[1,:] = 2.0 .+ 0.5.*cos.(3*x)
 h[1,end] = h[1,1]
 ρ[1,:] = ones(1,M+1)*0.016
 
@@ -49,11 +50,10 @@ if growth_dir == "inward"
 else
     S = -1.0
 end
-H = 1.0
 a⁺ = 0.0
 a⁻ = 0.0
 
-for n in 1:1
+for n in 1:N
     for m in 1:M
         if m == 1
             a⁺ = aₘ₊(h[n,2],h[n,M])
@@ -73,10 +73,10 @@ for n in 1:1
 
         # can apply heaviside function in case want only κ ≥ 0 to move in the longtitudinal direction (For H variable)
 
-        Φ[n,m] = ρ[n,m] - S*Δt*κ[n,m]*H*(ρ[n,m]^2) + (S*Δt*H*ρ[n,m]*ρₓ[n,m]*hₓ[n,m])/(sqrt(1+(hₓ[n,m]^2))) - D*Δt*ρₓ[n,m]*hₓ[n,m]*hₓₓ[n,m] / ((1 + (hₓ[n,m]^2))^2) - A*Δt*ρ[n,m]
+        Φ[n,m] = ρ[n,m] - S*Δt*κ[n,m]*kf*(ρ[n,m]^2) + (S*Δt*kf*ρ[n,m]*ρₓ[n,m]*hₓ[n,m])/(sqrt(1+(hₓ[n,m]^2))) - D*Δt*ρₓ[n,m]*hₓ[n,m]*hₓₓ[n,m] / ((1 + (hₓ[n,m]^2))^2) - A*Δt*ρ[n,m]
         λ[n,m] = (D*Δt/(Δx^2)) / (1 + hₓ[n,m]^2)
 
-        h[n+1,m] = h[n,m] + S*Δt*H*ρ[n,m]*sqrt(1 + (hₓ[n,m]^2))
+        h[n+1,m] = h[n,m] + S*Δt*kf*ρ[n,m]*sqrt(1 + (hₓ[n,m]^2))
     end
 
     # cyclic tridiagonal matrix
@@ -93,10 +93,10 @@ for n in 1:1
 
     # periodic boundary conditions
     h[n+1,M+1] = h[n+1,1]
-    h[n+1,M+1] = ρ[n+1,1]
+    ρ[n+1,M+1] = ρ[n+1,1]
 end
 
-plot(x,h[1,1:end-1])
-plot!(x,h[10,1:end-1])
-plot!(x,h[20,1:end-1])
-plot!(x,h[30,1:end-1])
+plot(x,h[1,1:end])
+plot!(x,h[10,1:end])
+plot!(x,h[20,1:end])
+plot!(x,h[30,1:end])
