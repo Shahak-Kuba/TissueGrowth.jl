@@ -3,21 +3,21 @@ using LinearAlgebra
 include("SolverFncs.jl")
 
 # simulation parameters
-D = 0.01;
+D = 0.02;
 A = 0.0;
 growth_dir = "inward"
 
 # time and space discretisation
 T₀ = 0.0
-Tmax = 100.0
+Tmax = 250.0
 X₀ = 0.0
 Xmax = 2π
 
-N = 40
+N = 3000
 Δt = (Tmax - T₀)/N
 t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
-M = 10
+M = 200
 Δx = (Xmax - X₀)/M
 x = LinRange(X₀,Xmax,Int64(round((Xmax - X₀)/Δx)))
 
@@ -53,7 +53,7 @@ H = 1.0
 a⁺ = 0.0
 a⁻ = 0.0
 
-for n in 1:N
+for n in 1:1
     for m in 1:M
         if m == 1
             a⁺ = aₘ₊(h[n,2],h[n,M])
@@ -73,10 +73,10 @@ for n in 1:N
 
         # can apply heaviside function in case want only κ ≥ 0 to move in the longtitudinal direction (For H variable)
 
-        Φ[n,m] = ρ[n,m] - S*Δt*κ[n,m]*H*(ρ[n,m]^2) + S*Δt*H*ρ[n,m]*ρₓ[n,m]*hₓ[n,m]/(sqrt(1+hₓ[n,m]^2)) - D*Δt*ρₓ[n,m]*hₓ[n,m]*hₓₓ[n,m] / ((1 + hₓ[n,m]^2)^2) - A*Δt*ρ[n,m]
-        λ[n,m] = (D*Δt/(Δx)^2) / (1 + hₓ[n,m]^2)
+        Φ[n,m] = ρ[n,m] - S*Δt*κ[n,m]*H*(ρ[n,m]^2) + (S*Δt*H*ρ[n,m]*ρₓ[n,m]*hₓ[n,m])/(sqrt(1+(hₓ[n,m]^2))) - D*Δt*ρₓ[n,m]*hₓ[n,m]*hₓₓ[n,m] / ((1 + (hₓ[n,m]^2))^2) - A*Δt*ρ[n,m]
+        λ[n,m] = (D*Δt/(Δx^2)) / (1 + hₓ[n,m]^2)
 
-        h[n+1,m] = h[n,m] + S*Δt*H*ρ[n,m]*sqrt(1 + hₓ[n,m]^2)
+        h[n+1,m] = h[n,m] + S*Δt*H*ρ[n,m]*sqrt(1 + (hₓ[n,m]^2))
     end
 
     # cyclic tridiagonal matrix
