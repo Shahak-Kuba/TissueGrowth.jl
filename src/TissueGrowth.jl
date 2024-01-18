@@ -1,5 +1,6 @@
 module TissueGrowth
 
+    # discrete simulation code
     include("Discrete/MechanicalEqns.jl")
     include("Discrete/CellBehaviours.jl")
     include("Discrete/PoreBoundariesV2.jl")
@@ -14,5 +15,8 @@ module TissueGrowth
     include("Discrete/DataStructs.jl")
     include("Discrete/PostSimulation.jl")
     include("Discrete/ModifierFncs.jl")
+
+    # continuum limit simulation code
+    include("Continuum/ContinuumSolvers.jl")
 
 end

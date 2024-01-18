@@ -4,16 +4,35 @@ using BenchmarkTools
 
 include("SolverFncs.jl")
 
-# simulation parameters
-D = 1.0;
-kf = 0.002
-A = 0.0;
-ρ₀ = 22.918311805232928;
-growth_dir = "inward"
-Tmax = 25.0
-Xmax = 2π
 
+"""
+    SolveContinuumLim_Cartesian(D, kf, A, ρ₀, growth_dir, Tmax, Xmax)
 
+Solve the continuum limit of a discrete cell-based model using a semi-implicit scheme and finite differencing for discretization in Cartesian coordinates.
+
+This function is used to simulate the dynamics of a growing cell population in a one-dimensional domain. It utilizes finite difference methods for spatial discretization and a semi-implicit scheme for time integration.
+
+# Arguments
+- `D::Float64`: Diffusion coefficient.
+- `kf::Float64`: Growth rate constant.
+- `A::Float64`: A constant used in the continuum model.
+- `ρ₀::Float64`: Initial density of cells.
+- `growth_dir::String`: Direction of growth; can be "inward" or "outward".
+- `Tmax::Float64`: Maximum time for the simulation.
+- `Xmax::Float64`: Maximum spatial extent in the x-direction.
+
+# Returns
+- `x::Vector{Float64}`: Vector of spatial positions.
+- `h::Matrix{Float64}`: Matrix representing the height profile at each time step and spatial position.
+- `ρ::Matrix{Float64}`: Matrix representing the cell density at each time step and spatial position.
+
+# Implementation Details
+- The function discretizes the time from `T₀` (initially 0.0) to `Tmax` into `N` steps, and the spatial domain from `X₀` (initially 0.0) to `Xmax` into `M` steps.
+- It initializes various matrices and vectors to store derivatives and variables.
+- The function sets initial conditions for the height profile `h` and density `ρ`.
+- A loop over the time steps computes the finite differences and updates the variables according to the semi-implicit scheme.
+- A cyclic tridiagonal matrix method is used to solve a linear system in each time step.
+"""
 function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
     # time and space discretisation
     T₀ = 0.0
@@ -108,7 +127,33 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
 end
 
 
+"""
+    SolveContinuumLim_Polar(D, kf, A, ρ₀, growth_dir, Tmax)
 
+Solve the continuum limit of a discrete cell-based model using a semi-implicit scheme and finite differencing for discretization.
+
+This function is specifically designed for a polar coordinate system and is used to model the dynamics of a growing cell population in a circular domain. It employs finite difference methods for spatial discretization and a semi-implicit scheme for time integration.
+
+# Arguments
+- `D::Float64`: Diffusion coefficient.
+- `kf::Float64`: Growth rate constant.
+- `A::Float64`: A constant used in the continuum model.
+- `ρ₀::Float64`: Initial density of cells.
+- `growth_dir::String`: Direction of growth; can be "inward" or "outward".
+- `Tmax::Float64`: Maximum time for the simulation.
+
+# Returns
+- `θ::Vector{Float64}`: Vector of angular positions (in radians).
+- `R::Matrix{Float64}`: Matrix representing the radial positions at each time step and angular position.
+- `ρ::Matrix{Float64}`: Matrix representing the cell density at each time step and angular position.
+
+# Implementation Details
+- The function discretizes the time from `T₀` (initially 0.0) to `Tmax` into `N` steps, and the angular domain from 0 to `2π` into `M` steps.
+- It initializes various matrices and vectors to store derivatives and variables.
+- The function sets initial conditions for radial positions `R` and density `ρ`.
+- A loop over the time steps computes the finite differences and updates the variables according to the semi-implicit scheme.
+- A cyclic tridiagonal matrix method is used to solve a linear system in each time step.
+"""
 function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
     # time and space discretisation
     T₀ = 0.0
@@ -117,9 +162,12 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
-    M = 200
-    Δθ = (2π)/M
-    θ = LinRange(0.0,2π,M)
+    m = 161
+    Δθ = (2π)/m
+    θ = Vector(LinRange(0.0,2π,m))
+    pop!(θ)
+    M = m - 1
+ 
 
     # initialise all derivatives and variables
     R = zeros(N+1,M)
@@ -141,6 +189,16 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
 
     # set initial conditions for h and ρ
     R[1,:] = ones(size(θ)).*3.0 #2.0 .+ 0.5.*cos.(3*θ)
+    """
+    r = 3.0;
+    for i in 1:M
+        if θ[i] < π/2
+            R[1,i] = min((r/cos(θ[i])), (r/sin(θ[i])))
+        else
+            R[1,i] = min((r/cos((θ[i]%(π/2)))), (r/sin((θ[i]%(π/2)))))
+        end
+    end
+    """
     R[1,end] = R[1,1]
     #x = 3 .* cos.(x)
     ρ[1,:] = ones(1,M)*ρ₀
