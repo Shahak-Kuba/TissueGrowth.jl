@@ -26,7 +26,7 @@ A vector of `SimResults_t` objects, each representing the simulation results for
 function sim1D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type)
     M = Int64(m*N)
     results = Vector{SimResults_t}(undef, 0)
-    savetimes = LinRange(0, Tmax, 30)
+    savetimes = LinRange(0, Tmax, 20)
     # creating 
 
     for ii in eachindex(D)

@@ -41,7 +41,7 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
-    M = 200
+    M = 100
     Δx = (Xmax - X₀)/M
     x = LinRange(X₀,Xmax,M)
 

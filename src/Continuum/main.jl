@@ -3,12 +3,12 @@ include("ContinuumSolvers.jl")
 include("PlottingFncsPDE.jl")
 
 # simulation parameters
-D = 1;
-kf = 0.00053;
+D = 0.15;
+kf = 0.01;
 A = 0.00;
-ρ₀ = 30;
+ρ₀ = 17.18247918322778;
 growth_dir = "inward"
-Tmax = 250.0
+Tmax = 30.0
 Xmax = 2π
 
 x,h,ρ = SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax);

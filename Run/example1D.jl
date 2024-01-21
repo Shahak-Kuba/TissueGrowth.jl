@@ -6,7 +6,7 @@ m = 2 # number of springs per cell
 R₀ = 1  # shape radius
 D = [0.15] #, 0.075, 0.15, 1] # of cell 
 l₀ = 1 # of cell 
-kf = 0.01*m # of cell = kf¹
+kf = 0.02 # of cell = kf¹
 η = 1 # of cell = η¹
 Tmax = 25 # days
 δt = 0.001

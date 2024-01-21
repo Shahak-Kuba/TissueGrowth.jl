@@ -18,8 +18,8 @@ function equidistant_points_on_polar_curve(x_function, y_function, num_points)
 
     # Equally spaced points along the polar curve in terms of arc length
     L, _ = quadgk(integrand, 0, 2π)  # Total length of the curve
-    Δl = L / (num_points - 1)
-    Δθ = 2π / (num_points - 1)
+    Δl = L / (num_points)
+    Δθ = 2π / (num_points)
 
     theta_points = Float64[0.0]
     current_length = 0.0
