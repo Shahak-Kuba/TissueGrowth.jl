@@ -1,5 +1,4 @@
 using LinearAlgebra
-using Plots
 using BenchmarkTools
 
 include("SolverFncs.jl")
@@ -158,7 +157,7 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
     # time and space discretisation
     T₀ = 0.0
 
-    N = 3000
+    N = 10000
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
@@ -199,6 +198,7 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
         end
     end
     """
+
     R[1,end] = R[1,1]
     #x = 3 .* cos.(x)
     ρ[1,:] = ones(1,M)*ρ₀

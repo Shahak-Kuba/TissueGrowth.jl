@@ -1,4 +1,9 @@
 using DifferentialEquations
+using ElasticArrays
+
+
+Xᵩ(T) = T
+Yᵩ(T) = 2 + 0.5*cos(3*T)
 
 """
     u0SetUp(btype, R₀, N, dist_type)
@@ -61,6 +66,12 @@ function u0SetUp(btype,R₀,N,dist_type)
         vertices = CrossVertecies(side_length, offset)
         w = Int64(N/12) + 1
         @views u0 .= position_vectors_polygon(vertices, w, dist_type)
+    elseif btype == "SineWave"
+        xfunc = θ -> θ;
+        yfunc = θ -> 2 .+ 0.5 .* cos.(3 .* θ);
+        #integrand(θ) = sqrt(numerical_derivative(xfunc, θ)^2 + numerical_derivative(yfunc, θ)^2)
+        #rootsFunc(θ,curr_length,Δl) = arc_length(θ) - (curr_length + Δl)
+        @views u0 .= equidistant_points_on_polar_curve(xfunc, yfunc, N)';
     end
     return u0
 end

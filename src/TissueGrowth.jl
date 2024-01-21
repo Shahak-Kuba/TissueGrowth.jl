@@ -18,5 +18,6 @@ module TissueGrowth
 
     # continuum limit simulation code
     include("Continuum/ContinuumSolvers.jl")
+    include("Continuum/PlottingFncsPDE.jl")
 
 end

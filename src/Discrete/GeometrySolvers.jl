@@ -1,7 +1,52 @@
+using QuadGK
+using Roots
+
+
+function equidistant_points_on_polar_curve(x_function, y_function, num_points)
+
+    function numerical_derivative(f, θ, h=1e-7)
+        return (f(θ + h) - f(θ - h)) / (2h)
+    end
+
+    # Define the integrand for the arc length in polar coordinates
+    integrand = θ -> sqrt(numerical_derivative(x_function, θ)^2 + numerical_derivative(y_function, θ)^2)
+
+    function arc_length(θ)
+        result, _ = quadgk(integrand, 0, θ)
+        return result
+    end
+
+    # Equally spaced points along the polar curve in terms of arc length
+    L, _ = quadgk(integrand, 0, 2π)  # Total length of the curve
+    Δl = L / (num_points - 1)
+    Δθ = 2π / (num_points - 1)
+
+    theta_points = Float64[0.0]
+    current_length = 0.0
+
+   rootsFunc = (θ,curr_length) -> arc_length(θ) - (curr_length + Δl)
+
+
+    for i in 1:num_points - 1
+        θ = find_zero(θ->rootsFunc(θ,current_length), (theta_points[i], theta_points[i] + 2*Δθ))
+        push!(theta_points, θ)
+        current_length = arc_length(θ)
+    end
+
+    # Get equally spaced θ values along the polar curve
+    θ_values = theta_points
+
+    # Calculate corresponding (x, y) values
+    x_values = x_function.(θ_values)
+    y_values = y_function.(θ_values)
+
+    return hcat(x_values, y_values)
+end
+
 """
     lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ)
 
-Calculate the intersection points of two lines defined by points `rₘ₁`, `rₗ` and `rₘ₂`, `rᵣ`.
+Implementation of geometric solution for moving a cell in the normal direction. Calculate the intersection points of two lines defined by points `rₘ₁`, `rₗ` and `rₘ₂`, `rᵣ`.
 
 This function computes the intersection point of each pair of lines. If the lines are parallel (the determinant is zero), it returns the midpoint of `rₘ₁` and `rₘ₂`. Otherwise, it calculates the intersection point using the parameters `u` and `t`. If the intersection lies within the segments, the intersection point is returned; otherwise, the midpoint is returned.
 

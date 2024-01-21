@@ -10,8 +10,9 @@ makedocs(
         "Home" => "index.md",
         "ForUser.md",
         "Equations.md",
-        "Example.md",
-        "PDEsolver.md"
+        "ExampleDiscrete.md",
+        "PDEsolver.md",
+        "ExampleContinuum.md"
     ],
 warnonly = Documenter.except(),
 format = Documenter.HTML(prettyurls = false)

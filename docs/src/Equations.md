@@ -1,4 +1,4 @@
-# Simulation functions and code description
+# Discrete simulation functions and code description
 
 # Index
 ```@index
@@ -27,17 +27,12 @@ TissueGrowth.ODE_fnc_1D!(du,u,p,t)
 TissueGrowth.ODE_fnc_2D!(du,u,p,t) 
 ```
 
-# Equations for ODE problem:
+# Equations for Mechanical Relaxation and Normal Velocity:
 
 ```@docs
-TissueGrowth.δ(rᵢ₊₁, rᵢ)
-TissueGrowth.ρ(rᵢ₊₁, rᵢ)
-TissueGrowth.τ(rᵢ₊₁, rᵢ₋₁)
-TissueGrowth.n(rᵢ₊₁, rᵢ₋₁, type)
 TissueGrowth.Fₛ⁺(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀)
 TissueGrowth.Fₛ⁻(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀)
 TissueGrowth.Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt, type)
-TissueGrowth.κ(rᵢ₋₁, rᵢ, rᵢ₊₁)
 ```
 
 # Cell behaviour functions:
@@ -50,8 +45,11 @@ TissueGrowth.affect!(integrator)
 TissueGrowth.store_embed_cell_pos(pos)
 ```
 
-# Custom modifier functions
+# Custom modifier & Special functions
 ```@docs
 Base.insert!
 Base.deleteat!
+TissueGrowth.lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ)
+TissueGrowth.κ(rᵢ₋₁, rᵢ, rᵢ₊₁)
+TissueGrowth.Ω(p)
 ```

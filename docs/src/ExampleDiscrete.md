@@ -1,4 +1,4 @@
-# Example 2D simulation
+# Example 2D discrete simulation
 
 ## Non-Stochastic Simulation Code:
 
