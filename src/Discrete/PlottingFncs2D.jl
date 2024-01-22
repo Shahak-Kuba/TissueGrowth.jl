@@ -2,45 +2,58 @@
 using CairoMakie
 using ColorSchemes
 using Colors
+#using Plots
+using Interpolations
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
-function plotResults2D(u, desnity, cmap)
-    #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-    #    resolution=(500, 500))
-    txtSize = 30;
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+function plotResults2D(u, var, D, kf, cmap, cbarTxt, upLim, lowLim)
+    txtSize = 35;
+    tickSize = 25;
+    plot_font = "Arial"
+    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xlabel="x", xlabelsize=txtSize, ylabel="y", ylabelsize=txtSize)
-    #gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 1, 8), aspect=DataAspect(), xlabel="x", ylabel="y")
-    #CRange = findMinMax(var)
-    CRange = (0,200)
+    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xticklabelsize = tickSize, yticklabelsize = tickSize, 
+                    xlabel="x", xlabelsize=txtSize, xlabelfont = plot_font,
+                    ylabel="y", ylabelsize=txtSize,  ylabelfont = plot_font,
+                    title = "D = $D, kf = $kf", titlesize = txtSize, titlefont = plot_font)
+    CRange = (upLim,lowLim)
     for i in eachindex(u)
-        lines!(gaxmain, [u[i][:, 1]; u[i][1,1]], [u[i][:, 2]; u[i][1,2]], color=[desnity[i].data; desnity[i].data[1]], colorrange=CRange,
+        lines!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
             colormap=cmap, linewidth=5)
+        scatter!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
+            colormap=cmap,markersize = 6)
+        #lines!(gaxmain, u[i][1,:], u[i][2,:], linewidth=5)
     end
     Colorbar(f[1, 2], limits=CRange, size=20, ticklabelsize = txtSize, colormap=cmap,
-        flipaxis=false, label="Density ρ [cell/length]", labelsize=txtSize)
+        flipaxis=false, label="$cbarTxt", labelsize=txtSize)
     return f
 end
 
-function plotResults2D_Velocity(u, var, cmap)
-    #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-    #    resolution=(500, 500))
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+function plotResults2D(u, t, var, D, kf, cmap, cbarTxt, upLim, lowLim)
+    txtSize = 35;
+    tickSize = 25;
+    plot_font = "Arial"
+    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xlabel="x", ylabel="y")
-    #gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 1, 8), aspect=DataAspect(), xlabel="x", ylabel="y")
-    #CRange = findMinMax(var)
-    CRange = (0,0.05)  
+    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xticklabelsize = tickSize, yticklabelsize = tickSize, 
+                    xlabel="x", xlabelsize=txtSize, xlabelfont = plot_font,
+                    ylabel="y", ylabelsize=txtSize,  ylabelfont = plot_font,
+                    title = "D = $D, kf = $kf", titlesize = txtSize, titlefont = plot_font)
+    CRange = (upLim,lowLim)
     for i in eachindex(u)
-        lines!(gaxmain, [u[i][:, 1]; u[i][1,1]], [u[i][:, 2]; u[i][1,2]], color=[var[i]; var[i][1]], colorrange=CRange,
+        x = [u[i][:,1]; u[i][1,1]];
+        y = [u[i][:,2]; u[i][1,2]];
+        θ = atan.(y.data ./ x.data)
+        lines!(gaxmain, ones(size(θ)).*t[i] , θ, color=[var[i].data; var[i].data[1]], colorrange=CRange,
             colormap=cmap, linewidth=5)
-        scatter!([u[i][:, 1]; u[i][1,1]], [u[i][:, 2]; u[i][1,2]])
+        #scatter!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
+        #    colormap=cmap,markersize = 6)
+        #lines!(gaxmain, u[i][1,:], u[i][2,:], linewidth=5)
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
-        flipaxis=false, label="Vₙ [μm/s]")
+    Colorbar(f[1, 2], limits=CRange, size=20, ticklabelsize = txtSize, colormap=cmap,
+        flipaxis=false, label="$cbarTxt", labelsize=txtSize)
     return f
 end
 

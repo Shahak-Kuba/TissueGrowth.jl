@@ -187,8 +187,8 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
 
 
     # set initial conditions for h and ρ
-    R[1,:] = ones(size(θ)).*3.0 #2.0 .+ 0.5.*cos.(3*θ)
-    """
+    #R[1,:] = ones(size(θ)).*3.0 #2.0 .+ 0.5.*cos.(3*θ)
+   
     r = 3.0;
     for i in 1:M
         if θ[i] < π/2
@@ -197,7 +197,7 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
             R[1,i] = min((r/cos((θ[i]%(π/2)))), (r/sin((θ[i]%(π/2)))))
         end
     end
-    """
+    
 
     R[1,end] = R[1,1]
     #x = 3 .* cos.(x)

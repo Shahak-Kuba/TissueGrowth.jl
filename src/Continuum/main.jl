@@ -18,13 +18,14 @@ f1 = plotContinuumResults_Cartesian(x, h, ρ, D, kf, cmap)
 
 
 # simulation parameters
-D = 1 ;
+D = 0.015 ;
 kf = 0.00053;
 A = 0.00;
-ρ₀ = 30;
+ρ₀ = 20;
 growth_dir = "inward"
-Tmax = 250.0
+Tmax = 50.0
 
 θ,R,ρ = SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax);
 
 plotContinuumResults_Polar(θ, R, ρ, cmap)
+

@@ -7,7 +7,7 @@ seed = 88
 N = 180 # number of cells
 m = 1 # number of springs per cell
 R₀ = 1.0  # shape radius
-D = [0.0001, 0.0075, 0.015]
+D = [0.015]
 l₀ = 1.0
 kf = 0.0008
 η = 1.0 
@@ -31,4 +31,6 @@ cmap = :jet
 geo = 1
 diffusivity = 1
 
-f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, cmap)
+f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, D[diffusivity], kf, cmap, "Density ρ" ,50, 20)
+f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].ψ, D[diffusivity], kf, cmap, "Density ρ", 0, -200)
+f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, D[1], kf, cmap, "Stress ψ", 0, -200)
