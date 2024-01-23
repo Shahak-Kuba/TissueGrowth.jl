@@ -35,11 +35,11 @@ all_results = sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
 ```
 """
 function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-    prolif, death, embed, α, β, γ, event_δt, seed);
+    prolif, death, embed, α, β, γ, event_δt, seed, NumSaveTimePoints);
 
     Set_Random_Seed(seed)
     M = Int(m*N) # total number of springs along the interface
-    savetimes = LinRange(0, Tmax, 8)
+    savetimes = LinRange(0, Tmax, NumSaveTimePoints)
 
     all_results = Vector{Vector{SimResults_t}}(undef, 0)
 

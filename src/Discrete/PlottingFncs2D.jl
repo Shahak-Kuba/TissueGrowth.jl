@@ -2,7 +2,8 @@ using Makie
 using CairoMakie
 using ColorSchemes
 using Colors
-using Interpolations
+using Plots
+using ImageMagick
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
 """
@@ -42,11 +43,47 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
 end
 
 function plotInterface(gaxmain, u, var, cmap, CRange, index)
-    lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+    CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
             colormap=cmap, linewidth=5)
-    scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+    CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
         colormap=cmap, markersize=6)
 end
+
+
+function plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
+    Lplot = CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+            colormap=cmap, linewidth=5)
+    Splot = CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+        colormap=cmap, markersize=6)
+    return Lplot,Splot
+end
+
+
+function animateResults2D(u, var, cmap, crange, cbarlabel, D, kf, filename)
+    txtSize = 35;
+    tickSize = 25;
+    CRange = crange
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
+            xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
+            ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
+            title = "D = $D, kf = $kf", titlesize = txtSize)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+            flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
+    Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
+
+    frames = 2:length(u)
+    record(f,filename,frames; framerate = 10) do frame
+        delete!(f.content[1],Lplot)
+        delete!(f.content[1],Splot)
+        Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, frame)
+    end
+end
+
+
 
 """
     plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
@@ -86,7 +123,7 @@ function plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
         ξ[:,i] = [var[i]; var[i][1]].data
     end
     for j in axes(θ,1)
-        lines!(gaxmain, t, θ[j,:], color=ξ[j,:], colorrange=CRange,
+        CairoMakie.lines!(gaxmain, t, θ[j,:], color=ξ[j,:], colorrange=CRange,
                 colormap=cmap, linewidth=4)
     end
     Colorbar(f[1, 2], limits=CRange, colormap=cmap,
