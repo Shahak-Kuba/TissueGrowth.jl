@@ -26,11 +26,14 @@ event_δt = δt
 sols2D = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
             prolif, death, embed, α, β, γ, event_δt, seed);
 
-cmap = :jet
+Density_cmap = :jet
+ψ_cmap = :balance
 
 geo = 1
 diffusivity = 1
 
-f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, D[diffusivity], kf, cmap, "Density ρ" ,50, 20)
-f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].ψ, D[diffusivity], kf, cmap, "Density ρ", 0, -200)
-f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, D[1], kf, cmap, "Stress ψ", 0, -200)
+Density_Range = (0,80)
+ψ_Range = (-200,0)
+f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf)
+f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].ψ, ψ_cmap, ψ_Range, "Stress ψ", D[diffusivity], kf)
+f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, ψ_cmap, ψ_Range, "Stress ψ", D[diffusivity], kf)

@@ -1,63 +1,101 @@
-
+using Makie
 using CairoMakie
 using ColorSchemes
 using Colors
-#using Plots
 using Interpolations
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
-function plotResults2D(u, var, D, kf, cmap, cbarTxt, upLim, lowLim)
+"""
+    plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
+
+Generate a 2D plot to visualize results with lines and scatter points.
+
+# Arguments
+- `u::Vector`: A vector of 2D arrays representing the data points.
+- `var::Vector`: A vector of values associated with each data point for coloring.
+- `cmap::AbstractColorMap`: The colormap used for coloring the plot.
+- `crange::AbstractVector`: The color range for mapping values to colors.
+- `cbarlabel::AbstractString`: The label for the colorbar.
+- `D::Number`: A parameter to be displayed in the plot title.
+- `kf::Number`: Another parameter to be displayed in the plot title.
+
+# Returns
+- `Figure`: A Makie Figure object representing the 2D plot.
+"""
+function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
     txtSize = 35;
     tickSize = 25;
-    plot_font = "Arial"
-    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xticklabelsize = tickSize, yticklabelsize = tickSize, 
-                    xlabel="x", xlabelsize=txtSize, xlabelfont = plot_font,
-                    ylabel="y", ylabelsize=txtSize,  ylabelfont = plot_font,
-                    title = "D = $D, kf = $kf", titlesize = txtSize, titlefont = plot_font)
-    CRange = (upLim,lowLim)
+    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
+              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
+              title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
     for i in eachindex(u)
-        lines!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
-            colormap=cmap, linewidth=5)
-        scatter!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
-            colormap=cmap,markersize = 6)
-        #lines!(gaxmain, u[i][1,:], u[i][2,:], linewidth=5)
+        plotInterface(gaxmain, u, var, cmap, CRange, i)
     end
-    Colorbar(f[1, 2], limits=CRange, size=20, ticklabelsize = txtSize, colormap=cmap,
-        flipaxis=false, label="$cbarTxt", labelsize=txtSize)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
 
-function plotResults2D(u, t, var, D, kf, cmap, cbarTxt, upLim, lowLim)
+function plotInterface(gaxmain, u, var, cmap, CRange, index)
+    lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+            colormap=cmap, linewidth=5)
+    scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+        colormap=cmap, markersize=6)
+end
+
+"""
+    plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
+
+Generate a 2D plot to visualize results with lines representing angular positions over time.
+
+# Arguments
+- `u::Vector`: A vector of 2D arrays representing the data points.
+- `t::Vector`: A vector of time values corresponding to the data points.
+- `var::Vector`: A vector of values associated with each data point for coloring.
+- `cmap::AbstractColorMap`: The colormap used for coloring the plot.
+- `crange::AbstractVector`: The color range for mapping values to colors.
+- `cbarlabel::AbstractString`: The label for the colorbar.
+- `D::Number`: A parameter to be displayed in the plot title.
+- `kf::Number`: Another parameter to be displayed in the plot title.
+
+# Returns
+- `Figure`: A Makie Figure object representing the 2D plot.
+"""
+function plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
     txtSize = 35;
     tickSize = 25;
-    plot_font = "Arial"
-    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.6, 1.6, -1.6, 1.6), aspect=DataAspect(), xticklabelsize = tickSize, yticklabelsize = tickSize, 
-                    xlabel="x", xlabelsize=txtSize, xlabelfont = plot_font,
-                    ylabel="y", ylabelsize=txtSize,  ylabelfont = plot_font,
-                    title = "D = $D, kf = $kf", titlesize = txtSize, titlefont = plot_font)
-    CRange = (upLim,lowLim)
-    for i in eachindex(u)
-        x = [u[i][:,1]; u[i][1,1]];
-        y = [u[i][:,2]; u[i][1,2]];
-        θ = atan.(y.data ./ x.data)
-        lines!(gaxmain, ones(size(θ)).*t[i] , θ, color=[var[i].data; var[i].data[1]], colorrange=CRange,
-            colormap=cmap, linewidth=5)
-        #scatter!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
-        #    colormap=cmap,markersize = 6)
-        #lines!(gaxmain, u[i][1,:], u[i][2,:], linewidth=5)
+    gaxmain = Axis(ga[1, 1], 
+              xlabel="t", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="θ", ylabelsize = txtSize, yticklabelsize = tickSize,
+              title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    θ = zeros(size(u[1],1)+1,size(t,1))
+    ξ = zeros(size(u[1],1)+1,size(t,1))
+    for i in eachindex(t)
+        x = [u[i][:, 1]; u[i][1,1]].data
+        y = [u[i][:, 2]; u[i][1,2]].data
+        θ[:,i] = atan.(y,x)
+        ξ[:,i] = [var[i]; var[i][1]].data
     end
-    Colorbar(f[1, 2], limits=CRange, size=20, ticklabelsize = txtSize, colormap=cmap,
-        flipaxis=false, label="$cbarTxt", labelsize=txtSize)
+    for j in axes(θ,1)
+        lines!(gaxmain, t, θ[j,:], color=ξ[j,:], colorrange=CRange,
+                colormap=cmap, linewidth=4)
+    end
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
 
 
+## to be fixed
 function plotAreaVStime(sols)
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         resolution=(700, 500))

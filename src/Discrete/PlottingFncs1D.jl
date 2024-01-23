@@ -1,4 +1,3 @@
-
 using CairoMakie
 using ColorSchemes
 using Colors
