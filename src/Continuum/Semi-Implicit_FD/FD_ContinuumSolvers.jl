@@ -1,7 +1,7 @@
 using LinearAlgebra
 using BenchmarkTools
 
-include("SolverFncs.jl")
+include("FD_SolverFncs.jl")
 
 
 """

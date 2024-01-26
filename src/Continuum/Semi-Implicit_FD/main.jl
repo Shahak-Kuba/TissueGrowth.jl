@@ -1,5 +1,5 @@
 using TissueGrowth
-include("ContinuumSolvers.jl")
+include("FD_ContinuumSolvers.jl")
 include("PlottingFncsPDE.jl")
 
 # simulation parameters

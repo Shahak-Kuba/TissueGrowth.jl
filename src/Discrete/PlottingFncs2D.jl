@@ -3,7 +3,6 @@ using CairoMakie
 using ColorSchemes
 using Colors
 using Plots
-using ImageMagick
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
 """
@@ -69,17 +68,22 @@ function animateResults2D(u, var, cmap, crange, cbarlabel, D, kf, filename)
     gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
             xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
             ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-            title = "D = $D, kf = $kf", titlesize = txtSize)
+            title = "kₛ = $D, kf = $kf", titlesize = txtSize)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap,
             flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
     Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
 
-    frames = 2:length(u)
+    frames = 2:length(u)+50
     record(f,filename,frames; framerate = 10) do frame
         delete!(f.content[1],Lplot)
         delete!(f.content[1],Splot)
-        Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, frame)
+        if frame > length(u)
+            index = length(u)
+        else
+            index = frame
+        end
+        Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
     end
 end
 
@@ -112,7 +116,7 @@ function plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
     gaxmain = Axis(ga[1, 1], 
               xlabel="t", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="θ", ylabelsize = txtSize, yticklabelsize = tickSize,
-              title = "D = $D, kf = $kf", titlesize = txtSize)
+              title = "kₛ = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     θ = zeros(size(u[1],1)+1,size(t,1))
     ξ = zeros(size(u[1],1)+1,size(t,1))
