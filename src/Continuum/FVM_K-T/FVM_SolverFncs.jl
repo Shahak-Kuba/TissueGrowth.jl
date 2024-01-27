@@ -48,9 +48,21 @@ function γ(r, σ, η, kf, D, dσ)
            (D.*σ.*dσ)./((r.^2 .+ σ.^2).^2)
 end
 
-# Analytic solution to eigenvalues
+# Solving and returning max eigenvalues (i.e. roots to [-1 γ β/r 0] and characteristic equation given by "-λ³ + γλ² + (β/r)λ = 0" )
 function λ(Β,Γ,r)
-    λ₊ = (Γ .+ sqrt.(Γ.^2 .- 4 .*(Β./r)))./2
-    λ₋ = (Γ .- sqrt.(Γ.^2 .- 4 .*(Β./r)))./2
-    return [λ₊, λ₋]
+    λ_max = zeros(size(r));
+    λ₊ = real.(abs.((Γ .+ sqrt.(Complex.(Γ.^2 .- 4 .*(Β./r))))./2))
+    λ₋ = real.(abs.((Γ .- sqrt.(Complex.(Γ.^2 .- 4 .*(Β./r))))./2))
+    for i in eachindex(λ_max)
+        λ_max[i] = max(λ₊[i], λ₋[i], 0.0)
+    end
+    return λ_max
+end
+
+function a⁺(λ⁺₁, λ⁺₂)
+    return max.(λ⁺₁, λ⁺₂)
+end
+
+function a⁻(λ⁻₁, λ⁻₂)
+    return max.(λ⁻₁, λ⁻₂)
 end
