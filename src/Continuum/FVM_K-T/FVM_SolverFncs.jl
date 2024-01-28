@@ -1,3 +1,5 @@
+using Polynomials
+
 
 function minmod(varᵢ₋₁, varᵢ, varᵢ₊₁, Φ, Δx)
     # flux limiter function given by [Kraganov-Tadmor 2000] FVM Scheme equation (4.9), 
@@ -49,13 +51,26 @@ function γ(r, σ, η, kf, D, dσ)
 end
 
 # Solving and returning max eigenvalues (i.e. roots to [-1 γ β/r 0] and characteristic equation given by "-λ³ + γλ² + (β/r)λ = 0" )
-function λ(Β,Γ,r)
+function λ(Β,Γ,r,kf)
     λ_max = zeros(size(r));
-    λ₊ = (abs.((Γ .+ sqrt.(Complex.(Γ.^2 .- 4 .*(Β./r))))./2))
-    λ₋ = (abs.((Γ .- sqrt.(Complex.(Γ.^2 .- 4 .*(Β./r))))./2))
+
+    λ₊ = (abs.((Γ .+ sqrt.(Complex.(Γ.^2 .- (4 .*kf.*Β)./r)))./-2))
+    λ₋ = (abs.((Γ .- sqrt.(Complex.(Γ.^2 .- (4 .*kf.*Β)./r)))./-2))
+
     for i in eachindex(λ_max)
-        λ_max[i] = max(λ₊[i], λ₋[i], 0.0)
+        λ_max[i] = max(λ₊[i],λ₋[i],0.0)
     end
+
+    """ Method using Roots function (creates a lot of allocations)
+    p_coefficients = hcat(zeros(length(λ_max)), kf .* Β ./ r, Γ, -ones(length(λ_max)))
+
+    p_polynomials = Polynomial.(eachcol(p_coefficients'))
+    λs = roots.(p_polynomials)
+    
+
+    for i in eachindex(λ_max)
+        λ_max[i] = Float64(maximum(abs.(λs[i]))[1])
+    end"""
     return λ_max
 end
 
@@ -130,4 +145,44 @@ function SetupSolverMemory(r)
     L₃ = zeros(size(r[1,:]))
 
     return r⁺₁,r⁺₂,σ⁺₁,σ⁺₂,η⁺₁,η⁺₂,r⁻₁,r⁻₂,σ⁻₁,σ⁻₂,η⁻₁,η⁻₂,dσ⁺₁,dσ⁺₂,dη⁺₁,dη⁺₂,dσ⁻₁,dσ⁻₂,dη⁻₁,dη⁻₂,β⁺₁,γ⁺₁,β⁺₂,γ⁺₂,λ⁺₁,λ⁺₂ ,a⁺val ,β⁻₁ ,γ⁻₁ ,β⁻₂, γ⁻₂ ,λ⁻₁ ,λ⁻₂, a⁻val ,κ⁺₁ , κ⁺₂ ,κ⁻₁ ,κ⁻₂, F₁⁺₁ ,F₁⁺₂ ,F₁⁻₁ ,F₁⁻₂,F₂⁺₁ ,F₂⁺₂ ,F₂⁻₁,F₂⁻₂,F₃⁺₁,F₃⁺₂,F₃⁻₁, F₃⁻₂, H⁺₁, H⁻₁, H⁺₂, H⁻₂, H⁺₃, H⁻₃, L₁, L₂, L₃ 
+end
+
+function InitialBoundary(type,r₀,θ,M)
+    r = zeros(1,M);
+
+    if type == "circle"
+        r .= ones(size(r)).*r₀
+    elseif type == "square"
+        R = r₀;
+        for i in 1:M
+            if θ[i] < π/2
+                r[i] = min((R/cos(θ[i])), (R/sin(θ[i])))
+            else
+                r[i] = min((R/cos((θ[i]%(π/2)))), (R/sin((θ[i]%(π/2)))))
+            end
+        end
+    elseif type =="hex"
+        R = r₀;
+        for i in 1:M
+            if θ[i] >= 0 && θ[i] < π/3
+                r[i] = R/(cos(θ[i])+1/sqrt(3)*sin(θ[i]))
+            elseif θ[i] >= π/3 && θ[i] < π/2
+                r[i] = R*sqrt(3)/(2*sin(θ[i]))
+            elseif θ[i] >= π/2 && θ[i] < 2*π/3
+                r[i] = R*sqrt(3)/(2*sin(θ[i]))
+            elseif θ[i] >= 2*π/3 && θ[i] < π
+                r[i] = R/(-cos(θ[i])+1/sqrt(3)*sin(θ[i]))
+            elseif θ[i] >= π && θ[i] < 4*π/3
+                r[i] = -R/(cos(θ[i])+1/sqrt(3)*sin(θ[i]))
+            elseif θ[i] >= 4*π/3 && θ[i] < 3*π/2
+                r[i] = -R*sqrt(3)/(2*sin(θ[i])) 
+            elseif θ[i] >= 3*π/2 && θ[i] < 5*π/3
+                r[i] = -R*sqrt(3)/(2*sin(θ[i]))
+            else
+                r[i] = R/(cos(θ[i])-1/sqrt(3)*sin(θ[i]))
+            end
+        end
+                       
+    end
+    return r
 end

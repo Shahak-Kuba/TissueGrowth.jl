@@ -1,6 +1,6 @@
 include("FVM_SolverFncs.jl")
 
-function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀)
+function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
     # time and space discretisation
     T₀ = 0.0
 
@@ -48,18 +48,11 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀)
 
     # setting up initial conditions 
     # (interface: r₀)
-    R = r₀;
-    for i in 1:M
-        if θ[i] < π/2
-            r[1,i] = min((R/cos(θ[i])), (R/sin(θ[i])))
-        else
-            r[1,i] = min((R/cos((θ[i]%(π/2)))), (R/sin((θ[i]%(π/2)))))
-        end
-    end
+    r[1,:] = InitialBoundary(btype,r₀,θ,M)
     # (σ₀)
     rᵢ .= r[1,:]
-    rᵢ₊₁ .= circshift(rᵢ,1)
-    rᵢ₋₁ .= circshift(rᵢ,-1)
+    rᵢ₊₁ .= circshift(rᵢ,-1)
+    rᵢ₋₁ .= circshift(rᵢ,1)
     σ[1,:] .= (rᵢ₊₁.-rᵢ₋₁)./(2 .*Δt)
 
     # (η₀)
@@ -73,14 +66,14 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀)
     @time for n in 1:N
 
         rᵢ .= r[n,:]
-        rᵢ₊₁ .= circshift(rᵢ,1)
-        rᵢ₋₁ .= circshift(rᵢ,-1)
+        rᵢ₊₁ .= circshift(rᵢ,-1)
+        rᵢ₋₁ .= circshift(rᵢ,1)
         σᵢ .= σ[n,:]
-        σᵢ₊₁ .= circshift(σᵢ,1)
-        σᵢ₋₁ .= circshift(σᵢ,-1)
+        σᵢ₊₁ .= circshift(σᵢ,-1)
+        σᵢ₋₁ .= circshift(σᵢ,1)
         ηᵢ .= η[n,:]
-        ηᵢ₊₁ .= circshift(ηᵢ,1)
-        ηᵢ₋₁ .= circshift(ηᵢ,-1)
+        ηᵢ₊₁ .= circshift(ηᵢ,-1)
+        ηᵢ₋₁ .= circshift(ηᵢ,1)
 
         # getting derivatives
         dr[n,:] .= minmod(rᵢ₋₁, rᵢ, rᵢ₊₁, Φ, Δθ)
@@ -92,38 +85,38 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀)
         κ[n,:] .= -(rᵢ.^2 .- rᵢ.*ddr[n,:] .+ 2 .* dr[n,:])./((rᵢ.^2 .+ dr[n,:].^2).^1.5)
 
         # Finite Volume Method Kraganov-Tadmor scheme
-        r⁺₁ .= rᵢ .- (Δθ/2).*dr[n,:]
+        r⁺₁ .= rᵢ₊₁ .- (Δθ/2).*circshift(dr[n,:],-1) 
         r⁺₂ .= rᵢ .+ (Δθ/2).*dr[n,:]
-        σ⁺₁ .= σᵢ .- (Δθ/2).*dσ[n,:]
+        σ⁺₁ .= σᵢ₊₁ .- (Δθ/2).*circshift(dσ[n,:],-1)
         σ⁺₂ .= σᵢ .+ (Δθ/2).*dσ[n,:]
-        η⁺₁ .= ηᵢ .- (Δθ/2).*dη[n,:]
+        η⁺₁ .= ηᵢ₊₁ .- (Δθ/2).*circshift(dη[n,:],-1)
         η⁺₂ .= ηᵢ .+ (Δθ/2).*dη[n,:]
 
         r⁻₁ .= rᵢ .- (Δθ/2).*dr[n,:]
-        r⁻₂ .= rᵢ .+ (Δθ/2).*dr[n,:]
+        r⁻₂ .= rᵢ₋₁ .+ (Δθ/2).*circshift(dr[n,:],1)
         σ⁻₁ .= σᵢ .- (Δθ/2).*dσ[n,:]
-        σ⁻₂ .= σᵢ .+ (Δθ/2).*dσ[n,:]
+        σ⁻₂ .= σᵢ₋₁ .+ (Δθ/2).*circshift(dσ[n,:],1)
         η⁻₁ .= ηᵢ .- (Δθ/2).*dη[n,:]
-        η⁻₂ .= ηᵢ .+ (Δθ/2).*dη[n,:]
+        η⁻₂ .= ηᵢ₋₁ .+ (Δθ/2).*circshift(dη[n,:],1)
 
         # derivatives for Kraganov-Tadmor scheme
-        dσ⁺₁ .= minmod(circshift(σ⁺₁,-1), σ⁺₁, circshift(σ⁺₁,1), Φ, Δθ)
-        dσ⁺₂ .= minmod(circshift(σ⁺₂,-1), σ⁺₂, circshift(σ⁺₂,1), Φ, Δθ)
-        dη⁺₁ .= minmod(circshift(η⁺₁,-1), η⁺₁, circshift(η⁺₁,1), Φ, Δθ)
-        dη⁺₂ .= minmod(circshift(η⁺₂,-1), η⁺₂, circshift(η⁺₂,1), Φ, Δθ)
+        dσ⁺₁ .= minmod(circshift(σ⁺₁,1), σ⁺₁, circshift(σ⁺₁,-1), Φ, Δθ)
+        dσ⁺₂ .= minmod(circshift(σ⁺₂,1), σ⁺₂, circshift(σ⁺₂,-1), Φ, Δθ)
+        dη⁺₁ .= minmod(circshift(η⁺₁,1), η⁺₁, circshift(η⁺₁,-1), Φ, Δθ)
+        dη⁺₂ .= minmod(circshift(η⁺₂,1), η⁺₂, circshift(η⁺₂,-1), Φ, Δθ)
 
-        dσ⁻₁ .= minmod(circshift(σ⁻₁,-1), σ⁻₁, circshift(σ⁻₁,1), Φ, Δθ)
-        dσ⁻₂ .= minmod(circshift(σ⁻₂,-1), σ⁻₂, circshift(σ⁻₂,1), Φ, Δθ)
-        dη⁻₁ .= minmod(circshift(η⁻₁,-1), η⁻₁, circshift(η⁻₁,1), Φ, Δθ)
-        dη⁻₂ .= minmod(circshift(η⁻₂,-1), η⁻₂, circshift(η⁻₂,1), Φ, Δθ)
+        dσ⁻₁ .= minmod(circshift(σ⁻₁,1), σ⁻₁, circshift(σ⁻₁,-1), Φ, Δθ)
+        dσ⁻₂ .= minmod(circshift(σ⁻₂,1), σ⁻₂, circshift(σ⁻₂,-1), Φ, Δθ)
+        dη⁻₁ .= minmod(circshift(η⁻₁,1), η⁻₁, circshift(η⁻₁,-1), Φ, Δθ)
+        dη⁻₂ .= minmod(circshift(η⁻₂,1), η⁻₂, circshift(η⁻₂,-1), Φ, Δθ)
 
         β⁺₁ .= β(r⁺₁, σ⁺₁, η⁺₁, kf, D, dη⁺₁, dσ⁺₁)
         γ⁺₁ .= γ(r⁺₁, σ⁺₁, η⁺₁, kf, D, dσ⁺₁)
         β⁺₂ .= β(r⁺₂, σ⁺₂, η⁺₂, kf, D, dη⁺₂, dσ⁺₂)
         γ⁺₂ .= γ(r⁺₂, σ⁺₂, η⁺₂, kf, D, dσ⁺₂)
 
-        λ⁺₁ .= λ( β⁺₁, γ⁺₁, r⁺₁)
-        λ⁺₂ .= λ( β⁺₂, γ⁺₂, r⁺₂)
+        λ⁺₁ .= λ( β⁺₁, γ⁺₁, r⁺₁, kf)
+        λ⁺₂ .= λ( β⁺₂, γ⁺₂, r⁺₂, kf)
         a⁺val .= a⁺(λ⁺₁, λ⁺₂)
 
         β⁻₁ .= β(r⁻₁, σ⁻₁, η⁻₁, kf, D, dη⁻₁, dσ⁻₁)
@@ -131,8 +124,8 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀)
         β⁻₂ .= β(r⁻₂, σ⁻₂, η⁻₂, kf, D, dη⁻₂, dσ⁻₂)
         γ⁻₂ .= γ(r⁻₂, σ⁻₂, η⁻₂, kf, D, dσ⁻₂)
 
-        λ⁻₁ .= λ( β⁻₁, γ⁻₁, r⁻₁)
-        λ⁻₂ .= λ( β⁻₂, γ⁻₂, r⁻₂)
+        λ⁻₁ .= λ( β⁻₁, γ⁻₁, r⁻₁, kf)
+        λ⁻₂ .= λ( β⁻₂, γ⁻₂, r⁻₂, kf)
         a⁻val .= a⁻(λ⁻₁, λ⁻₂)
         
         κ⁺₁ .= -(r⁺₁.^2 .- r⁺₁.*dσ⁺₁ .+ 2 .* σ⁺₁.^2)./((r⁺₁.^2 .+ σ⁺₁.^2).^1.5)
