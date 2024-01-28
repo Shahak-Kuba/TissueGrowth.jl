@@ -1,7 +1,7 @@
 using TissueGrowth
 
 # User input variables
-D = 0.1
+D = 0.00075
 kf = 0.001
 A = 0.0
 ρ₀ = 20.0

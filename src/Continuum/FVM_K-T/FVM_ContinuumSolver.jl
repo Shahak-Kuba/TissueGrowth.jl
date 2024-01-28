@@ -14,7 +14,7 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
     pop!(θ)
     M = m - 1
 
-    Φ = 1; # for minmod gradient 
+    Φ = 2; # for minmod gradient 
 
     # allocating simulation memory
     ρ = zeros(N+1,M)
@@ -53,10 +53,10 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
     rᵢ .= r[1,:]
     rᵢ₊₁ .= circshift(rᵢ,-1)
     rᵢ₋₁ .= circshift(rᵢ,1)
-    σ[1,:] .= (rᵢ₊₁.-rᵢ₋₁)./(2 .*Δt)
+    σ[1,:] .= (rᵢ₊₁.-rᵢ₋₁)./(2 .*Δθ)
 
     # (η₀)
-    η[1,:] .= ρ₀.*sqrt.(rᵢ.^2 + σᵢ.^2)
+    η[1,:] .= ρ₀.*sqrt.(rᵢ.^2 + σ[1,:].^2)
     
     # (ρ₀)
     ρ[1,:] .= ρ₀.*ones(size(ρ[1,:]))
@@ -83,6 +83,7 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
 
         # calculate curvature
         κ[n,:] .= -(rᵢ.^2 .- rᵢ.*ddr[n,:] .+ 2 .* dr[n,:])./((rᵢ.^2 .+ dr[n,:].^2).^1.5)
+        #κ[n,:] .= -(rᵢ.^2 .- rᵢ.*ddr[n,:] .+ 2 .* dr[n,:])./((rᵢ.*sqrt.(1 .+ (dr[n,:]./rᵢ).^2)).^3)
 
         # Finite Volume Method Kraganov-Tadmor scheme
         r⁺₁ .= rᵢ₊₁ .- (Δθ/2).*circshift(dr[n,:],-1) 
