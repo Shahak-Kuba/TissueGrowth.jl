@@ -30,7 +30,7 @@ Density_cmap = :jet
 ψ_cmap = :balance
 
 geo = 1
-diffusivity = 1
+diffusivity = 2
 
 Density_Range = (20,65)
 ψ_Range = (-20,0)

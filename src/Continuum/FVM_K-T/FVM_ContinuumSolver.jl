@@ -8,13 +8,13 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
  
-    m = 161
+    m = 301
     Δθ = (2π)/m
     θ = Vector(LinRange(0.0,2π,m))
     pop!(θ)
     M = m - 1
 
-    Φ = 2; # for minmod gradient 
+    Φ = 1; # for minmod gradient 
 
     # allocating simulation memory
     ρ = zeros(N+1,M)
@@ -168,5 +168,5 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
         ρ[n+1,:] .= η[n+1,:]./sqrt.(r[n+1,:].^2 + σ[n+1,:].^2)
 
     end
-    return r,σ,η,ρ,θ
+    return θ,r,ρ,κ,σ,η
 end 

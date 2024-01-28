@@ -153,7 +153,7 @@ function InitialBoundary(type,r₀,θ,M)
     if type == "circle"
         r .= ones(size(r)).*r₀
     elseif type == "square"
-        R = r₀;
+        R = 0.9307680059028808;#((r₀√(2π))/2)*atan(π/4);
         for i in 1:M
             if θ[i] < π/2
                 r[i] = min((R/cos(θ[i])), (R/sin(θ[i])))
@@ -162,7 +162,7 @@ function InitialBoundary(type,r₀,θ,M)
             end
         end
     elseif type =="hex"
-        R = r₀;
+        R = √((2/3√3)*π*(r₀^2));
         for i in 1:M
             if θ[i] >= 0 && θ[i] < π/3
                 r[i] = R/(cos(θ[i])+1/sqrt(3)*sin(θ[i]))
