@@ -1,6 +1,6 @@
 include("FVM_SolverFncs.jl")
 
-function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
+function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype, growth_dir)
     # time and space discretisation
     T₀ = 0.0
 
@@ -8,13 +8,19 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
  
-    m = 301
+    m = 169
     Δθ = (2π)/m
     θ = Vector(LinRange(0.0,2π,m))
     pop!(θ)
     M = m - 1
 
     Φ = 1; # for minmod gradient 
+
+    if growth_dir == "inward"
+        S = 1;
+    else
+        S = -1
+    end
 
     # allocating simulation memory
     ρ = zeros(N+1,M)
@@ -43,7 +49,8 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
     dη⁻₂,β⁺₁,γ⁺₁,β⁺₂,γ⁺₂,λ⁺₁,λ⁺₂ ,a⁺val ,β⁻₁ ,γ⁻₁,
     β⁻₂, γ⁻₂ ,λ⁻₁ ,λ⁻₂, a⁻val ,κ⁺₁ , κ⁺₂ ,κ⁻₁ ,κ⁻₂,
     F₁⁺₁ ,F₁⁺₂ ,F₁⁻₁ ,F₁⁻₂,F₂⁺₁ ,F₂⁺₂ ,F₂⁻₁,F₂⁻₂,F₃⁺₁,
-    F₃⁺₂,F₃⁻₁, F₃⁻₂, H⁺₁, H⁻₁, H⁺₂, H⁻₂, H⁺₃, H⁻₃, L₁,L₂,L₃ = SetupSolverMemory(r)
+    F₃⁺₂,F₃⁻₁, F₃⁻₂, H⁺₁, H⁻₁, H⁺₂, H⁻₂, H⁺₃, H⁻₃, L₁,L₂,L₃,
+    ddσ⁺₁,ddσ⁺₂,ddσ⁻₁,ddσ⁻₂  = SetupSolverMemory(r)
 
 
     # setting up initial conditions 
@@ -111,18 +118,23 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
         dη⁻₁ .= minmod(circshift(η⁻₁,1), η⁻₁, circshift(η⁻₁,-1), Φ, Δθ)
         dη⁻₂ .= minmod(circshift(η⁻₂,1), η⁻₂, circshift(η⁻₂,-1), Φ, Δθ)
 
-        β⁺₁ .= β(r⁺₁, σ⁺₁, η⁺₁, kf, D, dη⁺₁, dσ⁺₁)
+        ddσ⁺₁ .= (circshift(σ⁺₁,1) .- 2 .*σ⁺₁ .+ circshift(σ⁺₁,-1))./(Δθ^2)
+        ddσ⁺₂ .= (circshift(σ⁺₂,1) .- 2 .*σ⁺₂ .+ circshift(σ⁺₂,-1))./(Δθ^2)
+        ddσ⁻₁ .= (circshift(σ⁻₁,1) .- 2 .*σ⁻₁ .+ circshift(σ⁻₁,-1))./(Δθ^2)
+        ddσ⁻₂ .= (circshift(σ⁻₂,1) .- 2 .*σ⁻₂ .+ circshift(σ⁻₂,-1))./(Δθ^2)
+
+        β⁺₁ .= β(r⁺₁, σ⁺₁, η⁺₁, kf, D, dη⁺₁, dσ⁺₁, ddσ⁺₁)
         γ⁺₁ .= γ(r⁺₁, σ⁺₁, η⁺₁, kf, D, dσ⁺₁)
-        β⁺₂ .= β(r⁺₂, σ⁺₂, η⁺₂, kf, D, dη⁺₂, dσ⁺₂)
+        β⁺₂ .= β(r⁺₂, σ⁺₂, η⁺₂, kf, D, dη⁺₂, dσ⁺₂, ddσ⁺₂)
         γ⁺₂ .= γ(r⁺₂, σ⁺₂, η⁺₂, kf, D, dσ⁺₂)
 
         λ⁺₁ .= λ( β⁺₁, γ⁺₁, r⁺₁, kf)
         λ⁺₂ .= λ( β⁺₂, γ⁺₂, r⁺₂, kf)
         a⁺val .= a⁺(λ⁺₁, λ⁺₂)
 
-        β⁻₁ .= β(r⁻₁, σ⁻₁, η⁻₁, kf, D, dη⁻₁, dσ⁻₁)
+        β⁻₁ .= β(r⁻₁, σ⁻₁, η⁻₁, kf, D, dη⁻₁, dσ⁻₁, ddσ⁻₁)
         γ⁻₁ .= γ(r⁻₁, σ⁻₁, η⁻₁, kf, D, dσ⁻₁)
-        β⁻₂ .= β(r⁻₂, σ⁻₂, η⁻₂, kf, D, dη⁻₂, dσ⁻₂)
+        β⁻₂ .= β(r⁻₂, σ⁻₂, η⁻₂, kf, D, dη⁻₂, dσ⁻₂, ddσ⁻₂)
         γ⁻₂ .= γ(r⁻₂, σ⁻₂, η⁻₂, kf, D, dσ⁻₂)
 
         λ⁻₁ .= λ( β⁻₁, γ⁻₁, r⁻₁, kf)
@@ -158,7 +170,7 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype)
         H⁺₃ .= 0.5.*(F₃⁺₁ .+ F₃⁺₂) .- ((a⁺val./2).*(η⁺₁ .- η⁺₂))
         H⁻₃ .= 0.5.*(F₃⁻₁ .+ F₃⁻₂) .- ((a⁻val./2).*(η⁻₁ .- η⁻₂))
 
-        L₁ .= -(1/Δθ).*(H⁺₁ .- H⁻₁) .- kf.*(ηᵢ./rᵢ)
+        L₁ .= -(1/Δθ).*(H⁺₁ .- H⁻₁) .- S.*kf.*(ηᵢ./rᵢ)
         L₂ .= -(1/Δθ).*(H⁺₂ .- H⁻₂)
         L₃ .= -(1/Δθ).*(H⁺₃ .- H⁻₃) .- A.*ηᵢ
 

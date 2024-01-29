@@ -7,10 +7,10 @@ A = 0.0
 ρ₀ = 24.1796
 Tmax = 26.0
 r₀ = 1.05
-btype = "hex"
-
+btype = "square"
+growth_dir = "inward"
 # running simulation
-θ,r,ρ,κ,σ,η = TissueGrowth.FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype);
+θ,r,ρ,κ,σ,η = TissueGrowth.FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir);
 
 # plotting solution
 cmap = :jet
