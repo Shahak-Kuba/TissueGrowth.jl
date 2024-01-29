@@ -9,10 +9,11 @@ A = 0.00
 Tmax = 50
 r₀ = 2.0
 btype = "circle"
+growth_dir = "inward"
 
 # running simulation
-r,σ,η,ρ,θ = FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype);
+θ,r,ρ,κ,σ,η = FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir);
 
 # plotting solution
 cmap = :jet
-f = plotContinuumResults_Polar(θ, r, ρ, cmap)  
+f = plotContinuumResults_Polar(θ, r, ρ, cmap, D, kf)  
