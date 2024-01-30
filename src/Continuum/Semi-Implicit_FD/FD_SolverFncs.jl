@@ -4,8 +4,17 @@ aₘ₋(hₘ₊₁, hₘ₋₁) = hₘ₊₁ .> hₘ₋₁
 
 # for solving FVM
 function aₘ(Rᵢ₊₁, Rᵢ₋₁)
-    a⁺ = Rᵢ₊₁ .> Rᵢ₋₁
-    a⁻ = Rᵢ₊₁ .≤ Rᵢ₋₁
+    a⁺ = zeros(size(Rᵢ₊₁))
+    a⁻ = zeros(size(Rᵢ₊₁))
+    for i in eachindex(Rᵢ₊₁)
+        if Rᵢ₊₁[i] - Rᵢ₋₁[i] > 0
+            a⁺[i] = 1.0;
+            a⁻[i] = 0.0;
+        else
+            a⁺[i] = 0.0;
+            a⁻[i] = 1.0;
+        end
+    end
     return a⁺,  a⁻
 end
 

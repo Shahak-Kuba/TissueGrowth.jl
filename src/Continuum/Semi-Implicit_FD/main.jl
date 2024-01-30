@@ -23,7 +23,7 @@ kf = 0.001;
 A = 0.00;
 ρ₀ = 20;
 growth_dir = "inward"
-btype = "hex"
+btype = "square"
 Tmax = 12.5
 r₀ = 1.05
 

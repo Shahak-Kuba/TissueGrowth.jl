@@ -70,9 +70,9 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
     ρ[1,:] = ones(1,M)*ρ₀
 
     if growth_dir == "inward"
-        S = 1.0
-    else
         S = -1.0
+    else
+        S = 1.0
     end
 
     a⁺ = zeros(size(h[1,:]))
@@ -87,11 +87,11 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
     @time for n in 1:N
 
         hᵢ .= h[n,:]
-        hᵢ₊₁ .= circshift(hᵢ,1)
-        hᵢ₋₁ .= circshift(hᵢ,-1)
+        hᵢ₊₁ .= circshift(hᵢ,-1)
+        hᵢ₋₁ .= circshift(hᵢ,1)
         ρᵢ = ρ[n,:]
-        ρᵢ₊₁ .= circshift(ρᵢ,1)
-        ρᵢ₋₁ .= circshift(ρᵢ,-1)
+        ρᵢ₊₁ .= circshift(ρᵢ,-1)
+        ρᵢ₋₁ .= circshift(ρᵢ,1)
 
         a⁺ .= aₘ₊(hᵢ₊₁,hᵢ₋₁)
         a⁻ .= aₘ₋(hᵢ₊₁,hᵢ₋₁)
@@ -105,7 +105,7 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
         Φ[n,:] = ρᵢ .- S.*Δt.*κ[n,:].*kf.*(ρᵢ.^2) .+ (S.*Δt.*kf.*ρᵢ.*ρₓ[n,:].*hₓ[n,:])./(sqrt.(1 .+(hₓ[n,:].^2))) .- D.*Δt.*ρₓ[n,:].*hₓ[n,:].*hₓₓ[n,:] ./ ((1 .+ (hₓ[n,:].^2)).^2) - A.*Δt.*ρᵢ
         λ[n,:] = (D.*Δt./(Δx.^2)) ./ (1 .+ hₓ[n,:].^2)
 
-        h[n+1,:] = hᵢ .+ S.*Δt.*kf.*ρᵢ.*sqrt.(1 .+ (hₓ[n,:].^2))
+        h[n+1,:] = hᵢ .- S.*Δt.*kf.*ρᵢ.*sqrt.(1 .+ (hₓ[n,:].^2))
 
         # cyclic tridiagonal matrix
         d₀ .= 1 .+ 2 .* λ[n,1:M]
@@ -218,17 +218,17 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir)
 
         a⁺, a⁻ = aₘ(Rᵢ₊₁, Rᵢ₋₁) 
 
-        Rθ[n,:] .= (Rᵢ.*(a⁺.-a⁻) .- Rᵢ₋₁.*a⁺ .+ Rᵢ₊₁.*a⁻) ./ Δθ;                    # upwind to find hₓ,  refer eqn (26) in the notes
+        Rθ[n,:] .= (Rᵢ.*(a⁺.-a⁻) .- Rᵢ₋₁.*a⁺ .+ Rᵢ₊₁.*a⁻) ./ Δθ;                        # upwind to find hₓ,  refer eqn (26) in the notes
         Rθθ[n,:] .= (Rᵢ₊₁ .- (2 .*Rᵢ) .+ Rᵢ₋₁) ./ (Δθ^2);                               # cental to find hₓₓ, refer eqn (30) in the notes  
         ρθ[n,:] .= (ρᵢ.*(a⁺.-a⁻) .- ρᵢ₋₁.*a⁺ .+ ρᵢ₊₁.*a⁻) ./ Δθ;
 
         κ[n,:] = -(Rᵢ.^2 .+ (2 .* Rθ[n,:].^2) .- (Rᵢ.*Rθθ[n,:]))./((Rᵢ.^2 + Rθ[n,:].^2).^1.5)
 
-        Φ[n,:] = ρᵢ .- S.*Δt.*κ[n,:].*kf.*(ρᵢ.^2) .- (S.*Δt.*kf.*ρᵢ.*Rθ[n,:].*ρθ[n,:])./(Rᵢ.*sqrt.(Rᵢ.*2 .+ Rθ[n,:].^2)) .- A.*Δt.*ρᵢ
-        λ[n,:] = (D.*Δt./(Δθ.^2)) ./ (Rᵢ.*2 .+ (Rθ[n,:]).^2)
+        Φ[n,:] = ρᵢ .- S.*Δt.*κ[n,:].*kf.*(ρᵢ.^2) .- (S.*Δt.*kf.*ρᵢ.*Rθ[n,:].*ρθ[n,:])./(Rᵢ.*sqrt.(Rᵢ.^2 .+ Rθ[n,:].^2)) .- A.*Δt.*ρᵢ
+        λ[n,:] = (D.*Δt./(Δθ.^2)) ./ (Rᵢ.^2 .+ (Rθ[n,:]).^2)
         ψ[n,:] = (D.*Δt.*Rθ[n,:].*(Rᵢ .+ Rθθ[n,:]))./(Δθ.*((Rᵢ.^2 + Rθ[n,:].^2).^2))
 
-        R[n+1,:] = Rᵢ .- (S.*Δt.*kf.*ρᵢ./Rᵢ).*sqrt.(Rᵢ.*2 .+ Rθ[n,:].^2)
+        R[n+1,:] = Rᵢ .- (S.*Δt.*kf.*ρᵢ./Rᵢ).*sqrt.(Rᵢ.^2 .+ Rθ[n,:].^2)
 
         # cyclic tridiagonal matrix
         d₀ .= 1 .+ (2 .* λ[n,1:M]) .+ (ψ[n,1:M].*(a⁺ .- a⁻))
