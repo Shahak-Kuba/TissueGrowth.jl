@@ -12,19 +12,28 @@ function DiscVSContDensity_plot(Discrete_Solution, Continuum_Solution, index, bt
     # Getting Data Discrete
     x = zeros(size(Discrete_Solution.u,1),size(Discrete_Solution.u[1],1))
     y = zeros(size(x))
+    temp_θ = zeros(size(x))
+    temp_ρ = zeros(size(x))
     θ_disc = zeros(size(x))
     ρ_disc = zeros(size(x))
     for i in axes(x,1)
         x[i,:] .= Discrete_Solution.u[i][:,1];
         y[i,:] .= Discrete_Solution.u[i][:,2];
-        θ_disc[i,:] .= atan.(y[i,:],x[i,:]);
-        for j in axes(θ_disc,2)
-            if θ_disc[i,j] < 0
-                θ_disc[i,j] = θ_disc[i,j] + 2*π
+        temp_θ[i,:] .= atan.(y[i,:],x[i,:]);
+        for j in axes(temp_θ,2)
+            if temp_θ[i,j] < 0
+                temp_θ[i,j] = temp_θ[i,j] + 2*π
             end
         end
-        ρ_disc[i,:] = Discrete_Solution.Density[i].data
+        # reorganising the data from θmin -> θmax
+        θmin_idx = argmin(temp_θ[i,:]);
+        θ_disc[i,:] = [temp_θ[i, θmin_idx:end]; temp_θ[i, 1:θmin_idx-1]]
+
+        temp_ρ[i,:] = Discrete_Solution.Density[i].data
+        ρ_disc[i,:] = [temp_ρ[i, θmin_idx:end]; temp_ρ[i, 1:θmin_idx-1]]
     end
+    # sorting discrete solution values
+
     
     ## Making Figure
     txtSize = 35;
@@ -45,8 +54,8 @@ function DiscVSContDensity_plot(Discrete_Solution, Continuum_Solution, index, bt
 
     # plotting Discrete
     disc_index = index;
-    disc_scat = CairoMakie.scatter!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], markersize=10, color=:black)
-    Legend(f[1,2], [cont_line, disc_scat], ["Continuum Simulation", "Discrete Simulation"])
+    disc_scat = CairoMakie.stairs!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], step=:pre, linewidth=3, color=:black)
+    Legend(f[1,2], [cont_line, disc_scat], ["Continuum", "Discrete m = 1"])
 
     return f
 end
