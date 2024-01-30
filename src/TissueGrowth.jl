@@ -17,7 +17,8 @@ module TissueGrowth
     include("Discrete/ModifierFncs.jl")
 
     # continuum limit simulation code
-    include("Continuum/ContinuumSolvers.jl")
+    include("Continuum/Semi-Implicit_FD/FD_ContinuumSolvers.jl")
+    include("Continuum/FVM_K-T/FVM_ContinuumSolver.jl")
     include("Continuum/PlottingFncsPDE.jl")
 
 end

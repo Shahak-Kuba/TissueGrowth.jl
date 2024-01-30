@@ -1,7 +1,7 @@
 using LinearAlgebra
 using BenchmarkTools
 
-include("SolverFncs.jl")
+include("FD_SolverFncs.jl")
 
 
 """
@@ -70,9 +70,9 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
     ρ[1,:] = ones(1,M)*ρ₀
 
     if growth_dir == "inward"
-        S = 1.0
-    else
         S = -1.0
+    else
+        S = 1.0
     end
 
     a⁺ = zeros(size(h[1,:]))
@@ -87,11 +87,11 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
     @time for n in 1:N
 
         hᵢ .= h[n,:]
-        hᵢ₊₁ .= circshift(hᵢ,1)
-        hᵢ₋₁ .= circshift(hᵢ,-1)
+        hᵢ₊₁ .= circshift(hᵢ,-1)
+        hᵢ₋₁ .= circshift(hᵢ,1)
         ρᵢ = ρ[n,:]
-        ρᵢ₊₁ .= circshift(ρᵢ,1)
-        ρᵢ₋₁ .= circshift(ρᵢ,-1)
+        ρᵢ₊₁ .= circshift(ρᵢ,-1)
+        ρᵢ₋₁ .= circshift(ρᵢ,1)
 
         a⁺ .= aₘ₊(hᵢ₊₁,hᵢ₋₁)
         a⁻ .= aₘ₋(hᵢ₊₁,hᵢ₋₁)
@@ -105,7 +105,7 @@ function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
         Φ[n,:] = ρᵢ .- S.*Δt.*κ[n,:].*kf.*(ρᵢ.^2) .+ (S.*Δt.*kf.*ρᵢ.*ρₓ[n,:].*hₓ[n,:])./(sqrt.(1 .+(hₓ[n,:].^2))) .- D.*Δt.*ρₓ[n,:].*hₓ[n,:].*hₓₓ[n,:] ./ ((1 .+ (hₓ[n,:].^2)).^2) - A.*Δt.*ρᵢ
         λ[n,:] = (D.*Δt./(Δx.^2)) ./ (1 .+ hₓ[n,:].^2)
 
-        h[n+1,:] = hᵢ .+ S.*Δt.*kf.*ρᵢ.*sqrt.(1 .+ (hₓ[n,:].^2))
+        h[n+1,:] = hᵢ .- S.*Δt.*kf.*ρᵢ.*sqrt.(1 .+ (hₓ[n,:].^2))
 
         # cyclic tridiagonal matrix
         d₀ .= 1 .+ 2 .* λ[n,1:M]
@@ -153,7 +153,7 @@ This function is specifically designed for a polar coordinate system and is used
 - A loop over the time steps computes the finite differences and updates the variables according to the semi-implicit scheme.
 - A cyclic tridiagonal matrix method is used to solve a linear system in each time step.
 """
-function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
+function SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir)
     # time and space discretisation
     T₀ = 0.0
 
@@ -161,7 +161,7 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
-    m = 161
+    m = 121
     Δθ = (2π)/m
     θ = Vector(LinRange(0.0,2π,m))
     pop!(θ)
@@ -175,9 +175,9 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
     ρ = zeros(N+1,M)
     ρθ = zeros(N+1,M)
     κ = zeros(N+1,M)
-    λ = zeros(N+1,M)
     Φ = zeros(N+1,M)
-    g = zeros(N+1,M)
+    λ = zeros(N+1,M)
+    ψ = zeros(N+1,M)
 
     # initialise matricies for cyclic tridiagonal
     TriDiagMat = zeros(M,M)
@@ -189,24 +189,13 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
     # set initial conditions for h and ρ
     #R[1,:] = ones(size(θ)).*3.0 #2.0 .+ 0.5.*cos.(3*θ)
    
-    r = 3.0;
-    for i in 1:M
-        if θ[i] < π/2
-            R[1,i] = min((r/cos(θ[i])), (r/sin(θ[i])))
-        else
-            R[1,i] = min((r/cos((θ[i]%(π/2)))), (r/sin((θ[i]%(π/2)))))
-        end
-    end
-    
-
-    R[1,end] = R[1,1]
-    #x = 3 .* cos.(x)
+    R[1,:] = InitialBoundary(btype,r₀,θ,M)
     ρ[1,:] = ones(1,M)*ρ₀
 
     if growth_dir == "inward"
-        S = -1.0
-    else
         S = 1.0
+    else
+        S = -1.0
     end
 
     a⁺ = zeros(size(R[1,:]))
@@ -221,35 +210,34 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,growth_dir,Tmax)
     @time for n in 1:N
 
         Rᵢ .= R[n,:]
-        Rᵢ₊₁ .= circshift(Rᵢ,1)
-        Rᵢ₋₁ .= circshift(Rᵢ,-1)
+        Rᵢ₊₁ .= circshift(Rᵢ,-1)
+        Rᵢ₋₁ .= circshift(Rᵢ,1)
         ρᵢ = ρ[n,:]
-        ρᵢ₊₁ .= circshift(ρᵢ,1)
-        ρᵢ₋₁ .= circshift(ρᵢ,-1)
+        ρᵢ₊₁ .= circshift(ρᵢ,-1)
+        ρᵢ₋₁ .= circshift(ρᵢ,1)
 
-        a⁺ .= aₘ₊(Rᵢ₊₁,Rᵢ₋₁)
-        a⁻ .= aₘ₋(Rᵢ₊₁,Rᵢ₋₁)
+        a⁺, a⁻ = aₘ(Rᵢ₊₁, Rᵢ₋₁) 
 
-        Rθ[n,:] .= (Rᵢ.*(a⁺.-a⁻) .- Rᵢ₋₁.*a⁺ .+ Rᵢ₊₁.*a⁻) ./ Δθ;                    # upwind to find hₓ,  refer eqn (26) in the notes
-        Rθθ[n,:] .= (Rᵢ₊₁ .- 2 .*Rᵢ .+ Rᵢ₋₁) ./ (Δθ^2);                               # cental to find hₓₓ, refer eqn (30) in the notes  
-        ρθ[n,:] .= (ρᵢ .* (a⁺.-a⁻) .- ρᵢ₋₁ .* a⁺ .+ ρᵢ₊₁ .* a⁻) ./ Δθ;
-        g[n,:] .= Rᵢ.*sqrt.(1 .+ (Rθ[n,:]./Rᵢ).^2)
+        Rθ[n,:] .= (Rᵢ.*(a⁺.-a⁻) .- Rᵢ₋₁.*a⁺ .+ Rᵢ₊₁.*a⁻) ./ Δθ;                        # upwind to find hₓ,  refer eqn (26) in the notes
+        Rθθ[n,:] .= (Rᵢ₊₁ .- (2 .*Rᵢ) .+ Rᵢ₋₁) ./ (Δθ^2);                               # cental to find hₓₓ, refer eqn (30) in the notes  
+        ρθ[n,:] .= (ρᵢ.*(a⁺.-a⁻) .- ρᵢ₋₁.*a⁺ .+ ρᵢ₊₁.*a⁻) ./ Δθ;
 
-        κ[n,:] = (Rᵢ.^2 .- Rᵢ.*Rθθ[n,:] .+ 2 .* Rθ[n,:])./(g[n,:].^3)
+        κ[n,:] = -(Rᵢ.^2 .+ (2 .* Rθ[n,:].^2) .- (Rᵢ.*Rθθ[n,:]))./((Rᵢ.^2 + Rθ[n,:].^2).^1.5)
 
-        Φ[n,:] = ρᵢ .- S.*Δt.*(ρᵢ.^2).*kf.*κ[n,:] .- (Δt.*ρθ[n,:].*Rθ[n,:].*kf.*ρᵢ) ./ (Rᵢ.*g[n,:]) .- ((D.*Δt.*ρθ[n,:].*Rθ[n,:]) ./ (Rᵢ.*g[n,:])).*(2 ./ g[n,:] .- κ[n,:]) .- A.*ρᵢ
-        λ[n,:] = (D.*Δt./(Δθ.^2)) ./ (g[n,:].^2)
+        Φ[n,:] = ρᵢ .- S.*Δt.*κ[n,:].*kf.*(ρᵢ.^2) .- (S.*Δt.*kf.*ρᵢ.*Rθ[n,:].*ρθ[n,:])./(Rᵢ.*sqrt.(Rᵢ.^2 .+ Rθ[n,:].^2)) .- A.*Δt.*ρᵢ
+        λ[n,:] = (D.*Δt./(Δθ.^2)) ./ (Rᵢ.^2 .+ (Rθ[n,:]).^2)
+        ψ[n,:] = (D.*Δt.*Rθ[n,:].*(Rᵢ .+ Rθθ[n,:]))./(Δθ.*((Rᵢ.^2 + Rθ[n,:].^2).^2))
 
-        R[n+1,:] = Rᵢ .+ S.*Δt.*kf.*ρᵢ.*(g[n,:]./Rᵢ)
+        R[n+1,:] = Rᵢ .- (S.*Δt.*kf.*ρᵢ./Rᵢ).*sqrt.(Rᵢ.^2 .+ Rθ[n,:].^2)
 
         # cyclic tridiagonal matrix
-        d₀ .= 1 .+ 2 .* λ[n,1:M]
-        d₁ .= -λ[n,1:M-1]
-        d₋₁ .= -λ[n,2:M]
+        d₀ .= 1 .+ (2 .* λ[n,1:M]) .+ (ψ[n,1:M].*(a⁺ .- a⁻))
+        d₁ .= -λ[n,1:M-1] .+ ψ[n,1:M-1].*(a⁻[1:M-1])
+        d₋₁ .= -λ[n,2:M] .- ψ[n,2:M].*(a⁺[2:M])
     
         TriDiagMat .= diagm(-1 => d₋₁, 0 => d₀, 1 => d₁)
-        TriDiagMat[M,1] = -λ[n,M]
-        TriDiagMat[1,M] = -λ[n,1]
+        TriDiagMat[M,1] = -λ[n,M] + ψ[n,M].*a⁻[M]
+        TriDiagMat[1,M] = -λ[n,1] - ψ[n,1].*a⁺[1]
 
         # solving the system
         ρ[n+1,1:M] .= TriDiagMat\Φ[n,1:M]

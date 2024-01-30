@@ -14,7 +14,7 @@ kf = 0.0008
 growth_dir = "inward" # Options: "inward", "outward"
 Tmax = 21.0 # days
 δt = 0.01
-btypes = ["square"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["square","triangle","hex","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
