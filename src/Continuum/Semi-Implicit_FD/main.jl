@@ -23,8 +23,8 @@ kf = 0.001;
 A = 0.00;
 ρ₀ = 20;
 growth_dir = "inward"
-btype = "square"
-Tmax = 12.5
+btype = "hex"
+Tmax = 21
 r₀ = 1.05
 
 θ,R,ρ = SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir);
