@@ -7,7 +7,7 @@ D = 0.005
 kf = 0.0005
 growth_dir = "inward"
 Tmax = 26.0 # days
-btype = "square" #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btype = "hex" #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
 # Discrete Simulation
 # set random seed number for reproducability 
@@ -35,12 +35,12 @@ sols2D = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],di
 A = 0.00;
 ρ₀ = sols2D[1][1].Density[1][1];
 
-θ_cont,R_cont,ρ_cont = SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir);
+θ_cont,R_cont,ρ_cont = TissueGrowth.SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,R₀,btype,growth_dir);
 
 
 
 # plotting
 Discrete_Solution = sols2D[1][1];
 Continuum_Solution = (θ_cont,R_cont,ρ_cont);
-index = 9
-DiscVSContDensity_plot(Discrete_Solution, Continuum_Solution, index)
+index = 11
+DiscVSContDensity_plot(Discrete_Solution, Continuum_Solution, index, btype)

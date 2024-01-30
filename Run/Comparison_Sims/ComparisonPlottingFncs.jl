@@ -1,5 +1,8 @@
+using CairoMakie
+using ColorSchemes
+using Colors
 
-function DiscVSContDensity_plot(Discrete_Solution, Continuum_Solution, index)
+function DiscVSContDensity_plot(Discrete_Solution, Continuum_Solution, index, btype)
     if index > 11
         error("index is too large!")
     end
@@ -33,16 +36,17 @@ function DiscVSContDensity_plot(Discrete_Solution, Continuum_Solution, index)
     gaxmain = Axis(ga[1, 1], limits=(0, 2π, 22, 60), xticklabelsize = tickSize, yticklabelsize = tickSize, 
                     xlabel="θ", xlabelsize=txtSize, xlabelfont = plot_font,
                     ylabel="ρ", ylabelsize=txtSize,  ylabelfont = plot_font,
-                    title = "t = $(Discrete_Solution.t[index]) simulation days", titlesize = txtSize, titlefont = plot_font)
+                    title = "Pore: $btype, t = $(Discrete_Solution.t[index]) simulation days", titlesize = txtSize, titlefont = plot_font)
     
     # plotting Continuum
     cont_index = 1 + (index - 1)*1000
-    CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=5, color=:red)
+    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=5, color=:red)
 
 
     # plotting Discrete
     disc_index = index;
-    CairoMakie.scatter!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], markersize=9, color=:black)
+    disc_scat = CairoMakie.scatter!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], markersize=10, color=:black)
+    Legend(f[1,2], [cont_line, disc_scat], ["Continuum Simulation", "Discrete Simulation"])
 
     return f
 end
