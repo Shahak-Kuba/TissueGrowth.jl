@@ -8,23 +8,24 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solu
     end
     # Getting data Continuum
     θ_cont, R_cont, ρ_cont =  Continuum_Solution;
-    max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)
+    max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)+5
     
     # Getting Data Discrete
     θ_disc1, R_disc1, ρ_disc1 = Convert_Discrete_Data(Discrete_Solution_m1, m1)
     θ_disc2, R_disc2, ρ_disc2 = Convert_Discrete_Data(Discrete_Solution_m2, m2)
    
-    # plotting Continuum
-    cont_index = 1 + (index - 1)*1000
-    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=5, color=:red)
 
     # plotting Discrete
     disc_index = index;
     disc_stair1 = CairoMakie.stairs!(gaxmain, θ_disc1[disc_index,:], ρ_disc1[disc_index,:], step=:pre, linewidth=3, color=:blue)
-    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:pre, linewidth=3, color=:black)
-    text!(gaxmain, 0.2, max_y-5 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=24)
-    #Legend(f[1,2], [cont_line, disc_scat1, disc_scat2], ["Continuum", "Discrete m = $m1", "Discrete m = $m2"])
-    #axislegend(gaxmain,[cont_line, disc_scat1, disc_scat2], ["Continuum", "Discrete m = $m1", "Discrete m = $m2"],position=:rt,labelsize=25)
+    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:pre, linewidth=3, color=:green)
+
+    # plotting Continuum
+    cont_index = 1 + (index - 1)*1000
+    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red)
+
+    text!(gaxmain, 0.2, max_y-3 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=24)
+    
     return cont_line, disc_stair1, disc_stair2
 end
 
@@ -64,7 +65,7 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
      # Getting data Continuum
     θ_cont, R_cont, ρ_cont =  Continuum_Solution;
     min_y = floor(ρ_cont[1,1]; sigdigits=1)
-    max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)
+    max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)+5
     
     txtSize = 35;
     tickSize = 25;
@@ -77,7 +78,18 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
     for i in axes(indicies,1)
         row = Int64(floor((i-1)/col_size) + 1)
         col = Int64((i-1)%col_size + 1)
-        gaxmain = Axis(ga[row, col], limits=(0, 2π, min_y, max_y), xticklabelsize = tickSize, yticklabelsize = tickSize)
+        # only showing needed axis ticks
+        if col == 1
+            if row == row_size
+                gaxmain = Axis(ga[row, col], limits=(0, 2π, min_y, max_y), xticklabelsize = tickSize, yticklabelsize = tickSize)
+            else
+                gaxmain = Axis(ga[row, col], limits=(0, 2π, min_y, max_y), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize)
+            end
+        elseif row == row_size
+            gaxmain = Axis(ga[row, col], limits=(0, 2π, min_y, max_y), yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize)
+        else
+            gaxmain = Axis(ga[row, col], limits=(0, 2π, min_y, max_y), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize)
+        end
         cont_line, disc_stair1, disc_stair2 = DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies[i])
         Legend(f[1,2], [cont_line, disc_stair1, disc_stair2], ["Continuum", "Discrete m = $m1", "Discrete m = $m2"], labelsize=tickSize)
     end
@@ -86,7 +98,3 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
     Label(ga[row_size+1, :], "Angular position θ", fontsize = 30)
     return f
 end
-
-
-xlabel="θ", xlabelsize=txtSize, xlabelfont = plot_font,
-ylabel="ρ", ylabelsize=txtSize,  ylabelfont = plot_font

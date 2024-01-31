@@ -3,10 +3,10 @@ include("ComparisonPlottingFncs.jl")
 
 # Shared variables
 R₀ = 1.05  
-D = 0.005
-kf = 0.001
+D = 0.01
+kf = 0.002
 growth_dir = "inward"
-Tmax = 26.0 # days
+Tmax = 30.0 # days
 btype = "square" #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
 # Discrete Simulation
@@ -14,7 +14,7 @@ btype = "square" #Options: ["circle", "triangle", "square", "hex", "star","cross
 seed = 88
 
 # setting up simulation parameters
-N = 96 # number of cells
+N = 48 # number of cells
 m1 = 1 # number of springs per cell
 l₀ = 1.0
 η = 1.0 
@@ -49,4 +49,4 @@ Discrete_Solution_m2 = sols2D_m2[1][1];
 Continuum_Solution = (θ_cont,R_cont,ρ_cont);
 indicies = [1,3,5,7,9,11]
 num_cols = 2
-DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)
+DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)    
