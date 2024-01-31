@@ -161,7 +161,7 @@ function SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir)
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
-    m = 121
+    m = 193
     Δθ = (2π)/m
     θ = Vector(LinRange(0.0,2π,m))
     pop!(θ)
