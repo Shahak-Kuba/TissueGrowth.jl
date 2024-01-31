@@ -1,4 +1,4 @@
-using Polynomials
+#using Polynomials
 
 
 function minmod(varᵢ₋₁, varᵢ, varᵢ₊₁, Φ, Δx)

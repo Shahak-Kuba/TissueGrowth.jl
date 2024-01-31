@@ -18,7 +18,11 @@ module TissueGrowth
 
     # continuum limit simulation code
     include("Continuum/Semi-Implicit_FD/FD_ContinuumSolvers.jl")
+    include("Continuum/Semi-Implicit_FD/FD_SolverFncs.jl")
     include("Continuum/FVM_K-T/FVM_ContinuumSolver.jl")
+    include("Continuum/FVM_K-T/FVM_SolverFncs.jl")
     include("Continuum/PlottingFncsPDE.jl")
 
+    # including for comparion plotting 
+    include("../Run/Comparison_Sims/ComparisonPlottingFncs.jl")
 end

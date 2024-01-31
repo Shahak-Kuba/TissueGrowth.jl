@@ -32,7 +32,7 @@ This function is used to simulate the dynamics of a growing cell population in a
 - A loop over the time steps computes the finite differences and updates the variables according to the semi-implicit scheme.
 - A cyclic tridiagonal matrix method is used to solve a linear system in each time step.
 """
-function SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
+function FD_SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
     # time and space discretisation
     T₀ = 0.0
     X₀ = 0.0
@@ -153,7 +153,7 @@ This function is specifically designed for a polar coordinate system and is used
 - A loop over the time steps computes the finite differences and updates the variables according to the semi-implicit scheme.
 - A cyclic tridiagonal matrix method is used to solve a linear system in each time step.
 """
-function SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir)
+function FD_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir)
     # time and space discretisation
     T₀ = 0.0
 
