@@ -31,7 +31,7 @@ sols2D_m1 = TissueGrowth.sim2D(N,m1,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype
             prolif, death, embed, α, βv, γv, event_δt, seed, 11);
 
 m2 = 4 # number of springs per cell
-sols2D_m2 = sim2D(N,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
+sols2D_m2 = TissueGrowth.sim2D(N,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
             prolif, death, embed, α, βv, γv, event_δt, seed, 11);
 
 
@@ -47,5 +47,6 @@ Av = 0.00;
 Discrete_Solution_m1 = sols2D_m1[1][1];
 Discrete_Solution_m2 = sols2D_m2[1][1];
 Continuum_Solution = (θ_cont,R_cont,ρ_cont);
-index = 11
-DiscVSContDensity_plot(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, index, btype)
+indicies = [1,3,5,7,9,11]
+num_cols = 2
+DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)
