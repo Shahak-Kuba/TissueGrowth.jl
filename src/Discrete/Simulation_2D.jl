@@ -1,5 +1,3 @@
-using BenchmarkTools
-
 """
     sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,prolif,death,embed,α,β,γ,event_δt,seed)
 

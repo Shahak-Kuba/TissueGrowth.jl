@@ -1,5 +1,3 @@
-using DifferentialEquations
-
 
 """
     ODE_fnc_1D!(du, u, p, t)

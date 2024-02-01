@@ -1,6 +1,3 @@
-using LinearAlgebra
-using BenchmarkTools
-
 include("FD_SolverFncs.jl")
 
 
@@ -161,7 +158,7 @@ function FD_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir)
     Δt = (Tmax - T₀)/N
     t = LinRange(T₀,Tmax,Int64((Tmax - T₀)/Δt))
 
-    m = 193
+    m = 241
     Δθ = (2π)/m
     θ = Vector(LinRange(0.0,2π,m))
     pop!(θ)

@@ -1,7 +1,3 @@
-using CairoMakie
-using ColorSchemes
-using Colors
-
 
 function plotContinuumResults_Cartesian(x, h, ρ, D, kf, cmap)
     txtSize = 35;

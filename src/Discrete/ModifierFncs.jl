@@ -1,5 +1,3 @@
-using Base
-
 """
     Base.insert!(A::ElasticMatrix, col, xy)
 

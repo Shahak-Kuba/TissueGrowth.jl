@@ -1,6 +1,3 @@
-using DifferentialEquations
-using ElasticArrays
-
 
 Xᵩ(T) = T
 Yᵩ(T) = 2 + 0.5*cos(3*T)

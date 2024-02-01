@@ -1,14 +1,15 @@
+using TissueGrowth
 include("../PlottingFncsPDE.jl")
 include("FVM_ContinuumSolver.jl")
 
 # User input variables
-D = 0.015
+D = 0.0001
 kf = 0.001
 A = 0.00
 ρ₀ = 20.0
-Tmax = 50
-r₀ = 2.0
-btype = "circle"
+Tmax = 20
+r₀ = 1.0
+btype = "square"
 growth_dir = "inward"
 
 # running simulation

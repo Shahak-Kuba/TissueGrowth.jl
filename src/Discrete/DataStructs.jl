@@ -1,7 +1,4 @@
 
-using ElasticArrays
-
-
 """
     SimResults_t
 

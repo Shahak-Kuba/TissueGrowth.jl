@@ -1,5 +1,3 @@
-using BenchmarkTools
-
 function sim2D_δt()
     # setting up simulation parameters
     N = 180 # number of cells

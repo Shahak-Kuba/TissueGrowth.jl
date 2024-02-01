@@ -1,20 +1,22 @@
 include("ComparisonPlottingFncs.jl")
 
-function ComparisonSim(N,m1,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type, prolif, death, embed, α, β, γ, event_δt, seed, A)
-    # 2D simulations 
+function ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type, prolif, death, embed, α, β, γ, event_δt, seed, A)
+    ### Discrete Simulation
+    
+    # simulation with m1 cells
     sols2D_m1 = TissueGrowth.sim2D(N,m1,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
-    m2 = 4 # number of springs per cell
+    # simulation with m2 cells
     sols2D_m2 = TissueGrowth.sim2D(N,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
 
-    # Continuum Simulation
+    ### Continuum Simulation
     ρ₀ = sols2D_m1[1][1].Density[1][1];
 
     #using FVM for low diffusivity and FD for mid-high diffusivity
-    if D >= 0.01
+    if D >= 0.005
     θ_cont,R_cont,ρ_cont = TissueGrowth.FD_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,R₀,btype,growth_dir);
     else 
     θ_cont,R_cont,ρ_cont = TissueGrowth.FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,R₀,btype, growth_dir);

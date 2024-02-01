@@ -1,4 +1,26 @@
 module TissueGrowth
+    # PACKAGES USED for solving equations
+    using Base
+    using DifferentialEquations
+    using LinearAlgebra
+    using Random
+    using ElasticArrays
+    using QuadGK
+    using Roots
+    # PACKAGES USED for benchmarking
+    using BenchmarkTools
+    # PACKAGES USED for plotting
+    using Plots
+    using Makie
+    using CairoMakie
+    using ColorSchemes
+    using Colors
+    # PACKAGES USED for misc
+    using Printf
+    using JLD2
+    import FilePaths
+
+    # DEVELOPED SIMULATION CODE
 
     # discrete simulation code
     include("Discrete/MechanicalEqns.jl")

@@ -1,5 +1,3 @@
-using LinearAlgebra
-
 """
     δ(rᵢ₊₁, rᵢ)
 

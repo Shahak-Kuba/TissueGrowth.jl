@@ -1,6 +1,4 @@
-using LinearAlgebra
-using QuadGK
-using Roots
+
 
 # Circular Boundary
 X(R,θ) = R.*cos.(θ);

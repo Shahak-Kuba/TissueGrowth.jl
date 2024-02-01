@@ -1,6 +1,3 @@
-using CairoMakie
-using ColorSchemes
-using Colors
 
 function findMinMax(var)
     Min = 0

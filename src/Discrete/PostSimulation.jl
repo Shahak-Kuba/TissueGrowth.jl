@@ -115,7 +115,7 @@ function PostCalcs2D(u, p)
 
     ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(u,uᵢ₋₁)))
     #diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
-    density = ρ(uᵢ₊₁, u)
+    density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./2
     ψ = ∑F ./ δ(uᵢ₊₁, u)
     Κ = κ(uᵢ₋₁,u,uᵢ₊₁)
     vₙx = Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"2D")[:,1]

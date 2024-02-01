@@ -4,15 +4,15 @@ using TissueGrowth
 seed = 88
 
 # setting up simulation parameters
-N = 180 # number of cells
-m = 1 # number of springs per cell
+N = 60 # number of cells
+m = 2 # number of springs per cell
 R₀ = 1.0  # shape radius
-D = [0.015]
+D = [0.01]
 l₀ = 1.0
-kf = 0.0008
+kf = 0.002
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-Tmax = 21.0 # days
+Tmax = 26.0 # days
 δt = 0.01
 btypes = ["square","triangle","hex","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
@@ -33,7 +33,7 @@ Density_cmap = :jet
 geo = 1
 diffusivity = 1
 
-Density_Range = (0,80)
+Density_Range = (10,30)
 filename = "squarePore.gif"
 
 # making Animation

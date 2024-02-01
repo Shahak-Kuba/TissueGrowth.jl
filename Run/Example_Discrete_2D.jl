@@ -4,17 +4,17 @@ using TissueGrowth
 seed = 88
 
 # setting up simulation parameters
-N = 180 # number of cells
-m = 1 # number of springs per cell
+N = 60 # number of cells
+m = 2 # number of springs per cell
 R₀ = 1.05  # shape radius
-D = [0.0001, 0.005, 1]
+D = [0.0001, 0.01]
 l₀ = 1.0
-kf = 0.0005
+kf = 0.002
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 Tmax = 26.0 # days
 δt = 0.01
-btypes = ["square", "hex"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["square"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
@@ -32,7 +32,7 @@ Density_cmap = :jet
 geo = 1
 diffusivity = 2
 
-Density_Range = (20,65)
+Density_Range = (10,30)
 ψ_Range = (-20,0)
 f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf)
 f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, ψ_cmap, ψ_Range, "Stress ψ", D[diffusivity], kf)

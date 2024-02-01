@@ -1,5 +1,4 @@
-using DifferentialEquations
-using LinearAlgebra
+
 
 """
     X(R,θ), Y(R,θ), Xₜ(R,T), Yₜ(R,T), ...

@@ -1,8 +1,3 @@
-using LinearAlgebra
-using Printf
-using JLD2
-import FilePaths
-
 function printInfo(simNum,simTotal,btype,N,kₛ,η,kf,M,D)
     println(@sprintf "----------------------------- Simulation %d/%d Complete -----------------------------" simNum simTotal)
     println(@sprintf "Boundary Type: %s, Cell count: %d, Springs per cell: %d" btype N Int(M/N))

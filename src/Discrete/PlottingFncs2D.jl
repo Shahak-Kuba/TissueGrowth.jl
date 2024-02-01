@@ -1,8 +1,4 @@
-using Makie
-using CairoMakie
-using ColorSchemes
-using Colors
-using Plots
+
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
 """
@@ -36,7 +32,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
     for i in eachindex(u)
         plotInterface(gaxmain, u, var, cmap, CRange, i)
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
@@ -62,14 +58,14 @@ function animateResults2D(u, var, cmap, crange, cbarlabel, D, kf, filename)
     txtSize = 35;
     tickSize = 25;
     CRange = crange
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
             xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
             ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
             title = "kₛ = $D, kf = $kf", titlesize = txtSize)
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
             flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
     Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
