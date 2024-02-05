@@ -113,8 +113,9 @@ function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
               ylabel="Simulation Ot", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "Ot = $Ot", titlesize = txtSize)
     
-    CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black)
-    CairoMakie.lines!(gaxmain, t, y, linewidth=5, color = :blue)
+    Ot_line = CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black)
+    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, y, linewidth=5, color = :blue)
+    Legend(f[1,2],[Ot_line,Sim_Ot_Line], ["Ot value", "Simulated Ot"])
     return f
 end
 
