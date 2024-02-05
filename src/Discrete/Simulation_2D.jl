@@ -65,7 +65,7 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
                                         growth_dir,prolif,death,embed,α,β,γ,dist_type)
             @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
             push!(results, postSimulation2D(btype, sol, p))
-            push!(embedded_cells_count, sol.saved_values)
+            push!(embedded_cells_count, saved_values.saveval)
             printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D[jj])
         end
         push!(all_results,results)

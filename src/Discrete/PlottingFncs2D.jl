@@ -98,17 +98,24 @@ end
 
 
 
-function plotEmbeddedCellsVsTime(Embedded_Cells, m, t, Ot)
+function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
     # Sorting Data
-    
+    filled_Area = Ω[1] .- Ω
+    y = embedded_cell_count./filled_Area
     # Creating Figure
+    txtSize = 35;
+    tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
-              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-              title = "D = $D, kf = $kf", titlesize = txtSize)
+    gaxmain = Axis(ga[1, 1],
+              xlabel="t", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="Simulation Ot", ylabelsize = txtSize, yticklabelsize = tickSize,
+              title = "Ot = $Ot", titlesize = txtSize)
+    
+    CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black)
+    CairoMakie.lines!(gaxmain, t, y, linewidth=5, color = :blue)
+    return f
 end
 
 
