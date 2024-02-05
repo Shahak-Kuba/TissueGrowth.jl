@@ -1,5 +1,3 @@
-include("FVM_SolverFncs.jl")
-
 function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype, growth_dir)
     # time and space discretisation
     T₀ = 0.0

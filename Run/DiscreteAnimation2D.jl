@@ -14,7 +14,7 @@ kf = 0.002
 growth_dir = "inward" # Options: "inward", "outward"
 Tmax = 26.0 # days
 δt = 0.01
-btypes = ["square","triangle","hex","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["square"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
@@ -37,4 +37,4 @@ Density_Range = (10,30)
 filename = "squarePore.gif"
 
 # making Animation
-TissueGrowth.animateResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, filename)
+TissueGrowth.animateResults2D(sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, filename)

@@ -38,6 +38,8 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
     Set_Random_Seed(seed)
     M = Int(m*N) # total number of springs along the interface
     savetimes = LinRange(0, Tmax, NumSaveTimePoints)
+    global embedded_cells = []
+
 
     all_results = Vector{Vector{SimResults_t}}(undef, 0)
 
@@ -60,6 +62,6 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
         push!(all_results,results)
     end
 
-    return all_results
+    return all_results, hcat(embedded_cells...)
 
 end

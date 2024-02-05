@@ -54,7 +54,7 @@ function plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
 end
 
 
-function animateResults2D(u, var, cmap, crange, cbarlabel, D, kf, filename)
+function animateResults2D(t, u, var, cmap, crange, cbarlabel, D, kf, filename)
     txtSize = 35;
     tickSize = 25;
     CRange = crange
@@ -64,7 +64,7 @@ function animateResults2D(u, var, cmap, crange, cbarlabel, D, kf, filename)
     gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
             xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
             ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-            title = "kₛ = $D, kf = $kf", titlesize = txtSize)
+            title = "t = $(t[1])", titlesize = txtSize)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
             flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
@@ -79,6 +79,8 @@ function animateResults2D(u, var, cmap, crange, cbarlabel, D, kf, filename)
         else
             index = frame
         end
+        T = round(t[index];digits=2)
+        gaxmain.title="t = $T"
         Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
     end
 end

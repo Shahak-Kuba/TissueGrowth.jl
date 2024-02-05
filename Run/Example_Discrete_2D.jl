@@ -4,33 +4,33 @@ using TissueGrowth
 seed = 88
 
 # setting up simulation parameters
-N = 60 # number of cells
-m = 2 # number of springs per cell
+N = 180 # number of cells
+m = 1 # number of springs per cell
 R₀ = 1.05  # shape radius
-D = [0.0001, 0.01]
+D = [0.01]
 l₀ = 1.0
-kf = 0.002
+kf = 0.001
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-Tmax = 26.0 # days
+Tmax = 10.0 # days
 δt = 0.01
 btypes = ["square"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
-prolif = false; death = false; embed = false;
-α = 0.0001;        β = 0.001;      γ = 0.01;
+prolif = false; death = false; embed = true;
+α = 0.0001;        β = 0.001;      Ot = 625;
 event_δt = δt
 
 # 2D simulations 
-sols2D = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, γ, event_δt, seed, 11);
+sols2D, test = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
+            prolif, death, embed, α, β, Ot, event_δt, seed, 11);
 
 Density_cmap = :jet
 ψ_cmap = :balance
 
 geo = 1
-diffusivity = 2
+diffusivity = 1
 
 Density_Range = (10,30)
 ψ_Range = (-20,0)

@@ -90,7 +90,7 @@ If the embedding event is considered to occur (`event` is `true`), the probabili
 # Returns
 A vector representing the calculated probabilities for embedding.
 """
-E(event,ρ,γ) = event ? γ.*ρ : zeros(size(ρ))
+E(event,ρ,kf,γ) = event ? γ.*kf.*ones(size(ρ)) : zeros(size(ρ))
 
 """
     cell_probs(uᵢ, m, δt, prolif, death, embed, α, β, γ)
@@ -109,9 +109,9 @@ This function uses `calc_cell_densities` to calculate cell densities and then co
 # Returns
 A tuple containing three vectors representing the probabilities for proliferation, death, and embedding.
 """
-function cell_probs(uᵢ,m,δt,prolif,death,embed,α,β,γ)
+function cell_probs(uᵢ,m,δt,prolif,death,embed,α,β,γ,kf)
     ρ = calc_cell_densities(uᵢ,m)
-    return (P(prolif,ρ,α).*δt, A(death, ρ,β).*δt, E(embed, ρ,γ).*δt)
+    return (P(prolif,ρ,α).*δt, A(death,ρ,β).*δt, E(embed,ρ,kf,γ).*δt)
 end
 
 """
@@ -154,7 +154,7 @@ This function modifies `integrator` in place. It uses the parameters and state f
 function affect!(integrator)
     (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ) = integrator.p
     u = integrator.u
-    (p,a,e) = cell_probs(u, m, δt, prolif, death, embed, α, β, γ)
+    (p,a,e) = cell_probs(u, m, δt, prolif, death, embed, α, β, γ, kf)
     (r1,r2,r3) = rand(3)
     if r1 < (sum(p) + sum(a) + sum(e)) # check if event has occurred
         if r2 < sum(p) / (sum(p) + sum(a) + sum(e)) # prolif occurs
@@ -173,9 +173,12 @@ function affect!(integrator)
 
 
         else # embed occurs
-            global 🥔
             idx = find_cell_index(e, r3 * sum(e))
-            
+            #println("embedded at: ",idx)
+            store_embedded_cell(u, idx, m)
+
+            deleteat!(u,idx)
+            resize!(integrator,(2,size(integrator.u,2)))
             # Perform operations based on embed occurrence if needed
         end
         resize!(integrator,(2,size(integrator.u,2)))
@@ -186,18 +189,25 @@ end
 """
     store_embed_cell_pos(pos)
 
-Stores the position of embedded cells into 🥔 array.
+Stores the position of embedded cells into embedded_cells array.
 
-This function inserts the position vector `pos` of an embedded cell into the 🥔 array.
+This function inserts the position vector `pos` of a boundary of an embedded cell into the embedded_cells array.
 
 # Arguments
 - `pos`: position vector of the cell that is being embedded into the tissue should contain `m+1` values given `m` springs in the simulation
 
 # Returns
-`nothing`. The function modifies `🥔` in place.
+`nothing`. The function modifies `embedded_cells` in place.
 """
 function store_embed_cell_pos(pos)
-    global 🥔
-    insert!(🥔,size(🥔,2),pos)
+    global embedded_cells
+    insert!(embedded_cells,size(embedded_cells,2),pos)
+    return nothing
+end
+
+function store_embedded_cell(u, idx, m)
+    for i = idx:idx+m
+        store_embed_cell_pos(u[:,idx].data)
+    end
     return nothing
 end
