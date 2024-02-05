@@ -56,6 +56,7 @@ An instance of `SimResults_t` containing the calculated data.
 """
 function postSimulation1D(btype, sol, p)
 
+    #global embedded_cell_count
     c = size(sol.t, 1)
 
     Area = Vector{Float64}(undef, c)

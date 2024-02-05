@@ -213,3 +213,12 @@ function store_embedded_cell(u, idx, m)
     end
     return nothing
 end
+
+function store_embedded_cell_count(u, t, integrator)
+    (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ) = integrator.p
+    global embedded_cells
+    #global embedded_cell_count
+    cell_count = size(hcat(embedded_cells...),2)/(m+1)
+    #push!(embedded_cell_count,cell_count)
+    return cell_count
+end
