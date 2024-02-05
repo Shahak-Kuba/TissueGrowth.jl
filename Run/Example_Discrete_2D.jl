@@ -1,7 +1,7 @@
 using TissueGrowth
 
 # set random seed number for reproducability 
-seed = 88
+seed = 99
 
 # setting up simulation parameters
 N = 180 # number of cells
@@ -12,14 +12,14 @@ l₀ = 1.0
 kf = 0.001
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-Tmax = 10.0 # days
+Tmax = 20.0 # days
 δt = 0.01
 btypes = ["square"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
 prolif = false; death = false; embed = true;
-α = 0.0001;        β = 0.001;      Ot = 625;
+α = 0.0001;        β = 0.001;      Ot = 62.5;
 event_δt = δt
 
 # 2D simulations 

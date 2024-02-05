@@ -177,7 +177,9 @@ function affect!(integrator)
             #println("embedded at: ",idx)
             store_embedded_cell(u, idx, m)
 
-            deleteat!(u,idx)
+            for i = idx:(idx + m)-1
+                deleteat!(u,idx)
+            end
             resize!(integrator,(2,size(integrator.u,2)))
             # Perform operations based on embed occurrence if needed
         end
