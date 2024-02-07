@@ -102,6 +102,7 @@ function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
     # Sorting Data
     filled_Area = Ω[1] .- Ω
     y = embedded_cell_count./filled_Area
+    y[1] = 0.0
     # Creating Figure
     txtSize = 35;
     tickSize = 25;

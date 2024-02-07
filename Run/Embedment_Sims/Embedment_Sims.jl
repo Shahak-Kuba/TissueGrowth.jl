@@ -26,15 +26,7 @@ event_δt = δt
 sols2D, embedded_cells, embed_cell_count = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
             prolif, death, embed, α, β, Ot, event_δt, seed, 100);
 
-Density_cmap = :jet
-ψ_cmap = :balance
-
 geo = 1
 diffusivity = 1
-
-Density_Range = (10,30)
-ψ_Range = (-20,0)
-f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf)
-f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, ψ_cmap, ψ_Range, "Stress ψ", D[diffusivity], kf)
 
 f = TissueGrowth.plotOtValueVsTime(sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].Ω, embed_cell_count[1], Ot)
