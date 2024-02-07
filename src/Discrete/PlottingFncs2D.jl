@@ -44,8 +44,32 @@ function plotInterface!(gaxmain, u, var, cmap, CRange, index)
         colormap=cmap, markersize=6)
 end
 
-function plotEmbeddedCells!()
-    # TODO
+
+function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, embedded_cells)
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
+              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
+              title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    for i in 1:9:size(u,1)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i)
+    end
+    plotEmbeddedCells!(gaxmain, embedded_cells)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
+function plotEmbeddedCells!(gaxmain, embedded_cell_pos)
+    for i in axes(embedded_cell_pos,1)
+        cell = embedded_cell_pos[i]
+        CairoMakie.lines!(gaxmain, cell[1,:], cell[2,:],color=:black,linewidth=8)
+    end
 end
 
 

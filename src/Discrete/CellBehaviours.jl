@@ -133,7 +133,7 @@ function find_cell_index(arr::Vector{Float64}, threshold::Float64)
     cum_sum = cumsum(arr)
     index = findfirst(cum_sum .>= threshold)
     if index === nothing || index > length(arr)
-        return index = length(arr)  # If the cumulative sum never reaches the threshold
+        return index = length(arr)-1  # If the cumulative sum never reaches the threshold
     end
     return index
 end
@@ -159,26 +159,32 @@ function affect!(integrator)
     if r1 < (sum(p) + sum(a) + sum(e)) # check if event has occurred
         if r2 < sum(p) / (sum(p) + sum(a) + sum(e)) # prolif occurs
             idx = find_cell_index(p, r3 * sum(p))
+            # converting back to spring index
+            spring_index = idx*m - (m-1)
             #println("inserted at: ",idx)
-            insert!(u,idx,((circshift(u',1)'[:,idx] + u[:,idx])/2))
+            insert!(u,spring_index,((circshift(u',1)'[:,spring_index] + u[:,spring_index])/2))
             # Perform operations based on prolif occurrence if needed
  
 
         elseif sum(p) / (sum(p) + sum(a) + sum(e)) < r2 < (sum(p) + sum(a)) / (sum(p) + sum(a) + sum(e)) # death occurs
             idx = find_cell_index(a, r3 * sum(a))
+            # converting back to spring index
+            spring_index = idx*m - (m-1)
             #println("deleted at: ",idx)
-            deleteat!(u,idx)
+            deleteat!(u,spring_index)
             resize!(integrator,(2,size(integrator.u,2)))
             # Remove the cell from u based on death occurrence
 
 
         else # embed occurs
             idx = find_cell_index(e, r3 * sum(e))
+            # converting back to spring index
+            spring_index = idx*m - (m-1)
             #println("embedded at: ",idx)
-            store_embedded_cell(u, idx, m)
+            store_embedded_cell(u, spring_index, m)
 
-            for i = idx:(idx + m)-1
-                deleteat!(u,idx)
+            for i = spring_index:(spring_index + m)-1
+                deleteat!(u,spring_index)
             end
             resize!(integrator,(2,size(integrator.u,2)))
             # Perform operations based on embed occurrence if needed
@@ -209,7 +215,11 @@ end
 
 function store_embedded_cell(u, idx, m)
     for i = idx:idx+m
-        store_embed_cell_pos(u[:,idx].data)
+        if i > size(u,2)
+            store_embed_cell_pos(u[:,1].data)
+        else
+            store_embed_cell_pos(u[:,i].data)
+        end
     end
     return nothing
 end
@@ -221,4 +231,19 @@ function store_embedded_cell_count(u, t, integrator)
     cell_count = size(hcat(embedded_cells...),2)/(m+1)
     #push!(embedded_cell_count,cell_count)
     return cell_count
+end
+
+
+function convert_matrix(matrix, M)
+    # Check if N is divisible by M
+    N = size(matrix, 2)
+    @assert N % M == 0 "N must be divisible by M"
+
+    # Reshape the matrix
+    reshaped_matrix = reshape(matrix, 2, M, :)
+
+    # Split the reshaped matrix along the third dimension to get a vector of 2x3 matrices
+    vector_of_matrices = [reshaped_matrix[:, :, i] for i in axes(reshaped_matrix,3)]
+
+    return vector_of_matrices
 end

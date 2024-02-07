@@ -72,6 +72,6 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
         push!(all_results,results)
     end
 
-    return all_results, hcat(embedded_cells...), embedded_cells_count
+    return all_results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
 
 end
