@@ -75,9 +75,9 @@ end
 
 
 """
-    plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
+    plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
 
-Generate a 2D plot to visualize results with lines representing angular positions over time.
+Generate a plot to visualize results with lines representing angular positions over time.
 
 # Arguments
 - `u::Vector`: A vector of 2D arrays representing the data points.
@@ -92,7 +92,7 @@ Generate a 2D plot to visualize results with lines representing angular position
 # Returns
 - `Figure`: A Makie Figure object representing the 2D plot.
 """
-function plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
+function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
