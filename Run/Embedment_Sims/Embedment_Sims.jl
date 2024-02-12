@@ -7,12 +7,12 @@ seed = 211
 N = 60 # number of cells
 m = 3 # number of springs per cell
 R₀ = 1.05  # shape radius
-D = [0.01]
+D = [0.005]
 l₀ = 1.0
 kf = 0.002
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-Tmax = 30.0 # days
+Tmax = 39.0 # days
 δt = 0.01
 btypes = ["square"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
@@ -34,4 +34,6 @@ f = TissueGrowth.plotOtValueVsTime(sols2D[diffusivity][geo].t, sols2D[diffusivit
 # plotting interface
 Density_Range = (20,40)
 Density_cmap = :jet
-f_interface = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, embedded_cells)
+multiple_Interfaces = false
+f_interface = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, 
+                                        "Density ρ", D[diffusivity], kf, embedded_cells, multiple_Interfaces)

@@ -45,7 +45,7 @@ function plotInterface!(gaxmain, u, var, cmap, CRange, index)
 end
 
 
-function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, embedded_cells)
+function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, embedded_cells, multiInterfaces)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
@@ -56,8 +56,13 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, embedded_cells)
               ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
-    for i in 1:9:size(u,1)
-        plotInterface!(gaxmain, u, var, cmap, CRange, i)
+    if multiInterfaces
+        for i in 1:9:size(u,1)
+            plotInterface!(gaxmain, u, var, cmap, CRange, i)
+        end
+    else
+        plotInterface!(gaxmain, u, var, cmap, CRange, 1)
+        plotInterface!(gaxmain, u, var, cmap, CRange, size(u,1))
     end
     plotEmbeddedCells!(gaxmain, embedded_cells)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
