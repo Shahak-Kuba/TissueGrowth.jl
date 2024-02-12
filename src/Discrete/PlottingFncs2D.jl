@@ -30,14 +30,14 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
               title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     for i in eachindex(u)
-        plotInterface(gaxmain, u, var, cmap, CRange, i)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i)
     end
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
 
-function plotInterface(gaxmain, u, var, cmap, CRange, index)
+function plotInterface!(gaxmain, u, var, cmap, CRange, index)
     CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
             colormap=cmap, linewidth=5)
     CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
@@ -45,50 +45,44 @@ function plotInterface(gaxmain, u, var, cmap, CRange, index)
 end
 
 
-function plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
-    Lplot = CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
-            colormap=cmap, linewidth=5)
-    Splot = CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
-        colormap=cmap, markersize=6)
-    return Lplot,Splot
-end
-
-
-function animateResults2D(u, var, cmap, crange, cbarlabel, D, kf, filename)
+function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, embedded_cells, multiInterfaces)
     txtSize = 35;
     tickSize = 25;
-    CRange = crange
-    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
-            xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-            ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-            title = "kₛ = $D, kf = $kf", titlesize = txtSize)
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
-            flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
-    plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
-    Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
-
-    frames = 2:length(u)+50
-    record(f,filename,frames; framerate = 10) do frame
-        delete!(f.content[1],Lplot)
-        delete!(f.content[1],Splot)
-        if frame > length(u)
-            index = length(u)
-        else
-            index = frame
+              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
+              title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    if multiInterfaces
+        for i in 1:9:size(u,1)
+            plotInterface!(gaxmain, u, var, cmap, CRange, i)
         end
-        Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
+    else
+        plotInterface!(gaxmain, u, var, cmap, CRange, 1)
+        plotInterface!(gaxmain, u, var, cmap, CRange, size(u,1))
+    end
+    plotEmbeddedCells!(gaxmain, embedded_cells)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
+function plotEmbeddedCells!(gaxmain, embedded_cell_pos)
+    for i in axes(embedded_cell_pos,1)
+        cell = embedded_cell_pos[i]
+        CairoMakie.lines!(gaxmain, cell[1,:], cell[2,:],color=:black,linewidth=8)
     end
 end
 
 
 
 """
-    plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
+    plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
 
-Generate a 2D plot to visualize results with lines representing angular positions over time.
+Generate a plot to visualize results with lines representing angular positions over time.
 
 # Arguments
 - `u::Vector`: A vector of 2D arrays representing the data points.
@@ -103,7 +97,7 @@ Generate a 2D plot to visualize results with lines representing angular position
 # Returns
 - `Figure`: A Makie Figure object representing the 2D plot.
 """
-function plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
+function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
@@ -132,62 +126,68 @@ function plotResults2D(u, t, var, cmap, crange, cbarlabel, D, kf)
 end
 
 
-## to be fixed
-function plotAreaVStime(sols)
+
+function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
+    # Sorting Data
+    filled_Area = Ω[1] .- Ω
+    y = embedded_cell_count./filled_Area
+    y[1] = 0.0
+    # Creating Figure
+    txtSize = 35;
+    tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        resolution=(700, 500))
+        size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], title="Void area over time", xlabel="Time [Days]", ylabel="Ω [μm²]")
-    lin1 = lines!(gaxmain, sols[1].t, sols[1].Ω, linewidth=4, linestyle=:solid)
-    lin2 = lines!(gaxmain, sols[2].t, sols[2].Ω, linewidth=4, linestyle=:dash)
-    lin3 = lines!(gaxmain, sols[3].t, sols[3].Ω, linewidth=4, linestyle=:dot)
-    lin4 = lines!(gaxmain, sols[4].t, sols[4].Ω, linewidth=4, linestyle=:dashdot)
-    lin5 = lines!(gaxmain, sols[5].t, sols[5].Ω, linewidth=4, linestyle=:dashdot)
-    Legend(f[1, 2], [lin1, lin2, lin3, lin4, lin5], ["circle", "triangle", "square", "hex", "star"])
+    gaxmain = Axis(ga[1, 1],
+              xlabel="t", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="Simulation Ot", ylabelsize = txtSize, yticklabelsize = tickSize,
+              title = "Ot = $Ot", titlesize = txtSize)
+    
+    Ot_line = CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black)
+    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, y, linewidth=5, color = :blue)
+    Legend(f[1,2],[Ot_line,Sim_Ot_Line], ["Ot value", "Simulated Ot"])
     return f
 end
 
-function plotAreaVStime_δt(sol_δt1, sol_δt2, sol_δt3, sol_δt4, Geometry)
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        resolution=(700, 500))
-    ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], title="Void area difference compared with solution for δt = 0.00001 for $Geometry pore", xlabel="Time [Days]", ylabel="Ω-difference [units²]")
-    lin1 = lines!(gaxmain, sol_δt2.t, sol_δt2.Ω - sol_δt1.Ω, linewidth=4, linestyle=:solid)
-    lin2 = lines!(gaxmain, sol_δt3.t, sol_δt3.Ω - sol_δt1.Ω, linewidth=4, linestyle=:dash)
-    lin3 = lines!(gaxmain, sol_δt4.t, sol_δt4.Ω - sol_δt1.Ω, linewidth=4, linestyle=:dot)
-    Legend(f[1, 2], [lin1, lin2, lin3], ["δt = 0.0001", "δt = 0.001", "δt = 0.01"])
-    return f
+
+# ANIMATION CODE
+
+function plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
+    Lplot = CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+            colormap=cmap, linewidth=5)
+    Splot = CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+        colormap=cmap, markersize=6)
+    return Lplot,Splot
 end
 
-function plotKapVsVel(sol)
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        resolution=(700, 500))
+
+function animateResults2D(t, u, var, cmap, crange, cbarlabel, D, kf, filename)
+    txtSize = 35;
+    tickSize = 25;
+    CRange = crange
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], title="Curvature vs velocity @ different days", xlabel="κ", ylabel="vₙ [μms⁻¹]")
-    for ii in axes(sol.Κ,1)
-        if sol.btype == "triangle"
-            mid = floor(Int64, length(sol.Κ[ii])/3)
-        elseif sol.btype == "square"
-            mid = floor(Int64, length(sol.Κ[ii])/4)
-        elseif sol.btype == "hex"
-            mid = floor(Int64, length(sol.Κ[ii])/6)
-        elseif sol.btype == "circle"
-            mid = floor(Int64, length(sol.Κ[ii])/2)
-        elseif sol.btype == "star"
-            mid = floor(Int64, length(sol.Κ[ii])/1)
+    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
+            xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
+            ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
+            title = "t = $(t[1])", titlesize = txtSize)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+            flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
+    Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
+
+    frames = 2:length(u)+50
+    record(f,filename,frames; framerate = 10) do frame
+        delete!(f.content[1],Lplot)
+        delete!(f.content[1],Splot)
+        if frame > length(u)
+            index = length(u)
+        else
+            index = frame
         end
-
-        x = sort(sol.Κ[ii][2:mid])
-        y = sort(sol.Vₙ[ii][2:mid])
-
-        scatter!(gaxmain, x, y, markersize = 25, marker = '*')
-        
-
-        #fit = curve_fit(LogFit, x, y)
-        #yfit = fit.(x)
-        #lines!(gaxmain, x, yfit, linewidth=3, linestyle=:dash)
+        T = round(t[index];digits=2)
+        gaxmain.title="t = $T"
+        Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
     end
-
-    return f
 end
-

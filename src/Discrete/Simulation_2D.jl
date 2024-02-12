@@ -38,10 +38,21 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
     Set_Random_Seed(seed)
     M = Int(m*N) # total number of springs along the interface
     savetimes = LinRange(0, Tmax, NumSaveTimePoints)
+    
+    # for cell embedment 
+    global embedded_cells = []
+    embedded_cells_count = []
 
     all_results = Vector{Vector{SimResults_t}}(undef, 0)
 
-    cb = PeriodicCallback(affect!,event_δt; save_positions=(false, false))
+    event_cb = PeriodicCallback(affect!,event_δt; save_positions=(false, false))
+
+    # saving callback 
+    saved_values = SavedValues(Float64, Float64)
+    save_cb = SavingCallback(store_embedded_cell_count, saved_values, saveat=savetimes)
+    
+    # generating a set of callbacks
+    cbs = CallbackSet(event_cb,save_cb)
 
     for jj in eachindex(D)
         @views kₛ = D[jj]*(η)/((l₀)^2)
@@ -53,13 +64,14 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
             @views btype = btypes[ii]
             prob, p = SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
                                         growth_dir,prolif,death,embed,α,β,γ,dist_type)
-            @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cb)
+            @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
             push!(results, postSimulation2D(btype, sol, p))
+            push!(embedded_cells_count, floor.(saved_values.saveval))
             printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D[jj])
         end
         push!(all_results,results)
     end
 
-    return all_results
+    return all_results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
 
 end

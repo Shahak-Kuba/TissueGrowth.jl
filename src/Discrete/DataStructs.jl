@@ -30,4 +30,6 @@ struct SimResults_t
     ψ::Vector{ElasticMatrix{Float64,Vector{Float64}}}
     Κ::Vector{ElasticMatrix{Float64,Vector{Float64}}}
     CellCount::Vector{Int64}
+    #EmbeddedCellCount::Vector{Float64}
+    #EmbeddedCellPos::
 end

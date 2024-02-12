@@ -122,7 +122,7 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     tickSize = 20;
     plot_font = "Arial"
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(600, 800))
+        size=(600, 900))
     ga = f[1, 1] = GridLayout()
     col_size = 1;
     #row_size = Int64(ceil(length(indicies)/col_size))

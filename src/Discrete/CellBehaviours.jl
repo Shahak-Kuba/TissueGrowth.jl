@@ -90,7 +90,7 @@ If the embedding event is considered to occur (`event` is `true`), the probabili
 # Returns
 A vector representing the calculated probabilities for embedding.
 """
-E(event,ρ,γ) = event ? γ.*ρ : zeros(size(ρ))
+E(event,ρ,kf,γ) = event ? γ.*kf.*ones(size(ρ)) : zeros(size(ρ))
 
 """
     cell_probs(uᵢ, m, δt, prolif, death, embed, α, β, γ)
@@ -109,9 +109,9 @@ This function uses `calc_cell_densities` to calculate cell densities and then co
 # Returns
 A tuple containing three vectors representing the probabilities for proliferation, death, and embedding.
 """
-function cell_probs(uᵢ,m,δt,prolif,death,embed,α,β,γ)
+function cell_probs(uᵢ,m,δt,prolif,death,embed,α,β,γ,kf)
     ρ = calc_cell_densities(uᵢ,m)
-    return (P(prolif,ρ,α).*δt, A(death, ρ,β).*δt, E(embed, ρ,γ).*δt)
+    return (P(prolif,ρ,α).*δt, A(death,ρ,β).*δt, E(embed,ρ,kf,γ).*δt)
 end
 
 """
@@ -133,7 +133,7 @@ function find_cell_index(arr::Vector{Float64}, threshold::Float64)
     cum_sum = cumsum(arr)
     index = findfirst(cum_sum .>= threshold)
     if index === nothing || index > length(arr)
-        return index = length(arr)  # If the cumulative sum never reaches the threshold
+        return index = length(arr)-1  # If the cumulative sum never reaches the threshold
     end
     return index
 end
@@ -154,28 +154,39 @@ This function modifies `integrator` in place. It uses the parameters and state f
 function affect!(integrator)
     (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ) = integrator.p
     u = integrator.u
-    (p,a,e) = cell_probs(u, m, δt, prolif, death, embed, α, β, γ)
+    (p,a,e) = cell_probs(u, m, δt, prolif, death, embed, α, β, γ, kf)
     (r1,r2,r3) = rand(3)
     if r1 < (sum(p) + sum(a) + sum(e)) # check if event has occurred
         if r2 < sum(p) / (sum(p) + sum(a) + sum(e)) # prolif occurs
             idx = find_cell_index(p, r3 * sum(p))
+            # converting back to spring index
+            spring_index = idx*m - (m-1)
             #println("inserted at: ",idx)
-            insert!(u,idx,((circshift(u',1)'[:,idx] + u[:,idx])/2))
+            insert!(u,spring_index,((circshift(u',1)'[:,spring_index] + u[:,spring_index])/2))
             # Perform operations based on prolif occurrence if needed
  
 
         elseif sum(p) / (sum(p) + sum(a) + sum(e)) < r2 < (sum(p) + sum(a)) / (sum(p) + sum(a) + sum(e)) # death occurs
             idx = find_cell_index(a, r3 * sum(a))
+            # converting back to spring index
+            spring_index = idx*m - (m-1)
             #println("deleted at: ",idx)
-            deleteat!(u,idx)
+            deleteat!(u,spring_index)
             resize!(integrator,(2,size(integrator.u,2)))
             # Remove the cell from u based on death occurrence
 
 
         else # embed occurs
-            global 🥔
             idx = find_cell_index(e, r3 * sum(e))
-            
+            # converting back to spring index
+            spring_index = idx*m - (m-1)
+            #println("embedded at: ",idx)
+            store_embedded_cell(u, spring_index, m)
+
+            for i = spring_index:(spring_index + m)-1
+                deleteat!(u,spring_index)
+            end
+            resize!(integrator,(2,size(integrator.u,2)))
             # Perform operations based on embed occurrence if needed
         end
         resize!(integrator,(2,size(integrator.u,2)))
@@ -186,18 +197,53 @@ end
 """
     store_embed_cell_pos(pos)
 
-Stores the position of embedded cells into 🥔 array.
+Stores the position of embedded cells into embedded_cells array.
 
-This function inserts the position vector `pos` of an embedded cell into the 🥔 array.
+This function inserts the position vector `pos` of a boundary of an embedded cell into the embedded_cells array.
 
 # Arguments
 - `pos`: position vector of the cell that is being embedded into the tissue should contain `m+1` values given `m` springs in the simulation
 
 # Returns
-`nothing`. The function modifies `🥔` in place.
+`nothing`. The function modifies `embedded_cells` in place.
 """
 function store_embed_cell_pos(pos)
-    global 🥔
-    insert!(🥔,size(🥔,2),pos)
+    global embedded_cells
+    insert!(embedded_cells,size(embedded_cells,2),pos)
     return nothing
+end
+
+function store_embedded_cell(u, idx, m)
+    for i = idx:idx+m
+        if i > size(u,2)
+            store_embed_cell_pos(u[:,1].data)
+        else
+            store_embed_cell_pos(u[:,i].data)
+        end
+    end
+    return nothing
+end
+
+function store_embedded_cell_count(u, t, integrator)
+    (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ) = integrator.p
+    global embedded_cells
+    #global embedded_cell_count
+    cell_count = size(hcat(embedded_cells...),2)/(m+1)
+    #push!(embedded_cell_count,cell_count)
+    return cell_count
+end
+
+
+function convert_matrix(matrix, M)
+    # Check if N is divisible by M
+    N = size(matrix, 2)
+    @assert N % M == 0 "N must be divisible by M"
+
+    # Reshape the matrix
+    reshaped_matrix = reshape(matrix, 2, M, :)
+
+    # Split the reshaped matrix along the third dimension to get a vector of 2x3 matrices
+    vector_of_matrices = [reshaped_matrix[:, :, i] for i in axes(reshaped_matrix,3)]
+
+    return vector_of_matrices
 end

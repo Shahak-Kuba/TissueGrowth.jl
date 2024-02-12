@@ -60,7 +60,6 @@ function λ(Β,Γ,r,kf)
     for i in eachindex(λ_max)
         λ_max[i] = max(λ₊[i],λ₋[i],0.0)
     end
-
     """ Method using Roots function (creates a lot of allocations)
     p_coefficients = hcat(zeros(length(λ_max)), kf .* Β ./ r, Γ, -ones(length(λ_max)))
 
