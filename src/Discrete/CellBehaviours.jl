@@ -237,13 +237,17 @@ end
 function convert_matrix(matrix, M)
     # Check if N is divisible by M
     N = size(matrix, 2)
-    @assert N % M == 0 "N must be divisible by M"
+    if N % M == 0 "N must be divisible by M"
 
-    # Reshape the matrix
-    reshaped_matrix = reshape(matrix, 2, M, :)
+        # Reshape the matrix
+        reshaped_matrix = reshape(matrix, 2, M, :)
 
-    # Split the reshaped matrix along the third dimension to get a vector of 2x3 matrices
-    vector_of_matrices = [reshaped_matrix[:, :, i] for i in axes(reshaped_matrix,3)]
+        # Split the reshaped matrix along the third dimension to get a vector of 2x3 matrices
+        vector_of_matrices = [reshaped_matrix[:, :, i] for i in axes(reshaped_matrix,3)]
 
-    return vector_of_matrices
+        return vector_of_matrices
+
+    else
+        return []
+    end
 end

@@ -4,11 +4,11 @@ function ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_
     ### Discrete Simulation
     
     # simulation with m1 cells
-    sols2D_m1 = TissueGrowth.sim2D(N,m1,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
+    sols2D_m1, z, c = TissueGrowth.sim2D(N,m1,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
     # simulation with m2 cells
-    sols2D_m2 = TissueGrowth.sim2D(N,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
+    sols2D_m2, z, c = TissueGrowth.sim2D(N,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,[btype],dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
 
