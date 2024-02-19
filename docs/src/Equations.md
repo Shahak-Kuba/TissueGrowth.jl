@@ -1,4 +1,4 @@
-# Discrete simulation functions and code description
+# System of ODEs (Discrete Model)
 
 # Index
 ```@index
@@ -11,13 +11,14 @@ TissueGrowth.SimResults_t
 
 # 1D simulation code:
 ```@docs
-TissueGrowth.sim1D()
+TissueGrowth.sim1D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type)
 ```
 
 # 2D simulation code:
 
 ```@docs
-TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,prolif,death,embed,α,β,γ,event_δt,seed)
+TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type, 
+                prolif, death, embed, α, β, γ, event_δt, seed, NumSaveTimePoints)
 ```
 
 # ODE Problem:
@@ -40,9 +41,8 @@ TissueGrowth.Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt, type)
 ```@docs
 TissueGrowth.P(event,ρ,α)
 TissueGrowth.A(event,ρ,β)
-TissueGrowth.E(event,ρ,γ)
+TissueGrowth.E(event,ρ,kf,γ)
 TissueGrowth.affect!(integrator)
-TissueGrowth.store_embed_cell_pos(pos)
 ```
 
 # Custom modifier & Special functions

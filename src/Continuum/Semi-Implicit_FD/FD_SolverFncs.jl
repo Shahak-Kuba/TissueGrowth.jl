@@ -19,7 +19,7 @@ function aₘ(Rᵢ₊₁, Rᵢ₋₁)
 end
 
 # same function created in FVM_SolverFncs.jl
-"""
+
 function InitialBoundary(type,r₀,θ,M)
     r = zeros(1,M);
 
@@ -59,4 +59,3 @@ function InitialBoundary(type,r₀,θ,M)
     end
     return r
 end
-"""

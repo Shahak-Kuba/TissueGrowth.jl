@@ -1,5 +1,5 @@
-
-function plotContinuumResults_Cartesian(x, h, ρ, D, kf, cmap)
+ 
+function plotContinuumResults_Cartesian(x, h, ρ, cmap, D, kf)
     txtSize = 35;
     tickSize = 25;
     plot_font = "Arial"

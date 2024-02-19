@@ -29,14 +29,15 @@ prolif = false;    death = false;  embed = false;
 event_δt = δt
 
 # 2D simulations 
-sols2D = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, γ, event_δt, seed);
+sols2D, Q, R = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
+            prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
 cmap = :jet
 
 geo = 1 # indexing through `btypes`
 diffusivity = 1 # indexing through `D`
-TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, cmap)
+Density_Range = (10,30)
+TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, cmap, Density_Range, "Density ρ", D[diffusivity], kf)
 
 ```
 
@@ -69,13 +70,14 @@ prolif = true;     death = true;    embed = false;
 event_δt = δt
 
 # 2D simulations 
-sols2D = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, γ, event_δt, seed);
+sols2D, Q, R = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
+            prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
 cmap = :jet
 
 geo = 1 # indexing through `btypes`
 diffusivity = 1 # indexing through `D`
-TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, cmap)
+Density_Range = (10,30)
+TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, cmap, Density_Range, "Density ρ", D[diffusivity], kf)
 
 ```

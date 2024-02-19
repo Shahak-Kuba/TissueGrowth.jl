@@ -1,5 +1,5 @@
 """
-    sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,prolif,death,embed,α,β,γ,event_δt,seed)
+    sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,prolif,death,embed,α,β,γ,event_δt,seed, NumSaveTimePoints)
 
 Execute a series of 2D mechanical relaxation simulations.
 
@@ -29,11 +29,11 @@ A vector of vectors of `SimResults_t` objects. Each inner vector represents the 
 # Example
 ```julia
 all_results = sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-                        prolif, death, embed, α, β, γ, event_δt, seed);
+                        prolif, death, embed, α, β, γ, event_δt, seed, NumSaveTimePoints);
 ```
 """
-function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-    prolif, death, embed, α, β, γ, event_δt, seed, NumSaveTimePoints);
+function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type, 
+                prolif, death, embed, α, β, γ, event_δt, seed, NumSaveTimePoints)
 
     Set_Random_Seed(seed)
     M = Int(m*N) # total number of springs along the interface

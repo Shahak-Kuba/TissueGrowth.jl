@@ -11,14 +11,14 @@ growth_dir = "inward"
 Tmax = 30.0
 Xmax = 2π
 
-x,h,ρ = SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax);
+x,h,ρ = FD_SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax);
 
 cmap = :jet
 f1 = plotContinuumResults_Cartesian(x, h, ρ, D, kf, cmap)
 
 
 # simulation parameters
-D = 1.0;
+D = 0.05;
 kf = 0.001;
 A = 0.00;
 ρ₀ = 20;
@@ -27,7 +27,7 @@ btype = "hex"
 Tmax = 21
 r₀ = 1.05
 
-θ,R,ρ = SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir);
+θ,R,ρ = FD_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir);
 
 plotContinuumResults_Polar(θ, R, ρ, cmap, D, kf)
 

@@ -36,20 +36,26 @@ Vₙ = k_{f}^{(m)}\rho_{i}, \hspace{0.5cm} \rho_{i} = \frac{1}{\lVert \mathbf{u}
 # Continuum model description
 To derive the continuum limit of the discrete model we consider a very large number of springs per cell such that $m\rightarrow\infty$. There we are able to derive the evolution equation for spring density $\frac{\partial\rho}{\partial t}$ and then transform the result into an evolution equation for cell density $\frac{\partial q}{\partial t}$ using the relationship between spring and cell density $q(x,t) = \frac{\rho(x,t)}{m}$. Using appropriate parameter scalings we derive the evolution equation of cell density to be,
 ```math
-\frac{\partial q}{\partial t} = -\frac{\partial^{2}\tilde{F}(q(x,t))}{\partial s^{2}} - q(x,t)V(q(x,t))\kappa
+\frac{\partial q}{\partial t} = -\frac{\partial^{2}\tilde{F}(q)}{\partial s^{2}} - qV(q)\kappa,
 ```
-where,
+the mechanical relaxation is given by the first term and can be rewritten using the chain rule to look like a nonlinear diffusion,
 ```math
-\tilde{F}(q(x,t)) = D(q_{0} - q(x,t)), \hspace{0.5cm} D = \frac{k_{s}^{(1)}}{\eta^{(1)}}q_{0}^{2},
+ -\frac{\partial^{2}\tilde{F}(q)}{\partial s^{2}} = \frac{\partial}{\partial s}\bigg(-\frac{\partial\tilde{F}(q)}{\partial q}\frac{\partial q}{\partial s}\bigg).
+```
+Given the choice of the nonlinear restoring force in the discrete models we retain a linear diffusion where,
+```math
+\tilde{F}(q) = D(q_{0} - q), \hspace{0.5cm} D = \frac{k_{s}^{(1)}}{\eta^{(1)}}q_{0}^{2},
 ```
 ```math
-V(q(x,t)) = k_{f}^{(1)}q(x,t),
+V(q) = k_{f}^{(1)}q,
 ```
 $\frac{\partial^{2}}{\partial s^{2}}$ is the second derivative in terms of arc-length and $\bm{\gamma}(x,t)$ is an arbitrary parameterisation for the interface.
 
-When this equation is solved in a parameterised form such that $\bm{\gamma} = (x,h(x))$ there is an extra term such that,
+In cartesian form such that $\bm{\gamma} = (x,h(x))$ there is an extra term such that,
 
 ```math
 \frac{\partial q}{\partial t} = -\frac{\partial^{2}\tilde{F}(q(x,t))}{\partial s^{2}} - q(x,t)V(q(x,t))\kappa - \bigg(\frac{\bm{\gamma}_{t}\cdot\bm{\hat{\tau}}}{\lVert \bm{\gamma}_{t} \rVert} \bigg)\frac{\partial q(x,t)}{\partial x}
 ```
+
+For high to mid diffusivities i.e. $0.05 \geq D \leq 1$ we use a Finite Difference upwinding scheme. 
 
