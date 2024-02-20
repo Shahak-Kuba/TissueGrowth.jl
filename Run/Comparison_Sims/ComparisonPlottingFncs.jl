@@ -26,7 +26,7 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solu
     cont_index = 1 + (index - 1)*1000
     cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red)
 
-    text!(gaxmain, 0.2, max_y-1.2 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=24)
+    text!(gaxmain, 0.2, max_y-1.8 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=24)
     
     return cont_line, disc_stair1, disc_stair2
 end

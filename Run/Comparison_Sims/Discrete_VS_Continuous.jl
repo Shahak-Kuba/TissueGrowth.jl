@@ -36,7 +36,7 @@ Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution, f_results = Comp
                                                                             prolif, death, embed, α, βv, γv, event_δt, seed, Av);
 
 indicies = [1,3,5,7,9,11]
-num_cols = 3
+num_cols = 2
 f1 = DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)
 
 cmap = :jet

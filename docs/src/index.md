@@ -4,7 +4,7 @@ CurrentModule = TissueGrowth
 
 # TissueGrowth.jl
 
-TissueGrowth.jl is a open source project package developed to simulate the evoluition of biological tissue interface during tissue growth. This package is used to solve both the system of ODE's defined in the discrete model and the PDE derived through taking the continuum limit of the discrete model.
+TissueGrowth.jl is a open source project package developed to simulate the evoluition of biological tissue interface during tissue growth. This package is used to solve both the system of ODEs defined in the discrete model and the PDE derived through taking the continuum limit of the discrete model.
 
 # Discrete model description
 Our model considers mechanical interactions between neighbouring cells and a secretion rate of new tissue material that is proportional to cell density. In this project we include cell proliferation, apoptosis (death) and embedment as stochastic processes. This model is solved using the `DifferentialEquations.jl` and `ElasticArrays.jl` packages. The solver uses `RK4()` or `Euler()` solving algorithms with a constant timestep $\Delta t$. The stochastic cell behaviour is implemented using a `PeriodicCallback` and occurs every $\delta t_{\text{event}}$ period of time. This package offers 1D and 2D simulations. In our case 1D simulations imply the evolution of a line segment which has periodic boundaries and 2D is a closed domain. In the case of 2D simulations you can choose an `inward` or `outward` growth simulation by setting the appropriate parameters.
@@ -57,5 +57,5 @@ In cartesian form such that $\bm{\gamma} = (x,h(x))$ there is an extra term such
 \frac{\partial q}{\partial t} = -\frac{\partial^{2}\tilde{F}(q(x,t))}{\partial s^{2}} - q(x,t)V(q(x,t))\kappa - \bigg(\frac{\bm{\gamma}_{t}\cdot\bm{\hat{\tau}}}{\lVert \bm{\gamma}_{t} \rVert} \bigg)\frac{\partial q(x,t)}{\partial x}
 ```
 
-For high to mid diffusivities i.e. $0.05 \geq D \leq 1$ we use a Finite Difference upwinding scheme. 
+For high to mid diffusivities i.e. $1 \geq D \geq 0.05$ we use a Finite Difference upwinding scheme. 
 
