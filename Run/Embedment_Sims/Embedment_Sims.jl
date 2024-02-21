@@ -1,7 +1,7 @@
 using TissueGrowth
 
 # set random seed number for reproducability 
-seed = 211
+seed = 77
 
 # setting up simulation parameters
 N = 60 # number of cells

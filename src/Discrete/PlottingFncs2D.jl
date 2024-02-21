@@ -37,6 +37,25 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
     return f
 end
 
+function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims)
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
+              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              #title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    for i in eachindex(u)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i)
+    end
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
 function plotInterface!(gaxmain, u, var, cmap, CRange, index)
     CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
             colormap=cmap, linewidth=5)

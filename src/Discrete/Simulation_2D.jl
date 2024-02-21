@@ -56,7 +56,6 @@ function sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
 
     for jj in eachindex(D)
         @views kₛ = D[jj]*(η)/((l₀)^2)
-        #sol_array = Array{ODESolution}(undef,length(btypes));
         results = Vector{SimResults_t}(undef, 0)
         # creating 
 
