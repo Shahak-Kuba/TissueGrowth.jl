@@ -64,13 +64,13 @@ function plotInterface!(gaxmain, u, var, cmap, CRange, index)
 end
 
 
-function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, embedded_cells, multiInterfaces)
+function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedded_cells, multiInterfaces)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -123,9 +123,8 @@ function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], 
-              xlabel="t", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="θ", ylabelsize = txtSize, yticklabelsize = tickSize,
-              title = "kₛ = $D, kf = $kf", titlesize = txtSize)
+              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="θ [radians]", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
     θ = zeros(size(u[1],1)+1,size(t,1))
     ξ = zeros(size(u[1],1)+1,size(t,1))
@@ -158,7 +157,7 @@ function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1],
-              xlabel="t", xlabelsize = txtSize, xticklabelsize = tickSize,
+              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="Simulation Ot", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "Ot = $Ot", titlesize = txtSize)
     

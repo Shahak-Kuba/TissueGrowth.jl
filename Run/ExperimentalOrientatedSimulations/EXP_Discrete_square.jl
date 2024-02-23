@@ -20,13 +20,13 @@ using TissueGrowth
 seed = 99
 
 # scaling factor to simulate μm instead of mm
-Λ = 1000
+Λ = 10000
 
 # setting up simulation parameters
 N = 100 # number of cells
-m = 4 # number of springs per cell
+m = 1 # number of springs per cell
 R₀ = 282.09  # shape radius μm
-D = [0.5].*Λ
+D = [0.05].*Λ
 l₀ = 3.14
 kf = 93.13 
 η = 1.0 
@@ -46,10 +46,13 @@ sols2D, 🥔, 🌻 = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δ
             prolif, death, embed, α, β, Ot, event_δt, seed, 11);
 
 Density_cmap = :jet
+Stress_cmap = :viridis
 
 geo = 1
 diffusivity = 1
 
 Density_Range = (0.05,0.32)
+Stress_Range = (-20, 20)
 
-f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, (500,500))
+f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, (280,280))
+f2 = TissueGrowth.plotThetaVsTime(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, Stress_cmap, Stress_Range, "Stress ψ", D, kf)
