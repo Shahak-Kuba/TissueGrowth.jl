@@ -121,10 +121,10 @@ function plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,N,kf)
     if !COMPARE
         t = LinRange(0,t₁[end],500)
         Ωₐ = Ω_analytic(Ω₁[1],N,kf,t)
-        Line0 = plotAreaDiffVsTime!(gaxmain, t, Ωₐ, :green, :solid)
-        Line1 = plotAreaDiffVsTime!(gaxmain, t₁, Ω₁, :blue, :solid)
-        Line2 = plotAreaDiffVsTime!(gaxmain, t₂, Ω₂, :red, :dash)
-        Line3 = plotAreaDiffVsTime!(gaxmain, t₃, Ω₃, :black, :dot)
+        Line0 = plotAreaVsTime!(gaxmain, t, Ωₐ, :green, :solid)
+        Line1 = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :solid)
+        Line2 = plotAreaVsTime!(gaxmain, t₂, Ω₂, :red, :dash)
+        Line3 = plotAreaVsTime!(gaxmain, t₃, Ω₃, :black, :dot)
         Legend(f[1,2],[Line0,Line1,Line2,Line3], ["Analytic","δt = 0.01", "δt = 0.001","δt = 0.0001"])
     else
         Line1 = plotAreaDiffVsTime!(gaxmain, t₁, Ω₁, N, kf, :blue, :solid)
@@ -136,7 +136,7 @@ function plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,N,kf)
     return f
 end
 
-function plotAreaDiffVsTime!(gaxmain, t, Ωₛ, clr, style)
+function plotAreaVsTime!(gaxmain, t, Ωₛ, clr, style)
     CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, linewidth=4, linestyle=style)
 end
 
@@ -151,7 +151,7 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
     txtSize = 35;
     tickSize = 16;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(655, 480))
+        size=(655, 455))
     ga = f[1, 1] = GridLayout()
 
     for Diffusivity = axes(Solution,1)
@@ -179,7 +179,29 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
     return f
 end
 
+function plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,N,kf)
+    txtSize = 35;
+    tickSize = 16;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(455, 455))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], 
+                    xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+                    ylabel="Ω [μm^2]", ylabelsize = txtSize, yticklabelsize = tickSize)
+    
+    t = LinRange(0,t₁[end],500)
+    Ωₐ = Ω_analytic(Ω₁[1],N,kf,t)
 
+    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid)
+    Square_Sol = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :dash)
+    Hex_Sol = plotAreaVsTime!(gaxmain, t₂, Ω₂, :black, :dot)
+
+    Legend(f[1,2],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
+
+    return f
+end
+
+function plotAreaVsTime!()
 """
     plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
 
