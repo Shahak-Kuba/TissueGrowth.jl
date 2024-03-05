@@ -43,7 +43,7 @@ event_δt = δt
 
 # 2D simulations 
 sols2D, 🥔, 🌻 = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, Ot, event_δt, seed, 11);
+            prolif, death, embed, α, β, Ot, event_δt, seed, 100);
 
 Density_cmap = :jet
 Stress_cmap = :viridis

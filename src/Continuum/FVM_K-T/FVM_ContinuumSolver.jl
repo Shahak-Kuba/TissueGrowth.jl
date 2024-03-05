@@ -53,7 +53,7 @@ function FVM_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype, growth_dir)
 
     # setting up initial conditions 
     # (interface: r₀)
-    r[1,:] = InitialBoundary(btype,r₀,θ,M)
+    r[1,:] = FVM_InitialBoundary(btype,r₀,θ,M)
     # (σ₀)
     rᵢ .= r[1,:]
     rᵢ₊₁ .= circshift(rᵢ,-1)

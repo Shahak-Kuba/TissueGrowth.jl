@@ -150,7 +150,7 @@ function SetupSolverMemory(r)
     return r⁺₁,r⁺₂,σ⁺₁,σ⁺₂,η⁺₁,η⁺₂,r⁻₁,r⁻₂,σ⁻₁,σ⁻₂,η⁻₁,η⁻₂,dσ⁺₁,dσ⁺₂,dη⁺₁,dη⁺₂,dσ⁻₁,dσ⁻₂,dη⁻₁,dη⁻₂,β⁺₁,γ⁺₁,β⁺₂,γ⁺₂,λ⁺₁,λ⁺₂ ,a⁺val ,β⁻₁ ,γ⁻₁ ,β⁻₂, γ⁻₂ ,λ⁻₁ ,λ⁻₂, a⁻val ,κ⁺₁ , κ⁺₂ ,κ⁻₁ ,κ⁻₂, F₁⁺₁ ,F₁⁺₂ ,F₁⁻₁ ,F₁⁻₂,F₂⁺₁ ,F₂⁺₂ ,F₂⁻₁,F₂⁻₂,F₃⁺₁,F₃⁺₂,F₃⁻₁, F₃⁻₂, H⁺₁, H⁻₁, H⁺₂, H⁻₂, H⁺₃, H⁻₃, L₁, L₂, L₃, ddσ⁺₁, ddσ⁺₂, ddσ⁻₁, ddσ⁻₂ 
 end
 
-function InitialBoundary(type,r₀,θ,M)
+function FVM_InitialBoundary(type,r₀,θ,M)
     r = zeros(1,M);
 
     if type == "circle"

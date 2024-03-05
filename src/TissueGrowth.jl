@@ -37,6 +37,7 @@ module TissueGrowth
     include("Discrete/DataStructs.jl")
     include("Discrete/PostSimulation.jl")
     include("Discrete/ModifierFncs.jl")
+    include("Discrete/AnalyticSolution.jl")
 
     # continuum limit simulation code
     include("Continuum/Semi-Implicit_FD/FD_ContinuumSolvers.jl")
@@ -48,5 +49,5 @@ module TissueGrowth
     include("Continuum/PlottingFncsPDE.jl")
 
     # including for comparion plotting 
-    include("../Run/Comparison_Sims/ComparisonPlottingFncs.jl")
+    include("../Run/Paper_Simulations/Comparison_Sims/ComparisonPlottingFncs.jl")
 end

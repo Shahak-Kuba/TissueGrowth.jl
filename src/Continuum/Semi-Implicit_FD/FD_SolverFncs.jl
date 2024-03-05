@@ -1,8 +1,3 @@
-
-aₘ₊(hₘ₊₁, hₘ₋₁) = hₘ₊₁ .≤ hₘ₋₁ 
-aₘ₋(hₘ₊₁, hₘ₋₁) = hₘ₊₁ .> hₘ₋₁ 
-
-# for solving FVM
 function aₘ(Rᵢ₊₁, Rᵢ₋₁)
     a₊ = zeros(size(Rᵢ₊₁))
     a₋ = zeros(size(Rᵢ₊₁))
@@ -20,7 +15,7 @@ end
 
 # same function created in FVM_SolverFncs.jl
 
-function InitialBoundary(type,r₀,θ,M)
+function FD_InitialBoundary(type,r₀,θ,M)
     r = zeros(1,M);
 
     if type == "circle"

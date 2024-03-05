@@ -88,8 +88,7 @@ function FD_SolveContinuumLim_Cartesian(D,kf,A,ρ₀,growth_dir,Tmax,Xmax)
         ρᵢ₊₁ .= circshift(ρᵢ,-1)
         ρᵢ₋₁ .= circshift(ρᵢ,1)
 
-        a⁺ .= aₘ₊(hᵢ₊₁,hᵢ₋₁)
-        a⁻ .= aₘ₋(hᵢ₊₁,hᵢ₋₁)
+        a⁺, a⁻ = aₘ(Rᵢ₊₁, Rᵢ₋₁) 
 
         hₓ[n,:] .= (hᵢ.*(a⁺.-a⁻) .- hᵢ₋₁.*a⁺ .+ hᵢ₊₁.*a⁻) ./ Δx;                    # upwind to find hₓ,  refer eqn (26) in the notes
         hₓₓ[n,:] .= (hᵢ₊₁ .- 2 .*hᵢ .+ hᵢ₋₁) ./ (Δx^2);                               # cental to find hₓₓ, refer eqn (30) in the notes  
@@ -184,7 +183,7 @@ function FD_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir)
     # set initial conditions for h and ρ
     #R[1,:] = ones(size(θ)).*3.0 #2.0 .+ 0.5.*cos.(3*θ)
    
-    R[1,:] = InitialBoundary(btype,r₀,θ,M)
+    R[1,:] = FD_InitialBoundary(btype,r₀,θ,M)
     ρ[1,:] = ones(1,M)*ρ₀
 
     if growth_dir == "inward"

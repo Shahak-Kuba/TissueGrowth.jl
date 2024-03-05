@@ -21,7 +21,7 @@ Generate a 2D plot to visualize results with lines and scatter points.
 function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
     txtSize = 35;
     tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
@@ -40,7 +40,7 @@ end
 function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims)
     txtSize = 35;
     tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
@@ -63,11 +63,18 @@ function plotInterface!(gaxmain, u, var, cmap, CRange, index)
         colormap=cmap, markersize=6)
 end
 
+function plotInterface!(gaxmain, u, var, cmap, CRange, index, lw)
+    CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+            colormap=cmap, linewidth=lw)
+    CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+        colormap=cmap, markersize=lw+1)
+end
+
 
 function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedded_cells, multiInterfaces)
     txtSize = 35;
     tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
@@ -96,6 +103,81 @@ function plotEmbeddedCells!(gaxmain, embedded_cell_pos)
     end
 end
 
+## AREA COMPARE PLOTTING CODE
+
+# δt compare code
+
+function plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,N,kf)
+    COMPARE = false
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], 
+              xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="Ω-error [μm^2]", ylabelsize = txtSize, yticklabelsize = tickSize)
+
+    if !COMPARE
+        t = LinRange(0,t₁[end],500)
+        Ωₐ = Ω_analytic(Ω₁[1],N,kf,t)
+        Line0 = plotAreaDiffVsTime!(gaxmain, t, Ωₐ, :green, :solid)
+        Line1 = plotAreaDiffVsTime!(gaxmain, t₁, Ω₁, :blue, :solid)
+        Line2 = plotAreaDiffVsTime!(gaxmain, t₂, Ω₂, :red, :dash)
+        Line3 = plotAreaDiffVsTime!(gaxmain, t₃, Ω₃, :black, :dot)
+        Legend(f[1,2],[Line0,Line1,Line2,Line3], ["Analytic","δt = 0.01", "δt = 0.001","δt = 0.0001"])
+    else
+        Line1 = plotAreaDiffVsTime!(gaxmain, t₁, Ω₁, N, kf, :blue, :solid)
+        Line2 = plotAreaDiffVsTime!(gaxmain, t₂, Ω₂, N, kf, :red, :dash)
+        Line3 = plotAreaDiffVsTime!(gaxmain, t₃, Ω₃, N, kf, :black, :dot)
+        Legend(f[1,2],[Line1,Line2,Line3], ["δt = 0.01", "δt = 0.001","δt = 0.0001"])
+    end
+
+    return f
+end
+
+function plotAreaDiffVsTime!(gaxmain, t, Ωₛ, clr, style)
+    CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, linewidth=4, linestyle=style)
+end
+
+function plotAreaDiffVsTime!(gaxmain, t, Ωₛ, N, kf, clr, style)
+    Ωₐ = Ω_analytic(Ωₛ[1],N,kf,t)
+    CairoMakie.lines!(gaxmain, t, Ωₛ.-Ωₐ, color=clr, linewidth=4, linestyle=style)
+end
+
+
+# shape compare plotting code
+function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
+    txtSize = 35;
+    tickSize = 16;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(655, 480))
+    ga = f[1, 1] = GridLayout()
+
+    for Diffusivity = axes(Solution,1)
+        for Shape = axes(Solution[1],1)
+            # Setting gaxmain (axis ticks and labels)
+            if Diffusivity == 1
+                if Shape == size(Solution[1],1)
+                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsize = tickSize, yticklabelsize = tickSize)
+                else
+                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize)
+                end
+            elseif Shape == size(Solution[1],1)
+                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize)
+            else
+                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize)
+            end
+            # Plotting Interface
+            u = Solution[Diffusivity][Shape].u
+            var = Solution[Diffusivity][Shape].Density
+            for i in eachindex(u)
+                plotInterface!(gaxmain, u, var, cmap, CRange, i, 3)
+            end
+        end
+    end
+    return f
+end
 
 
 """
