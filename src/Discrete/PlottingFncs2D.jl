@@ -108,11 +108,11 @@ end
 # δt compare code
 
 function plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,N,kf)
-    COMPARE = false
-    txtSize = 35;
-    tickSize = 25;
+    COMPARE = true
+    txtSize = 16;
+    tickSize = 16;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(455, 400))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], 
               xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
@@ -121,37 +121,35 @@ function plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,N,kf)
     if !COMPARE
         t = LinRange(0,t₁[end],500)
         Ωₐ = Ω_analytic(Ω₁[1],N,kf,t)
-        Line0 = plotAreaVsTime!(gaxmain, t, Ωₐ, :green, :solid)
-        Line1 = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :solid)
-        Line2 = plotAreaVsTime!(gaxmain, t₂, Ω₂, :red, :dash)
-        Line3 = plotAreaVsTime!(gaxmain, t₃, Ω₃, :black, :dot)
-        Legend(f[1,2],[Line0,Line1,Line2,Line3], ["Analytic","δt = 0.01", "δt = 0.001","δt = 0.0001"])
+        Line0 = plotAreaVsTime!(gaxmain, t, Ωₐ, :green, :solid, "Analytic")
+        Line1 = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :solid, "δt = 0.01")
+        Line2 = plotAreaVsTime!(gaxmain, t₂, Ω₂, :red, :dash, "δt = 0.001")
+        Line3 = plotAreaVsTime!(gaxmain, t₃, Ω₃, :black, :dot, "δt = 0.0001")
+        axislegend(gaxmain, merge = true, unique = true)
+        #Legend(f[1,2],[Line0,Line1,Line2,Line3], ["Analytic","δt = 0.01", "δt = 0.001","δt = 0.0001"])
     else
-        Line1 = plotAreaDiffVsTime!(gaxmain, t₁, Ω₁, N, kf, :blue, :solid)
-        Line2 = plotAreaDiffVsTime!(gaxmain, t₂, Ω₂, N, kf, :red, :dash)
-        Line3 = plotAreaDiffVsTime!(gaxmain, t₃, Ω₃, N, kf, :black, :dot)
-        Legend(f[1,2],[Line1,Line2,Line3], ["δt = 0.01", "δt = 0.001","δt = 0.0001"])
+        Line1 = plotAreaDiffVsTime!(gaxmain, t₁, Ω₁, N, kf, :blue, :solid, "δt = 0.01")
+        Line2 = plotAreaDiffVsTime!(gaxmain, t₂, Ω₂, N, kf, :red, :dash, "δt = 0.001")
+        Line3 = plotAreaDiffVsTime!(gaxmain, t₃, Ω₃, N, kf, :black, :dot, "δt = 0.0001")
+        #Legend(f[1,2],[Line1,Line2,Line3], ["δt = 0.01", "δt = 0.001","δt = 0.0001"])
+        axislegend(gaxmain, merge = true, unique = true, position = :lt)
     end
 
     return f
 end
 
-function plotAreaVsTime!(gaxmain, t, Ωₛ, clr, style)
-    CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, linewidth=4, linestyle=style)
-end
-
-function plotAreaDiffVsTime!(gaxmain, t, Ωₛ, N, kf, clr, style)
+function plotAreaDiffVsTime!(gaxmain, t, Ωₛ, N, kf, clr, style, name)
     Ωₐ = Ω_analytic(Ωₛ[1],N,kf,t)
-    CairoMakie.lines!(gaxmain, t, Ωₛ.-Ωₐ, color=clr, linewidth=4, linestyle=style)
+    CairoMakie.lines!(gaxmain, t, Ωₛ.-Ωₐ, color=clr, label=name, linewidth=4, linestyle=style)
 end
 
 
 # shape compare plotting code
 function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
-    txtSize = 35;
+    txtSize = 16;
     tickSize = 16;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(655, 455))
+        size=(655, 400))
     ga = f[1, 1] = GridLayout()
 
     for Diffusivity = axes(Solution,1)
@@ -172,16 +170,18 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
             u = Solution[Diffusivity][Shape].u
             var = Solution[Diffusivity][Shape].Density
             for i in eachindex(u)
-                plotInterface!(gaxmain, u, var, cmap, CRange, i, 3)
+                plotInterface!(gaxmain, u, var, cmap, CRange, i, 2)
             end
         end
     end
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=15,
+        flipaxis=false, label="Density ρ", labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
 
 function plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,N,kf)
-    txtSize = 35;
-    tickSize = 16;
+    txtSize = 18;
+    tickSize = 18;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(455, 455))
     ga = f[1, 1] = GridLayout()
@@ -192,16 +192,19 @@ function plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,N,kf)
     t = LinRange(0,t₁[end],500)
     Ωₐ = Ω_analytic(Ω₁[1],N,kf,t)
 
-    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid)
-    Square_Sol = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :dash)
-    Hex_Sol = plotAreaVsTime!(gaxmain, t₂, Ω₂, :black, :dot)
+    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, "Analytic")
+    Square_Sol = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :dash, "Square Pore")
+    Hex_Sol = plotAreaVsTime!(gaxmain, t₂, Ω₂, :black, :dot, "Hex Pore")
 
-    Legend(f[1,2],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
-
+    #Legend(f[1,1],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
+    axislegend(gaxmain, merge = true, unique = true)
     return f
 end
 
-function plotAreaVsTime!()
+function plotAreaVsTime!(gaxmain, t, Ωₛ, clr, style, name)
+    CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, label = name, linewidth=4, linestyle=style)
+end
+
 """
     plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
 

@@ -1,7 +1,7 @@
 using TissueGrowth
 using DifferentialEquations
 
-EXP_VALUES = true
+EXP_VALUES = false
 
 # set random seed number for reproducability 
 seed = 99
@@ -18,7 +18,7 @@ if !EXP_VALUES
     growth_dir = "inward" # Options: "inward", "outward"
     Tmax = 26.0 # days
     δt_array = [0.01, 0.005, 0.001, 0.0001]
-    btypes = ["square"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+    btypes = ["circle"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
     dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 else
     # scaling factor to simulate μm instead of mm
@@ -34,8 +34,8 @@ else
     η = 1.0 
     growth_dir = "inward" # Options: "inward", "outward"
     Tmax = 26.0 # days
-    δt = 0.01
-    btypes = ["square"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+    δt_array = [0.01, 0.005, 0.001, 0.0001]
+    btypes = ["circle"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
     dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 end
@@ -71,7 +71,7 @@ sols2D_δt_4, 🥔, 🌻 = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,T
 t₄ = sols2D_δt_4[1][1].t;
 
 
-TissueGrowth.plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₄,t₄,N,kf)
+TissueGrowth.plotδtAreaResults(Ω₁,t₁,Ω₃,t₃,Ω₄,t₄,N,kf)
 
 
 Density_cmap = :jet
@@ -81,4 +81,4 @@ diffusivity = 1
 
 Density_Range = (0.05,0.32)
 
-f = TissueGrowth.plotResults2D(sols2D_δt_1[diffusivity][geo].u, sols2D_δt_1[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, (280,280))
+f = TissueGrowth.plotResults2D(sols2D_δt_1[diffusivity][geo].u, sols2D_δt_1[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, (1.2,1.2))

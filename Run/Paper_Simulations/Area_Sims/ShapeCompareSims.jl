@@ -37,5 +37,5 @@ TissueGrowth.plotMultiSimResults2D(sols2D, axislims, cmap, CRange)
 t₁ = sols2D[2][1].t
 Ω₂ = sols2D[2][1].Ω
 t₂ = sols2D[2][1].t
-plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,N,kf)
+TissueGrowth.plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,N,kf)
 

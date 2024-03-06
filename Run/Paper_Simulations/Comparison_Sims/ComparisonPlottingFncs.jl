@@ -10,7 +10,7 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solu
     θ_cont, R_cont, ρ_cont =  Continuum_Solution;
     max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)
     if max_y - maximum(ρ_cont[end,:]) > 5
-        max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)+5
+        max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)+10
     end
     # Getting Data Discrete
     θ_disc1, R_disc1, ρ_disc1 = Convert_Discrete_Data(Discrete_Solution_m1, m1)
@@ -19,14 +19,14 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solu
 
     # plotting Discrete
     disc_index = index;
-    disc_stair1 = CairoMakie.stairs!(gaxmain, θ_disc1[disc_index,:], ρ_disc1[disc_index,:], step=:center, linewidth=3, color=:blue)
-    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:center, linewidth=3, color=:green)
+    disc_stair1 = CairoMakie.stairs!(gaxmain, θ_disc1[disc_index,:], ρ_disc1[disc_index,:], step=:center, linewidth=2, color=:blue)
+    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:center, linewidth=2, color=:green)
 
     # plotting Continuum
     cont_index = 1 + (index - 1)*1000
-    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red)
+    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red, linestyle=:dash)
 
-    text!(gaxmain, 0.2, max_y-1.8 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=24)
+    text!(gaxmain, 0.2, max_y-0.8 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=16)
     
     return cont_line, disc_stair1, disc_stair2
 end
@@ -67,17 +67,16 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
      # Getting data Continuum
     θ_cont, R_cont, ρ_cont =  Continuum_Solution;
     min_y = floor(ρ_cont[1,1]; sigdigits=1)
-    max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)
-    max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)
+    max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1) + 5
     if max_y - maximum(ρ_cont[end,:]) > 5
         max_y = ceil(maximum(ρ_cont[end,:]); sigdigits=1)+5
     end
     
-    txtSize = 35;
-    tickSize = 25;
+    txtSize = 16;
+    tickSize = 16;
     plot_font = "Arial"
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1200, 1000))
+        size=(655, 400))
     ga = f[1, 1] = GridLayout()
     col_size = num_cols;
     row_size = Int64(ceil(length(indicies)/col_size))
@@ -99,9 +98,9 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
         cont_line, disc_stair1, disc_stair2 = DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies[i])
         Legend(f[1,2], [cont_line, disc_stair1, disc_stair2], ["Continuum", "Discrete m = $m1", "Discrete m = $m2"], labelsize=tickSize)
     end
-    Label(ga[0, :], "Pore: Square", fontsize = 45)
-    Label(ga[:, 0], "Density ρ", fontsize = 30, rotation=π/2)
-    Label(ga[row_size+1, :], "Angular position θ", fontsize = 30)
+    #Label(ga[0, :], "Pore: Square", fontsize = 45)
+    Label(ga[:, 0], "Density ρ", fontsize = 16, rotation=π/2)
+    Label(ga[row_size+1, :], "Angular position θ", fontsize = 16)
     return f
 end
 

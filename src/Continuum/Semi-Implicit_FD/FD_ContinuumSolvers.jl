@@ -1,4 +1,3 @@
-include("FD_SolverFncs.jl")
 """
     SolveContinuumLim_Cartesian(D, kf, A, ρ₀, growth_dir, Tmax, Xmax)
 
