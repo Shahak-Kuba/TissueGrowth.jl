@@ -275,6 +275,27 @@ function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
 end
 
 
+# Plot to compare with Buenzli et al. 2020
+
+function plotCompareRegressionBuenzli(Ω_estimate, t, Ωnorm_Analytic, t_Analytic, Ωnorm_Discrete, t_Discrete)
+    txtSize = 18;
+    tickSize = 18;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(455, 455))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], 
+                    xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+                    ylabel="Ω(t)/Ω₀", ylabelsize = txtSize, yticklabelsize = tickSize)
+    
+    plotAreaVsTime!(gaxmain, t_Discrete, Ωnorm_Discrete, :blue, :solid, "Discrete")
+    plotAreaVsTime!(gaxmain, t_Analytic, Ωnorm_Analytic, :red, :dash, "Analytic")
+    plotAreaVsTime!(gaxmain, t, Ω_estimate, :black, :dash, "Regression Model")
+
+    axislegend(gaxmain, merge = true, unique = true)
+    return f
+end
+
+
 # ANIMATION CODE
 
 function plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)

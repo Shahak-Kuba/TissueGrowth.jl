@@ -28,10 +28,10 @@ m = 1 # number of springs per cell
 R₀ = 282.09  # shape radius μm
 D = [0.05].*Λ
 l₀ = 3.14
-kf = 93.13 
+kf = 85#93.13 
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-Tmax = 26.0 # days
+Tmax = 28.46 # days
 δt = 0.01
 btypes = ["square"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
@@ -56,3 +56,28 @@ Stress_Range = (-20, 20)
 
 f = TissueGrowth.plotResults2D(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].Density, Density_cmap, Density_Range, "Density ρ", D[diffusivity], kf, (280,280))
 f2 = TissueGrowth.plotThetaVsTime(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, Stress_cmap, Stress_Range, "Stress ψ", D, kf)
+
+# Compare with regression model from Buenzli et al. 2020
+
+# Regression Model Buenzli et al. 2020 equation (1)
+
+Tb = 28.46 # ± 2.00
+v = 2.02 # ± 0.22
+t = LinRange(0,28.46,1000)
+
+Ω_estimate = 1 .- (t./Tb).^v
+
+# Normalising our approximated Ω from discrete simulation
+
+Ω = sols2D[1][1].Ω
+Ωnorm_Discrete = Ω./Ω[1]
+t_sim = sols2D[1][1].t
+
+# Analytic Solution
+Ωnorm_Analytic = TissueGrowth.Ω_analytic(Ω[1],N,kf,t)./Ω[1]
+
+
+f3 = TissueGrowth.plotCompareRegressionBuenzli(Ω_estimate, t, Ωnorm_Analytic, t, Ωnorm_Discrete, t_sim)
+
+
+
