@@ -1,19 +1,15 @@
-# Simulations based off Lanaro et al. 2021 Experimental Investigation
-# Square scaffold side length = 500 μm → Perimeter = 2000 μm, Area = 250000 μm²
-# Pore radius (circular pore) = √(Area / π) ≈ 282.09 μm
+# See parameter approximation document
 
-# MC3T3-E1 cell diameter ≈ 20 to 50 μm,  10.1089/ten.tea.2011.0545, Gibon et al. 2012
-# Assuming 20 μm cell diameter ⟹ 2000 μm / 20 μm = 100 cells along the scaffold at the initial time.
+# Calculating kf
+KF = 8784.26;
+l = 500;
+Ω₀ = l^2
+P = l*4
+V₀ = abs(V(KF, Ω₀, 0))
+q₀ = 1/20;
+kf = V₀/q₀
+N_approx = P/(1/q₀)
 
-# 500 μm square scaffold can fill within 28 days (see Fig 2 Lanaro et al. 2021)
-# Assuming kf is constant for all cells, kf = (Pore Area / Time to close / Number of cells) = (2500 μm² / 28 days / 100 cells) ≈ 0.89 μm²/day/cell
-
-# FOR SIMULATION
-# To maintain cells under tension, assume closed pore radius = 50 μm (to avoid high densities and numerical instabilities) → void area ≈ 7853.98
-# Given constant number of cells, the ending cell length = 2π(close radius)/Number of cells = π
-# Assume closing time < 28 days ≈ 26 days
-# kf = (Filled Area) / Time to close / Number of cells = ((250000 - 7853.98)) / 26 / 100 ≈ 93.13
-# initial density = 1 / 20 μm = 0.05 , final density = 1 / π ≈ 0.32
 using TissueGrowth
 
 # set random seed number for reproducability 
@@ -28,12 +24,12 @@ m = 1 # number of springs per cell
 R₀ = 282.09  # shape radius μm
 D = [0.05].*Λ
 l₀ = 3.14
-kf = 85#93.13 
+#kf = 70#93.13 
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-Tmax = 28.46 # days
+Tmax = 26 # days
 δt = 0.01
-btypes = ["square"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["circle"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
@@ -43,7 +39,7 @@ event_δt = δt
 
 # 2D simulations 
 sols2D, 🥔, 🌻 = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, Ot, event_δt, seed, 100);
+            prolif, death, embed, α, β, Ot, event_δt, seed, 140);
 
 Density_cmap = :jet
 Stress_cmap = :viridis
