@@ -1,16 +1,20 @@
 # See parameter approximation document
 
+
+using TissueGrowth
+
 # Calculating kf
-KF = 8784.26;
+KF = 8784.2;
+Tb = 28.46
 l = 500;
 Ω₀ = l^2
 P = l*4
-V₀ = abs(V(KF, Ω₀, 0))
+tTest = LinRange(0,Tb-5,1000)
+V₀ = abs.(TissueGrowth.V(KF, Ω₀, 0))
 q₀ = 1/20;
 kf = V₀/q₀
 N_approx = P/(1/q₀)
-
-using TissueGrowth
+N_approx = TissueGrowth.Ncells(KF, Ω₀, ρ₀, 0)
 
 # set random seed number for reproducability 
 seed = 99
@@ -21,7 +25,7 @@ seed = 99
 # setting up simulation parameters
 N = 100 # number of cells
 m = 1 # number of springs per cell
-R₀ = 282.09  # shape radius μm
+R₀ = 282.095  # shape radius μm
 D = [0.05].*Λ
 l₀ = 3.14
 #kf = 70#93.13 
