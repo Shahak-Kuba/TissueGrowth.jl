@@ -6,10 +6,10 @@ seed = 99
 # setting up simulation parameters
 N = 120 # number of cells
 m = 1 # number of springs per cell
-R₀ = 1.05  # shape radius
-D = [0.001, 0.01, 1]
+R₀ = 1.3640876152390462#1.2694265629824517  # shape radius
+D = [0.001, 0.005, 1]
 l₀ = 1.0
-kf = 0.001
+kf = 0.0012
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 Tmax = 26.0 # days
@@ -28,9 +28,9 @@ sols2D, 🥔, 🌻 = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δ
 
 
 # Plotting
-axislims = (1.2,1.2)
+axislims = (1.5,1.5)
 cmap = :jet
-CRange = (15, 40)
+CRange = (10, 25)
 TissueGrowth.plotMultiSimResults2D(sols2D, axislims, cmap, CRange)
 
 Ω₁ = sols2D[2][1].Ω

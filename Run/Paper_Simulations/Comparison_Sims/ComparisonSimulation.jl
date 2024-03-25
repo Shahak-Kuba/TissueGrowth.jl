@@ -29,6 +29,6 @@ function ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_
     Continuum_Solution = (θ_cont,R_cont,ρ_cont);
     indicies = [1,3,5,7,9,11]
     num_cols = 2
-    f_results = TissueGrowth.DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)    
-    return Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution, f_results
+    #f_results = TissueGrowth.DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)    
+    return Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution
 end

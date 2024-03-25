@@ -64,10 +64,17 @@ function plotInterface!(gaxmain, u, var, cmap, CRange, index)
 end
 
 function plotInterface!(gaxmain, u, var, cmap, CRange, index, lw)
-    CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+    if typeof(var) == Vector{Vector{Float64}}
+        CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]], colorrange=CRange,
             colormap=cmap, linewidth=lw)
-    CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
-        colormap=cmap, markersize=lw+1)
+        CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]], colorrange=CRange,
+            colormap=cmap, markersize=lw+1)
+    else
+        CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+                colormap=cmap, linewidth=lw)
+        CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
+            colormap=cmap, markersize=lw+1)
+    end
 end
 
 
@@ -157,17 +164,18 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
             # Setting gaxmain (axis ticks and labels)
             if Diffusivity == 1
                 if Shape == size(Solution[1],1)
-                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsize = tickSize, yticklabelsize = tickSize)
+                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticks = [-1, 0, 1], xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [-1, 0, 1])
                 else
-                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize)
+                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticks = [-1, 0, 1], xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [-1, 0, 1])
                 end
             elseif Shape == size(Solution[1],1)
-                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize)
+                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, xticks = [-1, 0, 1], yticks = [-1, 0, 1])
             else
-                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize)
+                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize, xticks = [-1, 0, 1], yticks = [-1, 0, 1])
             end
             # Plotting Interface
             u = Solution[Diffusivity][Shape].u
+            #var = Solution[Diffusivity][Shape].Vₙ
             var = Solution[Diffusivity][Shape].Density
             for i in eachindex(u)
                 plotInterface!(gaxmain, u, var, cmap, CRange, i, 2)

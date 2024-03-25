@@ -9,12 +9,10 @@ Tb = 28.46
 l = 500;
 Ω₀ = l^2
 P = l*4
-tTest = LinRange(0,Tb-5,1000)
 V₀ = abs.(TissueGrowth.V(KF, Ω₀, 0))
 q₀ = 1/20;
-kf = V₀/q₀
-N_approx = P/(1/q₀)
-N_approx = TissueGrowth.Ncells(KF, Ω₀, ρ₀, 0)
+N = Int(P*q₀) # number of cells
+kf = KF/N
 
 # set random seed number for reproducability 
 seed = 99
@@ -23,7 +21,6 @@ seed = 99
 Λ = 10000
 
 # setting up simulation parameters
-N = 100 # number of cells
 m = 1 # number of springs per cell
 R₀ = 282.095  # shape radius μm
 D = [0.05].*Λ
@@ -31,14 +28,14 @@ l₀ = 3.14
 #kf = 70#93.13 
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-Tmax = 26 # days
+Tmax = 28.4 # days
 δt = 0.01
 btypes = ["circle"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
 prolif = false; death = false; embed = false;
-α = 0.0001;        β = 0.001;      Ot = 62.5;
+α = 0.0;        β = 0.0;      Ot = 0.0;
 event_δt = δt
 
 # 2D simulations 
