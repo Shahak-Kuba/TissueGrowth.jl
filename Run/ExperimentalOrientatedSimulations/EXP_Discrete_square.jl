@@ -30,7 +30,7 @@ l₀ = 3.14
 growth_dir = "inward" # Options: "inward", "outward"
 Tmax = 28.4 # days
 δt = 0.01
-btypes = ["circle"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["square"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
