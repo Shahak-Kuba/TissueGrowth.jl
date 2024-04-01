@@ -27,16 +27,60 @@ function PostCalcs1D(u, p)
     uᵢ₋₁[end,:] = uᵢ₋₁[end,:]+[dom;0]
     uᵢ₊₁[1,:] = uᵢ₊₁[1,:]-[dom;0]
 
-    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(u,uᵢ₋₁)))
-    #diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
-    density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./2
+    ∑F = diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
+    density = ρ(uᵢ₊₁, u)
     ψ = ∑F ./ δ(uᵢ₊₁, u)
     Κ = κ(uᵢ₋₁,u,uᵢ₊₁)
-    vₙx = Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"1D")[:,1]
-    vₙy = Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"1D")[:,2]
+    vₙx = Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"2D")[:,1]
+    vₙy = Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"2D")[:,2]
     vₙ = .√(vₙx.^2 + vₙy.^2)
 
     return ∑F, vₙ, density, ψ, Κ
+end
+
+
+"""
+    postSimulation1D(btype, sol, p)
+
+Perform post simulation calculations for 1D simulation and return a comprehensive data structure with all relevant data.
+
+This function processes the solution from a 1D simulation, calculating physical quantities and organizing them into a `SimResults_t` data structure.
+
+# Arguments
+- `btype`: The type of boundary condition or simulation.
+- `sol`: The solution object from the simulation.
+- `p`: Parameters used in the post calculations.
+
+# Returns
+An instance of `SimResults_t` containing the calculated data.
+"""
+function postSimulation1D(btype, sol, p)
+
+    #global embedded_cell_count
+    c = size(sol.t, 1)
+
+    Area = Vector{Float64}(undef, c)
+    Cell_Count = Vector{Float64}(undef, c)
+    ∑F = Vector{Vector{Float64}}(undef, 0)
+    ψ = Vector{Matrix{Float64}}(undef, 0)
+    DENSITY = Vector{Matrix{Float64}}(undef, 0)
+    vₙ = Vector{Vector{Float64}}(undef, 0)
+    Κ = Vector{Matrix{Float64}}(undef, 0)
+
+    u = [(reshape(vec, 2, Int(length(vec)/2)))' for vec in sol.u]
+
+    for ii in axes(u, 1)
+        Area[ii] = Ω(u[ii]) # area calculation
+        Cell_Count[ii] = size(u[ii],1)
+        Fnet, nV, den, stre, kap = PostCalcs2D(u[ii], p)
+        push!(∑F, Fnet)
+        push!(vₙ, nV)
+        push!(DENSITY, den)
+        push!(ψ, stre)
+        push!(Κ, kap)
+    end
+
+    return SimResults_t(btype, sol.t, u, ∑F, DENSITY, vₙ, Area, ψ, Κ, Cell_Count)
 end
 
 
@@ -98,9 +142,7 @@ This function processes the solution from a 2D simulation, similarly to `postSim
 # Returns
 An instance of `SimResults_t` containing the calculated data.
 """
-function postSimulation(btype, sol, p)
-
-    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,prolif,death,embed,α,β,γ = p
+function postSimulation2D(btype, sol, p)
 
     c = size(sol.t, 1)
 
@@ -117,11 +159,7 @@ function postSimulation(btype, sol, p)
     for ii in axes(u, 1)
         Area[ii] = Ω(u[ii]) # area calculation
         Cell_Count[ii] = size(u[ii],1)
-        if domain_type == "2D"
-            Fnet, nV, den, stre, kap = PostCalcs2D(u[ii], p)
-        else
-            Fnet, nV, den, stre, kap = PostCalcs1D(u[ii], p)
-        end
+        Fnet, nV, den, stre, kap = PostCalcs2D(u[ii], p)
         push!(∑F, Fnet)
         push!(vₙ, nV)
         push!(DENSITY, den)

@@ -110,9 +110,9 @@ end
 
 
 """
-    SetupODEproblem(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir, prolif, death, embed, α, β, γ, dist_type)
+    SetupODEproblem2D(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir, prolif, death, embed, α, β, γ, dist_type)
 
-Set up and configure a 1D or 2D ODE problem for mechanical relaxation simulations in tissue growth.
+Set up and configure a 2D ODE problem for mechanical relaxation simulations in tissue growth.
 
 This function initializes the conditions and parameters for a 2D ODE problem based on the specified boundary type, physical parameters, and cell behaviors. It then constructs an ODEProblem object, ready for solving with DifferentialEquations.jl.
 
@@ -138,13 +138,15 @@ This function initializes the conditions and parameters for a 2D ODE problem bas
 - `ODEProblem`: An ODE problem instance set up with the specified parameters and initial conditions.
 - `p`: A tuple containing the parameters used in setting up the ODE problem.
 """
-function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,α,β,γ,dist_type)
+function SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,prolif,death,embed,α,β,γ,dist_type)
     l₀ = l₀/m
     kₛ = kₛ*m
     η = η/m
     kf = kf/m
     u0 = u0SetUp(btype,R₀,M,dist_type)
-    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,prolif,death,embed,α,β,γ)
+    #plotInitialCondition(u0)
+    # solving ODE problem
+    p = (m,kₛ,η,kf,l₀,δt,growth_dir,prolif,death,embed,α,β,γ)
     tspan = (0.0,Tmax)
-    return ODEProblem(Growth_ODE!,u0,tspan,p), p
+    return ODEProblem(ODE_fnc_2D!,u0,tspan,p), p
 end

@@ -23,21 +23,29 @@ module TissueGrowth
     # DEVELOPED SIMULATION CODE
 
     # discrete simulation code
-    include("Discrete/MechanicalEqns.jl")
-    include("Discrete/CellBehaviours.jl")
-    include("Discrete/PoreBoundariesV2.jl")
-    include("Discrete/ProblemSetup.jl")
-    include("Discrete/PlottingFncs1D.jl")
-    include("Discrete/PlottingFncs2D.jl")
-    include("Discrete/Simulation_1D.jl")
-    include("Discrete/Simulation_2D.jl")
-    include("Discrete/TissueGrowthODEproblem.jl")
-    include("Discrete/GeometrySolvers.jl")
-    include("Discrete/Misc.jl")
+    include("Discrete/GeneralEquations.jl")
     include("Discrete/DataStructs.jl")
-    include("Discrete/PostSimulation.jl")
     include("Discrete/ModifierFncs.jl")
-    include("Discrete/AnalyticSolution.jl")
+    include("Discrete/Misc.jl")
+    include("Discrete/PoreBoundaries.jl")
+
+    include("Discrete/Model/CellMechanics.jl")
+    include("Discrete/Model/CellBehaviours.jl")
+    include("Discrete/Model/TissueSecretion.jl")
+    include("Discrete/Model/AnalyticSolution.jl")
+    
+    include("Discrete/ProblemSetup.jl")
+    include("Discrete/TissueGrowthODEproblem.jl")
+    include("Discrete/PostSimulation.jl")
+    
+    include("Discrete/GrowthSimulation.jl")
+    
+    include("Discrete/Plotting/GeneralPlotting.jl")
+    include("Discrete/Plotting/EmbeddedPlotting.jl")
+    include("Discrete/Plotting/HistogramPlotting.jl")
+    include("Discrete/Plotting/InterfaceAnimation.jl")
+    include("Discrete/Plotting/PlottingFncs1D.jl")
+    include("Discrete/Plotting/PlottingFncs2D.jl")
 
     # continuum limit simulation code
     include("Continuum/Semi-Implicit_FD/FD_ContinuumSolvers.jl")

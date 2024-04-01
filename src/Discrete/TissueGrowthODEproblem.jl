@@ -28,7 +28,7 @@ end
 
 
 """
-    ODE_fnc_2D!(du, u, p, t)
+    Growth_ODE!(du, u, p, t)
 
 Define the ODE system for 2D mechanical relaxation with initial conditions. This function computes the derivatives `du` based on the current state `u` and parameters `p`.
 
@@ -41,11 +41,20 @@ Define the ODE system for 2D mechanical relaxation with initial conditions. This
 # Description
 Calculates the mechanical relaxation and normal velocity in a 1D system with periodic boundary conditions. The derivatives are based on spring forces and mechanical properties defined in `p`.
 """
-function ODE_fnc_2D!(du,u,p,t) 
-    m,kₛ,η,kf,l₀,δt,growth_dir = p
+function Growth_ODE!(du,u,p,t) 
+    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type = p
     uᵢ₊₁ = circshift(u',1)
     uᵢ₋₁ = circshift(u',-1)
-    du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+
+    if domain_type == "2D"
+        du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
                        Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
+    else
+        dom = 2*pi;
+        uᵢ₋₁[end,:] = uᵢ₋₁[end,:]+[dom;0]
+        uᵢ₊₁[1,:] = uᵢ₊₁[1,:]-[dom;0]
+        du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+                            Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
+    end
     nothing
 end
