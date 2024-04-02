@@ -70,6 +70,12 @@ function u0SetUp(btype,R₀,N,dist_type,domain_type)
             #integrand(θ) = sqrt(numerical_derivative(xfunc, θ)^2 + numerical_derivative(yfunc, θ)^2)
             #rootsFunc(θ,curr_length,Δl) = arc_length(θ) - (curr_length + Δl)
             @views u0 .= equidistant_points_on_polar_curve(xfunc, yfunc, N)';
+        elseif btype == "InvertedBellCurve"
+            μ = 0.75
+            c = 0.2
+            xfunc = θ -> θ.*(1.5/(2π));
+            yfunc = θ -> -0.5 .* exp.((-((θ.*(1.5/(2π))) .- μ).^4) ./ c.^2) .+ 0.5
+            @views u0 .= equidistant_points_on_polar_curve(xfunc, yfunc, N)';
         end
     end
     return u0

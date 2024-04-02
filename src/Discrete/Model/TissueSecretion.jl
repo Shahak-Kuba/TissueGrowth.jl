@@ -31,3 +31,15 @@ function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt,type)
     return (lineIntersection(rₘ₁, rₗ, rₘ₂, rᵣ) - rᵢ) ./ δt
 end
 
+
+# alternate normal velocity function
+function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf,type)
+    ρₗ = ρ(rᵢ, rᵢ₋₁)
+    ρᵣ = ρ(rᵢ₊₁, rᵢ)
+    V = kf .* ((ρₗ .+ ρᵣ)./2)
+
+    nᵥ = n(rᵢ₊₁,rᵢ₋₁,type)
+
+    return V.*nᵥ
+end
+
