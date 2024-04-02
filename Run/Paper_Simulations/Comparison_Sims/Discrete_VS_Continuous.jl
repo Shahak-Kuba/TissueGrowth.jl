@@ -3,7 +3,7 @@ using TissueGrowth
 include("ComparisonSimulation.jl")
 
 # Shared variables
-R₀ = 1.2694265629824517;
+R₀ = 1.05#1.2694265629824517;
 D = 0.001;
 kf = 0.005;
 growth_dir = "inward";
@@ -35,7 +35,7 @@ Av = 0.0;
 Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution, f_results = ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type, 
                                                                             prolif, death, embed, α, βv, γv, event_δt, seed, Av);
 
-indicies = [1,5,11]
+indicies = [1,5,11, 1,5,11]
 num_cols = 2
 f1 = TissueGrowth.DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)
 
