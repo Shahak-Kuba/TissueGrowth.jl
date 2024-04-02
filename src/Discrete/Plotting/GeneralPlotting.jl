@@ -63,3 +63,17 @@ function plotInterface!(gaxmain, u, var, cmap, CRange, index, lw)
             colormap=cmap, markersize=lw+1)
     end
 end
+
+function plotInterface1D!(gaxmain, u, var, cmap, CRange, index, lw)
+    if typeof(var) == Vector{Vector{Float64}}
+        CairoMakie.lines!(gaxmain, u[index][:, 1].data, u[index][:, 2].data, color=var[index], colorrange=CRange,
+            colormap=cmap, linewidth=lw)
+        CairoMakie.scatter!(gaxmain, u[index][:, 1].data, u[index][:, 2].data, color=var[index], colorrange=CRange,
+            colormap=cmap, markersize=lw+1)
+    else
+        CairoMakie.lines!(gaxmain, u[index][:, 1].data, u[index][:, 2].data, color=var[index].data, colorrange=CRange,
+                colormap=cmap, linewidth=lw)
+        CairoMakie.scatter!(gaxmain, u[index][:, 1].data, u[index][:, 2].data, color=var[index].data, colorrange=CRange,
+            colormap=cmap, markersize=lw+1)
+    end
+end

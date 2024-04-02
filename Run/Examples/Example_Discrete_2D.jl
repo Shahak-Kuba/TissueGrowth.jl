@@ -25,7 +25,7 @@ event_δt = δt
 
 # 2D simulations 
 sol, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, Ot, event_δt, seed, 11);
+                    prolif, death, embed, α, β, Ot, event_δt, seed, 11);
 
 Density_cmap = :jet
 ψ_cmap = :balance

@@ -13,7 +13,7 @@ This function computes various physical quantities like force, density, velocity
 A tuple containing the sum of forces, normal velocity, density, stress, and curvature for each element in the state vector.
 """
 function PostCalcs1D(u, p)
-    N, kₛ, η, kf, l₀, δt = p
+    m, kₛ, η, kf, l₀, δt = p
     dom = 2*pi
 
     ∑F = zeros(size(u, 1))
@@ -22,10 +22,11 @@ function PostCalcs1D(u, p)
     ψ = zeros(size(u, 1))
     Κ = zeros(size(u, 1))
 
-    uᵢ₊₁ = circshift(u',1)
-    uᵢ₋₁ = circshift(u',-1)
-    uᵢ₋₁[end,:] = uᵢ₋₁[end,:]+[dom;0]
-    uᵢ₊₁[1,:] = uᵢ₊₁[1,:]-[dom;0]
+    uᵢ₊₁ = circshift(u,1)
+    uᵢ₋₁ = circshift(u,-1)
+
+    uᵢ₋₁[end,:] .= uᵢ₋₁[end,:] + [dom,0]
+    uᵢ₊₁[1,:] .= uᵢ₊₁[1,:] - [dom,0]
 
     ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(u,uᵢ₋₁)))
     #diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))

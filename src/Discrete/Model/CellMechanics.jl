@@ -1,5 +1,18 @@
-## Nonlinear restoring force
+# User defined force function
 
+## Hookean Restoring force
+hookean_restoring_force(rᵢ, rⱼ, kₛ, l₀) = kₛ .* ( δ(rⱼ,rᵢ) .- ones(size(rᵢ,1))*l₀ ) 
+## Nonlinear restoring force
+nonlinear_restoring_force(rᵢ, rⱼ, kₛ, l₀) = kₛ .* l₀.^2 .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rᵢ₊₁, rᵢ))
+
+
+
+
+
+# USER SET
+FORCE_FNC(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) = 
+
+# vector inputs into
 """
     Fₛ⁺(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀)
 

@@ -1,25 +1,36 @@
 using TissueGrowth
 
-# setting up simulation parameters
-N = 77 # number of cells
-m = 2 # number of springs per cell
-R₀ = 1  # shape radius
-D = [0.15] #, 0.075, 0.15, 1] # of cell 
-l₀ = 1 # of cell 
-kf = 0.02 # of cell = kf¹
-η = 1 # of cell = η¹
-Tmax = 25 # days
-δt = 0.001
-growth_dir = "inward"
-btype = "SineWave"
-dist_type = "Linear"
+# set random seed number for reproducability 
+seed = 99
 
-sols1D = TissueGrowth.sim1D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type);
+# setting up simulation parameters
+N = 100 # number of cells
+m = 1 # number of springs per cell
+R₀ = 1.05  # shape radius
+D = [0.01]
+l₀ = 1.0
+kf = 0.0013
+η = 1.0 
+growth_dir = "inward" # Options: "inward", "outward"
+domain_type = "1D"
+Tmax = 22.0 # days
+δt = 0.01
+btypes = ["SineWave"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
+
+## Cell Behaviours
+prolif = false; death = false; embed = false;
+β = 0.0001;        γ = 0.001;      Ot = 62.5;
+event_δt = δt
+
+
+sols1D = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
+                prolif, death, embed, β, γ, Ot, event_δt, seed, 2);
 
 cmap = :jet
 
 geo = 1
 diffusivity = 1
 
-f = TissueGrowth.plotResults1D(sols1D[diffusivity].u, sols1D[diffusivity].Density, 
-                                D[diffusivity], kf,cmap)
+f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, 
+                                D[diffusivity], kf,cmap, 12, 7)

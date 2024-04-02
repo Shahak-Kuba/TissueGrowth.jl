@@ -105,8 +105,8 @@ results = Vector{SimResults_t}(undef, 0)
 
 for ii in eachindex(btypes)
 @views btype = btypes[ii]
-prob, p = SetupODEproblem2D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
-                            growth_dir,prolif,death,embed,α,β,γ,dist_type)
+prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
+                            growth_dir,domain_type,prolif,death,embed,α,β,γ,dist_type)
 @time sol = solve(prob, SOLVER, save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
 push!(results, postSimulation2D(btype, sol, p))
 push!(embedded_cells_count, floor.(saved_values.saveval))

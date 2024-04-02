@@ -1,8 +1,7 @@
-# See parameter approximation document
-
 
 using TissueGrowth
 
+# See parameter approximation document
 # Calculating kf
 KF = 8784.2;
 Tb = 28.46
@@ -28,6 +27,7 @@ l₀ = 3.14
 #kf = 70#93.13 
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
+domain_type = "2D"
 Tmax = 28.4 # days
 δt = 0.01
 btypes = ["square"] #, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
@@ -39,8 +39,8 @@ prolif = false; death = false; embed = false;
 event_δt = δt
 
 # 2D simulations 
-sols2D, 🥔, 🌻 = TissueGrowth.sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, Ot, event_δt, seed, 140);
+sols2D, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
+                    prolif, death, embed, α, β, Ot, event_δt, seed, 140);
 
 Density_cmap = :jet
 Stress_cmap = :viridis

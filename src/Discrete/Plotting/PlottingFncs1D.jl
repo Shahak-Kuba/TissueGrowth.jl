@@ -1,4 +1,3 @@
-
 function findMinMax(var)
     Min = 0
     Max = 0
@@ -22,7 +21,7 @@ function plotResults1D(u,var,D,kf,cmap,upLim,lowLim)
     txtSize = 35;
     tickSize = 25;
     plot_font = "Arial"
-    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
+    f = Figure(fontsize = 32,backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(0, 2π, 1, 8), aspect=DataAspect(), xticklabelsize = tickSize, yticklabelsize = tickSize, 
@@ -31,11 +30,7 @@ function plotResults1D(u,var,D,kf,cmap,upLim,lowLim)
                     title = "D = $D, kf = $kf", titlesize = txtSize, titlefont = plot_font)
     CRange = (upLim,lowLim)
     for i in eachindex(u)
-        lines!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
-            colormap=cmap, linewidth=5)
-        scatter!(gaxmain, [u[i][:,1]; u[i][1,1]], [u[i][:,2]; u[i][1,2]], color=[var[i].data; var[i].data[1]], colorrange=CRange,
-            colormap=cmap,markersize = 6)
-        #lines!(gaxmain, u[i][1,:], u[i][2,:], linewidth=5)
+        plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 3)
     end
     Colorbar(f[1, 2], limits=CRange, size=20, ticklabelsize = txtSize, colormap=cmap,
         flipaxis=false, label="Density ρ [cells/length]", labelsize=txtSize)

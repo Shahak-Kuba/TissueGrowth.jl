@@ -1,6 +1,4 @@
 
-Xᵩ(T) = T
-Yᵩ(T) = 2 + 0.5*cos(3*T)
 
 """
     u0SetUp(btype, R₀, N, dist_type)
