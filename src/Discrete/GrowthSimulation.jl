@@ -33,7 +33,7 @@ all_results = sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
 ```
 """
 function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type, 
-                prolif, death, embed, α, β, γ, event_δt, seed, NumSaveTimePoints)
+                prolif, death, embed, β, γ, Ot, event_δt, seed, NumSaveTimePoints)
 
     Set_Random_Seed(seed)
     M = Int(m*N) # total number of springs along the interface
@@ -61,7 +61,7 @@ function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,
         for ii in eachindex(btypes)
             @views btype = btypes[ii]
             prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
-                                        growth_dir,domain_type,prolif,death,embed,α,β,γ,dist_type)
+                                        growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type)
             @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
             push!(results, postSimulation(btype, sol, p))
             push!(embedded_cells_count, floor.(saved_values.saveval))
