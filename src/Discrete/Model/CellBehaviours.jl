@@ -152,7 +152,7 @@ This function modifies `integrator` in place. It uses the parameters and state f
 `nothing`. The function modifies `integrator` in place.
 """
 function affect!(integrator)
-    (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,prolif,death,embed,α,β,γ) = integrator.p
+    (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,prolif,death,embed,α,β,γ) = integrator.p
     u = integrator.u
     (p,a,e) = cell_probs(u, m, δt, prolif, death, embed, α, β, γ, kf)
     (r1,r2,r3) = rand(3)

@@ -7,7 +7,7 @@ seed = 99
 N = 100 # number of cells
 m = 1 # number of springs per cell
 R₀ = 1.05  # shape radius
-D = [0.003]
+D = [0.01]
 l₀ = 1.0
 kf = 0.00031
 η = 1.0 
@@ -19,8 +19,8 @@ btypes = ["InvertedBellCurve"] #Options: ["circle", "triangle", "square", "hex",
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours
-prolif = false; death = false; embed = false;
-β = 0.0001;        γ = 0.1;      Ot = 62.5;
+prolif = false; death = true; embed = false;
+β = 0.0001;        γ = 0.005;      Ot = 62.5;
 event_δt = 0.05
 
 
@@ -31,7 +31,7 @@ cmap = :jet
 
 geo = 1
 diffusivity = 1
-crange = (30,60)
+crange = (10,60)
 
 #f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, 
 #                                D[diffusivity], kf,cmap, 12, 7)

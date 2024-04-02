@@ -81,41 +81,6 @@ function u0SetUp(btype,R₀,N,dist_type,domain_type)
     return u0
 end
 
-"""
-    SetupODEproblem1D(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir, dist_type)
-
-Create and configure a 1D ODE problem for mechanical relaxation simulations.
-
-This function sets up the initial conditions and parameters for a 1D ODE problem based on the specified boundary type and other physical parameters.
-
-# Arguments
-- `btype`: Boundary type (e.g., 'circle', 'triangle').
-- `M`, `m`: Number of springs/particles in the system.
-- `R₀`: Initial radius for circular boundary problems.
-- `kₛ`, `η`: Prescaled mechanical relaxation coefficients.
-- `kf`: Tissue production rate per cell per unit time.
-- `l₀`: Resting spring length.
-- `δt`: Euler timestep size.
-- `Tmax`: End of simulation time.
-- `growth_dir`: Direction of tissue growth ('inward' or 'outward').
-- `dist_type`: Distribution type for node placement.
-
-# Returns
-Configured ODEProblem instance and parameters for the 1D simulation.
-"""
-function SetupODEproblem1D(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,dist_type)
-    l₀ = l₀/m
-    kₛ = kₛ*m
-    kf = kf/m
-    η = η/m
-    # setting up initial conditions
-    u0 = u0SetUp(btype,R₀,M,dist_type)
-    # solving ODE problem
-    p = (M,kₛ,η,kf,l₀,δt,growth_dir)
-    tspan = (0.0,Tmax)
-    return ODEProblem(ODE_fnc_1D!,u0,tspan,p), p
-end
-
 
 """
     SetupODEproblem(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir, prolif, death, embed, α, β, γ, dist_type)
@@ -146,13 +111,13 @@ This function initializes the conditions and parameters for a 2D ODE problem bas
 - `ODEProblem`: An ODE problem instance set up with the specified parameters and initial conditions.
 - `p`: A tuple containing the parameters used in setting up the ODE problem.
 """
-function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,α,β,γ,dist_type)
+function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type)
     l₀ = l₀/m
     kₛ = kₛ*m
     η = η/m
     kf = kf/m
     u0 = u0SetUp(btype,R₀,M,dist_type,domain_type)
-    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,prolif,death,embed,α,β,γ)
+    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,prolif,death,embed,β,γ,Ot)
     tspan = (0.0,Tmax)
     return ODEProblem(Growth_ODE!,u0,tspan,p), p
 end

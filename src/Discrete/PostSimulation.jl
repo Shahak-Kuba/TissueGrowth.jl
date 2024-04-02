@@ -13,8 +13,13 @@ This function computes various physical quantities like force, density, velocity
 A tuple containing the sum of forces, normal velocity, density, stress, and curvature for each element in the state vector.
 """
 function PostCalcs1D(u, p)
-    m, kₛ, η, kf, l₀, δt = p
-    dom = 2*pi
+    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype = p
+
+    if btype == "InvertedBellCurve"
+        dom = 1.5; # For Bell curve
+    else
+        dom = 2*pi; # FOR Cosine SineWave
+    end
 
     ∑F = zeros(size(u, 1))
     density = zeros(size(u, 1))
