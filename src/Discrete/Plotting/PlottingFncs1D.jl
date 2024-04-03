@@ -36,6 +36,31 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf)
     return f
 end
 
+function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(-0.01, 1.5, -0.1, 1.1), aspect=DataAspect(), 
+              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
+              title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    for i in eachindex(u)
+        plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 5)
+    end
+
+    for j = 1:5:N
+        plotCellTrajectory!(gaxmain, u, m, j, 3)
+    end
+    plotCellTrajectory!(gaxmain, u, m, 99, 3)
+    #plotCellTrajectory!(gaxmain, u, m,  100, 3)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
 function plotResults1D_spatial_density(u, var)
     #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
     #    resolution=(500, 500))

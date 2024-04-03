@@ -55,7 +55,8 @@ function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,
     cbs = CallbackSet(event_cb,save_cb)
 
     for jj in eachindex(D)
-        @views kₛ = D[jj]*(η)/((l₀)^2)
+        #@views kₛ = D[jj]*(η)/((l₀)^2)
+        @views kₛ = 0.001
         results = Vector{SimResults_t}(undef, 0)
 
         for ii in eachindex(btypes)

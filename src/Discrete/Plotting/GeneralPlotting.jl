@@ -77,3 +77,20 @@ function plotInterface1D!(gaxmain, u, var, cmap, CRange, index, lw)
             colormap=cmap, markersize=lw+1)
     end
 end
+
+function plotCellTrajectory!(gaxmain, u, m, cell_index, lw)
+    left_cell_boundary_idx = cell_index*m - (m-1)
+    right_cell_boundary_idx = left_cell_boundary_idx + m
+
+    left_cell_traj = []
+    right_cell_traj = []
+
+    for ii in axes(u,1)
+        push!(left_cell_traj, u[ii][left_cell_boundary_idx,:])
+        push!(right_cell_traj, u[ii][right_cell_boundary_idx,:])
+    end
+
+    CairoMakie.lines!(gaxmain, hcat(left_cell_traj...)'[:,1], hcat(left_cell_traj...)'[:,2], color=:black, linewidth=lw)
+    CairoMakie.lines!(gaxmain, hcat(right_cell_traj...)'[:,1], hcat(right_cell_traj...)'[:,2], color=:black, linewidth=lw)
+
+end
