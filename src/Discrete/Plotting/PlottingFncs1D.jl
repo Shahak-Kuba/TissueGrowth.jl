@@ -54,7 +54,7 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     for j = 1:5:N
         plotCellTrajectory!(gaxmain, u, m, j, 3)
     end
-    plotCellTrajectory!(gaxmain, u, m, 99, 3)
+    plotCellTrajectory!(gaxmain, u, m, 74, 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
