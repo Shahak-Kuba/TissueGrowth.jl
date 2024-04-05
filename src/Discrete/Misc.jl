@@ -5,6 +5,29 @@ function printInfo(simNum,simTotal,btype,N,kₛ,η,kf,M,D)
     println(@sprintf "-----------------------------------------------------------------------------------")
 end
 
+function export_figure(fig, image_name, image_type)
+    # Get the current directory
+    current_dir = pwd()
+    
+    # Generate the save directory path
+    save_dir = joinpath(current_dir, "figures")
+
+    # Check if save directory exists, create it if it doesn't
+    if !isdir(save_dir)
+        mkdir(save_dir)
+    end
+    
+    # Generate the timestamp
+    timestamp = Dates.now()
+    timestamp_str = Dates.format(timestamp, "yyyymmdd")
+    
+    # Generate the filename
+    filename = joinpath(save_dir, "$image_name-$timestamp_str.$image_type")
+    
+    # Save the figure
+    save(filename, fig)
+end
+
 function SaveData(data, SaveName, SaveFolder)
     # Check if the folder exists, create it if it doesn't
     if !isdir(SaveFolder)

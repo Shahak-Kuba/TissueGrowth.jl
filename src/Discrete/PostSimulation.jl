@@ -118,7 +118,16 @@ function postSimulation(btype, sol, p)
     vₙ = Vector{Vector{Float64}}(undef, 0)
     Κ = Vector{Matrix{Float64}}(undef, 0)
 
-    u = [(reshape(vec, 2, Int(length(vec)/2)))' for vec in sol.u]
+    u = [Matrix((reshape(vec, 2, Int(length(vec)/2)))') for vec in sol.u]
+
+    # adding periodic boundary node in 1D case
+    if domain_type == "1D"
+        if btype == "InvertedBellCurve"
+            dom = 1.5
+        end
+        u = [[vec; (vec[1,:] + [dom,0])'] for vec in u]
+    end
+
 
     for ii in axes(u, 1)
         Area[ii] = Ω(u[ii]) # area calculation

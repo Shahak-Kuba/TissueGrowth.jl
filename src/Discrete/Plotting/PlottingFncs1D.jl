@@ -42,10 +42,9 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-0.01, 1.5, -0.1, 1.1), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], limits=(-0.01, 1.51, -0.1, 1.1), aspect=DataAspect(), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-              title = "D = $D, kf = $kf", titlesize = txtSize)
+              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
     for i in eachindex(u)
         plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 5)
@@ -54,7 +53,7 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     for j = 1:5:N
         plotCellTrajectory!(gaxmain, u, m, j, 3)
     end
-    plotCellTrajectory!(gaxmain, u, m, 74, 3)
+    plotCellTrajectory!(gaxmain, u, m, 80, 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
@@ -79,21 +78,21 @@ function plotResults1D_spatial_density(u, var)
     return f
 end
 
-function plotResults1D_Velocity(u, var)
-    #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-    #    resolution=(500, 500))
-    f = Figure(fontsize = 32,backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        resolution=(1000, 800))
+function plotThetaVsTime1D(u, t, var, cmap, crange, cbarlabel, D, kf)
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    #gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), xlabel="x", ylabel="y")
-    gaxmain = Axis(ga[1, 1], limits=(0, 2*pi, 1, 8), aspect=DataAspect(), xlabel="x", ylabel="y")
-    #CRange = findMinMax(var)
-    CRange = (0,0.4)
-    for i in eachindex(u)
-        lines!(gaxmain, u[i][:,1], u[i][:,2], color=var[i], colorrange=CRange,
-            colormap=:jet, linewidth=5)
+    gaxmain = Axis(ga[1, 1], 
+              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="x [mm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+    CRange = crange
+    for j in axes(u,1)
+        CairoMakie.lines!(gaxmain, t, u[j,:], color=var[j,:], colorrange=CRange,
+                colormap=cmap, linewidth=4)
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=:jet,
-        flipaxis=false, label="v [mm/day]") 
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
