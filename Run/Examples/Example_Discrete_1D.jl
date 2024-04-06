@@ -32,10 +32,8 @@ diffusivity = 1
 crange = (30,60)
 stress_range = (4,8)
 
-#f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, 
-#                                D[diffusivity], kf,cmap, 12, 7)
-
 f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, cmap, crange, "Density q", D[diffusivity], kf)
+f = TissueGrowth.plotThetaVsTime1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].t, sols1D[geo][diffusivity][1].ψ, cmap, stress_range, "Stress ψ", D[diffusivity], kf)
 
 f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, cmap, crange, "Density q", D[diffusivity], kf, m, N)
 

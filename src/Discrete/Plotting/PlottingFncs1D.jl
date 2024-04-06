@@ -85,11 +85,17 @@ function plotThetaVsTime1D(u, t, var, cmap, crange, cbarlabel, D, kf)
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], 
-              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="x [mm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="x [mm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="t [days]", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
-    for j in axes(u,1)
-        CairoMakie.lines!(gaxmain, t, u[j,:], color=var[j,:], colorrange=CRange,
+    x = zeros(size(u[1],1)-1,size(t,1))
+    ξ = zeros(size(u[1],1)-1,size(t,1))
+    for i in eachindex(t)
+        x[:,i] = u[i][2:end, 1].data
+        ξ[:,i] = var[i][2:end].data
+    end
+    for j in axes(x,1)
+        CairoMakie.lines!(gaxmain, x[j,:], t, color=ξ[j,:], colorrange=CRange,
                 colormap=cmap, linewidth=4)
     end
     Colorbar(f[1, 2], limits=CRange, colormap=cmap,

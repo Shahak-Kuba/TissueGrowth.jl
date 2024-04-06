@@ -7,7 +7,6 @@ nonlinear_restoring_force = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* l₀.^2 .* (ones
 
 
 # When changing force law make sure to run all of these
-
 FORCE_FNC = (rᵢ, rⱼ, kₛ, l₀) -> nonlinear_restoring_force(rᵢ, rⱼ, kₛ, l₀)
 
 # Force functions used in ODEs
