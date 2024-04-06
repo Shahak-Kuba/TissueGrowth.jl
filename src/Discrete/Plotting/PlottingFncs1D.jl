@@ -102,3 +102,58 @@ function plotThetaVsTime1D(u, t, var, cmap, crange, cbarlabel, D, kf)
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
+
+# Only middle growth
+function plotStationaryBoundary(u, var, cmap, crange, cbarlabel)
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(-0.01, 1.51, -0.1, 1.1), aspect=DataAspect(), 
+              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize)
+    CRange = crange
+    for index in eachindex(u)
+        if typeof(var) == Vector{Vector{Float64}}
+            if index == 1
+                CairoMakie.lines!(gaxmain, u[index][:,1].data, u[index][:,2].data, color=var[index], colorrange=CRange,
+                    colormap=cmap, linewidth=5)
+                CairoMakie.scatter!(gaxmain, u[index][:,1].data, u[index][:,2].data, color=var[index], colorrange=CRange,
+                    colormap=cmap, markersize=6)
+            else
+                u_fixed = fixYvalue1D(u[1], u[index])
+                CairoMakie.lines!(gaxmain, u_fixed[:,1], u_fixed[:,2], color=var[index], colorrange=CRange,
+                    colormap=cmap, linewidth=5)
+                CairoMakie.scatter!(gaxmain, u_fixed[:,1], u_fixed[:,2], color=var[index], colorrange=CRange,
+                    colormap=cmap, markersize=6)
+            end
+        else
+            if index == 1
+                CairoMakie.lines!(gaxmain, u[index][:,1].data, u[index][:,2].data, color=var[index].data, colorrange=CRange,
+                    colormap=cmap, linewidth=5)
+                CairoMakie.scatter!(gaxmain, u[index][:,1].data, u[index][:,2].data, color=var[index].data, colorrange=CRange,
+                    colormap=cmap, markersize=6)
+            else
+                u_fixed = fixYvalue1D(u[1], u[index])
+                CairoMakie.lines!(gaxmain, u_fixed[:,1], u_fixed[:,2], color=var[index].data, colorrange=CRange,
+                    colormap=cmap, linewidth=5)
+                CairoMakie.scatter!(gaxmain, u_fixed[:,1], u_fixed[:,2], color=var[index].data, colorrange=CRange,
+                    colormap=cmap, markersize=6)
+            end
+        end
+    end
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
+function fixYvalue1D(u0, u1)
+    fixed_u1 = zeros(size(u1))
+    delta = u1[1,2] - u0[1,2]
+    for ii in axes(u1,1)
+        fixed_u1[ii,:] .= u1[ii,:] - [0,delta]
+    end
+
+    return fixed_u1
+end
