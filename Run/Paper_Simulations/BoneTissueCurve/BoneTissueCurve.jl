@@ -25,10 +25,16 @@ event_δt = 0.05
 
 cmap = :spring
 cmap2 = :jet
+cmap3 = :RdBu_6
 geo = 1
 diffusivity = 1
 crange = (30,80)
-crange2 = (0.01, 0.02)
+crange2 = (0.01, 0.03)
+crange3 = (-5, 5)
+
+# NOTE: Make sure to change force law in Model/CellMechanics.jl between simulations
+
+# HOOKEAN SPRINGS SIMULATION
 
 sol_hookean = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
                 prolif, death, embed, β, γ, Ot, event_δt, seed, 5);
@@ -39,19 +45,27 @@ save("Bone_Hookean_1D.png", fig_interface_hookean)
 fig_interface_hookean_stationary_bounds = TissueGrowth.plotStationaryBoundary(sol_hookean[geo][diffusivity][1].u, sol_hookean[geo][diffusivity][1].Density, cmap2, crange, "cell density q")
 save("Bone_Hookean_Stationary_Bounds_1D.png", fig_interface_hookean_stationary_bounds)
 
-# Make sure to change force law in Model/CellMechanics.jl
+fig_hookean_stress_time = TissueGrowth.plotThetaVsTime1D(sol_hookean[geo][diffusivity][1].u, sol_hookean[geo][diffusivity][1].t, 
+            sol_hookean[geo][diffusivity][1].ψ, cmap3, crange3, "Stress ψ")
+save("Bone_Nonlinear_Stress_1D.png", fig_hookean_stress_time)
+
+# NONLINEAR SPRINGS SIMULATION
+
 sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
                 prolif, death, embed, β, γ, Ot, event_δt, seed, 5);
 
 fig_interface_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Vₙ, cmap, crange, "Density q", D[diffusivity], kf, m, N)
 save("Bone_Nonlinear_1D.png", fig_interface_nonlinear)
 
-fig_interface_nonlinear_stationary_bounds = TissueGrowth.plotStationaryBoundary(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Vₙ, cmap2, crange2, "velocity")
+fig_interface_nonlinear_stationary_bounds = TissueGrowth.plotStationaryBoundary(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Vₙ, cmap2, crange2, "velocity [mm day⁻¹]")
 save("Bone_Nonlinear_Stationary_Bounds_1D.png", fig_interface_nonlinear_stationary_bounds)
 
+fig_nonlinear_stress_time = TissueGrowth.plotThetaVsTime1D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].t, 
+            sol_nonlinear[geo][diffusivity][1].ψ, cmap3, crange3, "Stress ψ")
+save("Bone_Nonlinear_Stress_1D.png", fig_nonlinear_stress_time)
 
-#f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, cmap, crange, "Density q", D[diffusivity], kf, m, N)
 
+## HISTOGRAM PLOTTING
 timestep = 2
 g = TissueGrowth.plotForceLawCompare1D(1 ./ sol_nonlinear[geo][diffusivity][1].Density[timestep][2:end-1], 1 ./ sol_hookean[geo][diffusivity][1].Density[timestep][2:end-1], "Length")
 fig_name = "cell_length_$timestep.png"

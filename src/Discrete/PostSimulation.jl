@@ -35,7 +35,7 @@ function PostCalcs1D(u, p)
 
     ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(u,uᵢ₋₁)))
     #diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
-    density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./2
+    density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./(2*m)
     ψ = ∑F ./ δ(uᵢ₊₁, u)
     Κ = κ(uᵢ₋₁,u,uᵢ₊₁)
     vₙx = Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"1D")[:,1]
@@ -63,7 +63,7 @@ This function is similar to `PostCalcs1D`, but it is tailored for 2D simulation 
 A tuple containing the sum of forces, normal velocity, density, stress, and curvature for each element in the state vector.
 """
 function PostCalcs2D(u, p)
-    N, kₛ, η, kf, l₀, δt = p
+    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype = p
 
     #u = reshape(u, Int(length(u)/2), 2)
 
@@ -78,7 +78,7 @@ function PostCalcs2D(u, p)
 
     ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(u,uᵢ₋₁)))
     #diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
-    density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./2
+    density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./(2*m)
     ψ = ∑F ./ δ(uᵢ₊₁, u)
     Κ = κ(uᵢ₋₁,u,uᵢ₊₁)
     vₙx = Vₙ(uᵢ₋₁,u,uᵢ₊₁,kf,δt,"2D")[:,1]

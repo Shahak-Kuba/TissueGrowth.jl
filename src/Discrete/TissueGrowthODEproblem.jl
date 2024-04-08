@@ -19,7 +19,9 @@ function Growth_ODE!(du,u,p,t)
 
     if domain_type == "2D"
         du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
-                       Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,growth_dir))'
+                       Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
+        #du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+        #               Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,growth_dir))'
     else
         if btype == "InvertedBellCurve"
             dom = 1.5; # For Bell curve

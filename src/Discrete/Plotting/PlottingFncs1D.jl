@@ -78,7 +78,7 @@ function plotResults1D_spatial_density(u, var)
     return f
 end
 
-function plotThetaVsTime1D(u, t, var, cmap, crange, cbarlabel, D, kf)
+function plotThetaVsTime1D(u, t, var, cmap, crange, cbarlabel)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
@@ -98,7 +98,7 @@ function plotThetaVsTime1D(u, t, var, cmap, crange, cbarlabel, D, kf)
         CairoMakie.lines!(gaxmain, x[j,:], t, color=ξ[j,:], colorrange=CRange,
                 colormap=cmap, linewidth=4)
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
