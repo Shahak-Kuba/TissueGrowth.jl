@@ -143,7 +143,7 @@ function plotStationaryBoundary(u, var, cmap, crange, cbarlabel)
             end
         end
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
