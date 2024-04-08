@@ -1,43 +1,8 @@
 
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
-"""
-    plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
 
-Generate a 2D plot to visualize results with lines and scatter points.
-
-# Arguments
-- `u::Vector`: A vector of 2D arrays representing the data points.
-- `var::Vector`: A vector of values associated with each data point for coloring.
-- `cmap::AbstractColorMap`: The colormap used for coloring the plot.
-- `crange::AbstractVector`: The color range for mapping values to colors.
-- `cbarlabel::AbstractString`: The label for the colorbar.
-- `D::Number`: A parameter to be displayed in the plot title.
-- `kf::Number`: Another parameter to be displayed in the plot title.
-
-# Returns
-- `Figure`: A Makie Figure object representing the 2D plot.
-"""
-function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf)
-    txtSize = 35;
-    tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
-    ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
-              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-              title = "D = $D, kf = $kf", titlesize = txtSize)
-    CRange = crange
-    for i in eachindex(u)
-        plotInterface!(gaxmain, u, var, cmap, CRange, i)
-    end
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
-        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
-    return f
-end
-
-function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims)
+function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
@@ -50,6 +15,15 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims)
     CRange = crange
     for i in eachindex(u)
         plotInterface!(gaxmain, u, var, cmap, CRange, i)
+    end
+
+    plot_cell_traj = true # User set
+
+    if plot_cell_traj
+        for j = 1:3:N
+            plotCellTrajectory!(gaxmain, u, m, j, 3)
+        end
+
     end
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
