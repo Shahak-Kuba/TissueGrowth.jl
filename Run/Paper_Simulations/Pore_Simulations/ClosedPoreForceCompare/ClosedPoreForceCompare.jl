@@ -13,7 +13,7 @@ kf = 0.001
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "2D"
-Tmax = 20.0 # days
+Tmax = 21.0 # days
 δt = 0.01
 btypes = ["square"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
@@ -27,22 +27,22 @@ cmap = :spring
 cmap2 = :jet
 geo = 1
 diffusivity = 1
-crange = (0,80)
+crange = (10,40)
 
 sol_hookean = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
                 prolif, death, embed, β, γ, Ot, event_δt, seed, 6);
 
-fig_interface_hookean = TissueGrowth.plotResults2D(sol_hookean[geo][diffusivity][1].u, sol_hookean[geo][diffusivity][1].Density, cmap2, crange,  "Density q", D[diffusivity], kf, (1.2,1.2))
+fig_interface_hookean = TissueGrowth.plotResults2D(sol_hookean[geo][diffusivity][1].u, sol_hookean[geo][diffusivity][1].Density, cmap2, crange,  "Density q", (1.2,1.2), N, m)
 save("Pore_Hookean_Square.png", fig_interface_hookean)
 
 
 # Make sure to change force law in Model/CellMechanics.jl
 
 sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
-                prolif, death, embed, β, γ, Ot, event_δt, seed, 6);
+                prolif, death, embed, β, γ, Ot, event_δt, seed, 8);
 
-fig_interface_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap2, crange,  "Density q", D[diffusivity], kf, (1.2,1.2))
-save("Pore_Nonlinear_Square_NV2.png", fig_interface_nonlinear)
+fig_interface_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, "Density q", (1.2,1.2), N, m)
+save("Pore_Nonlinear_Square_Cell_Traj_D_0.005.png", fig_interface_nonlinear)
 
 
 #f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, cmap, crange, "Density q", D[diffusivity], kf, m, N)
