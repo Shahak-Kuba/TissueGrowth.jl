@@ -16,7 +16,7 @@ Generate a plot to visualize results with lines representing angular positions o
 # Returns
 - `Figure`: A Makie Figure object representing the 2D plot.
 """
-function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
+function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
@@ -36,7 +36,7 @@ function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel, D, kf)
     end
     for j in axes(θ,1)
         CairoMakie.lines!(gaxmain, t, θ[j,:], color=ξ[j,:], colorrange=CRange,
-                colormap=cmap, linewidth=4)
+            colormap=cmap, linewidth=4)
     end
     Colorbar(f[1, 2], limits=CRange, colormap=cmap,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)

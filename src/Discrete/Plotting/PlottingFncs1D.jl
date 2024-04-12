@@ -50,10 +50,7 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
         plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 5)
     end
 
-    for j = 1:5:N
-        plotCellTrajectory!(gaxmain, u, m, j, 3)
-    end
-    plotCellTrajectory!(gaxmain, u, m, 80, 3)
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)

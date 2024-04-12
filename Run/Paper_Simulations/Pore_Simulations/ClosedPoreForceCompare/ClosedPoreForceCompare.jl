@@ -25,15 +25,21 @@ event_δt = 0.05
 
 cmap = :spring
 cmap2 = :jet
+cmap3 = :RdBu_6
 geo = 1
 diffusivity = 1
 crange = (10,40)
+crange3 = (0, 35)
 
 sol_hookean = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
                 prolif, death, embed, β, γ, Ot, event_δt, seed, 6);
 
 fig_interface_hookean = TissueGrowth.plotResults2D(sol_hookean[geo][diffusivity][1].u, sol_hookean[geo][diffusivity][1].Density, cmap2, crange,  "Density q", (1.2,1.2), N, m)
 save("Pore_Hookean_Square.png", fig_interface_hookean)
+
+fig_hookean_stress_time = TissueGrowth.plotThetaVsTime(sol_hookean[geo][diffusivity][1].u, sol_hookean[geo][diffusivity][1].t, 
+                            sol_hookean[geo][diffusivity][1].ψ, cmap3, crange3, "Stress ψ")
+save("Pore_Hookean_Stress_D_0.005.png", fig_hookean_stress_time)
 
 
 # Make sure to change force law in Model/CellMechanics.jl
@@ -43,6 +49,10 @@ sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,d
 
 fig_interface_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, "Density q", (1.2,1.2), N, m)
 save("Pore_Nonlinear_Square_Cell_Traj_D_0.005.png", fig_interface_nonlinear)
+
+fig_nonlinear_stress_time = TissueGrowth.plotThetaVsTime(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].t, 
+            sol_nonlinear[geo][diffusivity][1].ψ, cmap3, crange3, "Stress ψ")
+save("Pore_Nonlinear_Stress_D_0.005.png", fig_nonlinear_stress_time)
 
 
 #f = TissueGrowth.plotResults1D(sols1D[geo][diffusivity][1].u, sols1D[geo][diffusivity][1].Density, cmap, crange, "Density q", D[diffusivity], kf, m, N)

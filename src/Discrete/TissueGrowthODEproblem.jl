@@ -32,6 +32,8 @@ function Growth_ODE!(du,u,p,t)
         uᵢ₊₁[1,:] = uᵢ₊₁[1,:]-[dom;0]
         du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
                             Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
+        #du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+        #                    Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,growth_dir))'
     end
     nothing
 end
