@@ -121,3 +121,15 @@ function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,doma
     tspan = (0.0,Tmax)
     return ODEProblem(Growth_ODE!,u0,tspan,p), p
 end
+
+# Setup for when cell density limit is applied
+function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type, q_lim)
+    l₀ = l₀/m
+    kₛ = kₛ*m
+    η = η/m
+    kf = kf/m
+    u0 = u0SetUp(btype,R₀,M,dist_type,domain_type)
+    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,prolif,death,embed,β,γ,Ot, q_lim)
+    tspan = (0.0,Tmax)
+    return ODEProblem(Growth_ODE!,u0,tspan,p), p
+end

@@ -151,7 +151,7 @@ This function modifies `integrator` in place. It uses the parameters and state f
 # Returns
 `nothing`. The function modifies `integrator` in place.
 """
-function affect!(integrator)
+function event_affect!(integrator)
     (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,prolif,death,embed,α,β,γ) = integrator.p
     u = integrator.u
     (p,a,e) = cell_probs(u, m, δt, prolif, death, embed, α, β, γ, kf)

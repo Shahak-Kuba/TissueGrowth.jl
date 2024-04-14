@@ -17,13 +17,12 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m)
         plotInterface!(gaxmain, u, var, cmap, CRange, i)
     end
 
-    plot_cell_traj = true # User set
+    plot_cell_traj = false # User set
 
     if plot_cell_traj
         for j = 1:3:N
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
-
     end
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)

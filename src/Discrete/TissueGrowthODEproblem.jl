@@ -37,3 +37,14 @@ function Growth_ODE!(du,u,p,t)
     end
     nothing
 end
+
+
+# Callback for stopping at a density limit ρ_lim
+density_lim_affect!(integrator) = terminate!(integrator)
+
+function density_lim_condition(u,t,integrator)
+    (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,prolif,death,embed,α,β,γ,q_lim) = integrator.p
+    q = calc_cell_densities(u,m)
+    flag = sum(q .> q_lim)
+    return flag > 0.0 ? true : false
+end
