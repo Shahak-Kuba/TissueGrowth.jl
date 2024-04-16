@@ -24,7 +24,7 @@ prolif = false; death = false; embed = false;
 event_δt = δt
 
 # Cell density limit
-q_lim = 40
+q_lim = 100
 
 # 2D simulations 
 sol, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
