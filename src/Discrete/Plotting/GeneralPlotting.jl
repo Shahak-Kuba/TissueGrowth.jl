@@ -64,6 +64,23 @@ function plotInterface!(gaxmain, u, var, cmap, CRange, index, lw)
     end
 end
 
+function plotInterface_Quadrant!(gaxmain, u, var, cmap, CRange, index, lw)
+    start_index = Int(size(u[index],1)/8)
+    end_index = Int(3*size(u[index],1)/8)+1
+
+    if typeof(var) == Vector{Vector{Float64}}
+        CairoMakie.lines!(gaxmain, u[index][start_index:end_index, 1].data, u[index][start_index:end_index, 2].data, color=var[index][start_index:end_index], colorrange=CRange,
+            colormap=cmap, linewidth=lw)
+        CairoMakie.scatter!(gaxmain, u[index][start_index:end_index, 1].data, u[index][start_index:end_index, 2].data, color=var[index][start_index:end_index], colorrange=CRange,
+            colormap=cmap, markersize=lw+1)
+    else
+        CairoMakie.lines!(gaxmain, u[index][start_index:end_index, 1].data, u[index][start_index:end_index, 2].data, color=var[index][start_index:end_index].data, colorrange=CRange,
+                colormap=cmap, linewidth=lw)
+        CairoMakie.scatter!(gaxmain, u[index][start_index:end_index, 1].data, u[index][start_index:end_index, 2].data, color=var[index][start_index:end_index].data, colorrange=CRange,
+            colormap=cmap, markersize=lw+1)
+    end
+end
+
 function plotInterface1D!(gaxmain, u, var, cmap, CRange, index, lw)
     if typeof(var) == Vector{Vector{Float64}}
         CairoMakie.lines!(gaxmain, u[index][:, 1].data, u[index][:, 2].data, color=var[index], colorrange=CRange,

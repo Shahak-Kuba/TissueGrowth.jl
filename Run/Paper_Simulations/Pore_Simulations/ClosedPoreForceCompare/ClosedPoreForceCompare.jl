@@ -2,7 +2,6 @@ using TissueGrowth
 
 # set random seed number for reproducability 
 seed = 99
-
 # setting up simulation parameters
 N = 120 # number of cells
 m = 2 # number of springs per cell
@@ -49,6 +48,8 @@ sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,d
 
 fig_interface_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, "Density q", (1.2,1.2), N, m)
 save("Pore_Nonlinear_Square_Cell_Traj_D_0.005.png", fig_interface_nonlinear)
+
+fig_interface_nonlinear_Quadrant = TissueGrowth.plotResults2D_Quadrant(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, "Density q", (1.2,1.2), N, m)
 
 fig_nonlinear_stress_time = TissueGrowth.plotThetaVsTime(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].t, 
             sol_nonlinear[geo][diffusivity][1].ψ, cmap3, crange3, "Stress ψ")

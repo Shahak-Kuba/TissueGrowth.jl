@@ -30,6 +30,32 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m)
     return f
 end
 
+function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m)
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
+              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              #title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    for i in eachindex(u)
+        plotInterface_Quadrant!(gaxmain, u, var, cmap, CRange, i, 5)
+    end
+
+    plotCellTrajectory!(gaxmain, u, m, 15, 3)
+    plotCellTrajectory!(gaxmain, u, m, 20, 3)
+    plotCellTrajectory!(gaxmain, u, m, 25, 3)
+    plotCellTrajectory!(gaxmain, u, m, 30, 3)
+    plotCellTrajectory!(gaxmain, u, m, 35, 3)
+
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
 
 function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedded_cells, multiInterfaces)
     txtSize = 35;
