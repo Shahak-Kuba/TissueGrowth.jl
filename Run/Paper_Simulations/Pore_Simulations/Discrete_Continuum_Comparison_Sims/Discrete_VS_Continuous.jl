@@ -32,12 +32,13 @@ event_δt = δt;
 Av = 0.0;
 
 # Generating results
-Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution, f_results = ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type, 
+Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution = ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_type, 
                                                                             prolif, death, embed, α, βv, γv, event_δt, seed, Av);
 
-indicies = [1,5,11, 1,5,11]
+indicies = [1,1,5,5,11,11]
 num_cols = 2
 f1 = TissueGrowth.DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)
+save("m_springs_compare.png",f1)
 
 cmap = :jet
 xbound = 1.1

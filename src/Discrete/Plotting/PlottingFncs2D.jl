@@ -24,6 +24,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m)
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
+    plotCellTrajectory!(gaxmain, u, m, 35, 3)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
@@ -121,15 +122,15 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
             end
             # Plotting Interface
             u = Solution[Diffusivity][Shape].u
-            #var = Solution[Diffusivity][Shape].Vₙ
-            var = Solution[Diffusivity][Shape].Density
+            var = Solution[Diffusivity][Shape].Vₙ
+            #var = Solution[Diffusivity][Shape].Density
             for i in eachindex(u)
                 plotInterface!(gaxmain, u, var, cmap, CRange, i, 2)
             end
         end
     end
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=15,
-        flipaxis=false, label="Density ρ", labelsize = txtSize, ticklabelsize = tickSize)
+        flipaxis=false, label="Velocity", labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
 

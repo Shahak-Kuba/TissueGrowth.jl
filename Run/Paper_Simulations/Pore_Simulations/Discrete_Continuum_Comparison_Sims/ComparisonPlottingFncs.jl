@@ -89,7 +89,7 @@ function Convert_Discrete_Data(Discrete_Solution, m)
         θ_disc[i,:] = [temp_θ[i, θmin_idx:end]; temp_θ[i, 1:θmin_idx-1]]
 
         temp_ρ[i,:] = Discrete_Solution.Density[i].data
-        ρ_disc[i,:] = [temp_ρ[i, θmin_idx:end]; temp_ρ[i, 1:θmin_idx-1]]./m
+        ρ_disc[i,:] = [temp_ρ[i, θmin_idx:end]; temp_ρ[i, 1:θmin_idx-1]]
         r_disc[i,:] = [temp_r[i, θmin_idx:end]; temp_r[i, 1:θmin_idx-1]]
     end
 
@@ -138,8 +138,8 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
         #Legend(f[1,1], [cont_line, disc_stair1, disc_stair2], ["Continuum", "Discrete m = $m1", "Discrete m = $m2"], labelsize=tickSize)
     end
     #Label(ga[0, :], "Pore: Square", fontsize = 45)
-    Label(ga[:, 0], "Density ρ", fontsize = 16, rotation=π/2)
-    Label(ga[row_size+1, :], "Angle θ", fontsize = 16)
+    Label(ga[:, 0], "Cell density q", fontsize = 18, rotation=π/2)
+    Label(ga[row_size+1, :], "Angle θ", fontsize = 18)
     return f
 end
 
