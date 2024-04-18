@@ -55,7 +55,7 @@ Stress_Range = (-20, 20)
 
 f = TissueGrowth.plotResults2D(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q", (280,280), N, m)
 save("Experimental_Square_Pore_Nonlinear.png", f)
-f2 = TissueGrowth.plotResults2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q", (280,280), N, m)
+f2 = TissueGrowth.plotResults2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q [1/μm]", (280,280), N, m)
 save("Experimental_Square_Pore_Nonlinear_Quadrant.png", f2)
 f2 = TissueGrowth.plotThetaVsTime(sols2D[diffusivity][geo].u, sols2D[diffusivity][geo].t, sols2D[diffusivity][geo].ψ, Stress_cmap, Stress_Range, "Stress ψ", D, kf)
 

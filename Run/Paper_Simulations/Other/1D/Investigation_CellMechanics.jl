@@ -3,7 +3,8 @@ using Plots
 ## Resting length investigation
 Φ = (l₀, l₁, p) -> (p.k * ( (2*p.a*(1/l₀ - 1/l₁)) - ((p.a^2 *((1/l₀^2 - 1/l₁^2)))/2) + log((1/l₁)/(1/l₀)) ) ) / (1/l₁ - 1/l₀)
 
-Aₕ = (l₀, l₁, p) -> p.k * (log((1/ρ₁)/(1/ρ₀)) + p.a*((1/ρ₀) - (1/ρ₁)))
+Aₕ = (l₀, l₁, p) -> p.k * (log((1/l₁)/(1/l₀)) + p.a*((1/l₀) - (1/l₁)))
+Aₙ = (l₀, l₁, ξ, p) -> p.k * p.a^2 * ((1/l₁ - 1/l₀)/p.a + (1/l₀^2 - 1/l₁^2)/2) + ξ*(1/l₁ - 1/l₀)
 
 l_min = 7.5
 l_max = 32.5
@@ -17,6 +18,9 @@ F₁ = (δ,p) -> p.k .* (δ .- p.a) # hookes law
 
 Φ_value = Φ(l_min,l_max,p)
 F₂ = (δ,p,ξ) -> p.k .* p.a^2 .* (ones(size(δ))./p.a .- (1 ./ δ)) .+ ξ # nonlinear restoring force w/ verticle shift
+
+hookean_area = Aₕ(l_min,l_max,p)
+nonlinear_area = Aₙ(l_min,l_max,Φ_value,p)
 
 hookean = F₁(l,p)
 nonlinear = F₂(l,p,Φ_value)
