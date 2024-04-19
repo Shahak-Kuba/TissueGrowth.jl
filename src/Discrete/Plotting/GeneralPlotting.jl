@@ -43,6 +43,34 @@ function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel)
     return f
 end
 
+function plotThetaVsTime_Quadrant(u, t, var, cmap, crange, cbarlabel)
+    txtSize = 35;
+    tickSize = 25;
+    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], 
+              xlabel="θ [radians]", xlabelsize = txtSize, xticklabelsize = tickSize, xticks = ([0, π/4, π/2],["0", "π/4", "π/2"]),
+              ylabel="t [days]", ylabelsize = txtSize, yticklabelsize = tickSize)
+    CRange = crange
+    θ = zeros(size(u[1],1),size(t,1))
+    ξ = zeros(size(u[1],1),size(t,1))
+    for i in eachindex(t)
+        x = u[i][:, 1].data
+        y = u[i][:, 2].data
+        θ[:,i] = atan.(y,x)
+        ξ[:,i] = var[i].data
+    end
+    QuadSize = Int(size(θ,1)/4)
+    for j in Int(QuadSize/2):Int(3*QuadSize/2)
+        CairoMakie.lines!(gaxmain, θ[j,:], t, color=ξ[j,:], colorrange=CRange,
+            colormap=cmap, linewidth=4)
+    end
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
 function plotInterface!(gaxmain, u, var, cmap, CRange, index)
     CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
             colormap=cmap, linewidth=5)

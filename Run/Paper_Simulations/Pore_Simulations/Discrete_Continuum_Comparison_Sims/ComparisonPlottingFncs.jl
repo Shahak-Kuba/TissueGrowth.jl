@@ -138,7 +138,7 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
         #Legend(f[1,1], [cont_line, disc_stair1, disc_stair2], ["Continuum", "Discrete m = $m1", "Discrete m = $m2"], labelsize=tickSize)
     end
     #Label(ga[0, :], "Pore: Square", fontsize = 45)
-    Label(ga[:, 0], "Cell density q", fontsize = 18, rotation=π/2)
+    Label(ga[:, 0], "Density q [1/μm]", fontsize = 18, rotation=π/2)
     Label(ga[row_size+1, :], "Angle θ", fontsize = 18)
     return f
 end
@@ -153,7 +153,7 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     for i in axes(x_disc,1)
         x_disc[i,:] .= [Discrete_Solution.u[i][:,1];Discrete_Solution.u[i][1,1]];
         y_disc[i,:] .= [Discrete_Solution.u[i][:,2];Discrete_Solution.u[i][1,2]];
-        ρ_disc[i,:] .= [Discrete_Solution.Density[i].data;Discrete_Solution.Density[i].data[1]]./m;
+        ρ_disc[i,:] .= [Discrete_Solution.Density[i].data;Discrete_Solution.Density[i].data[1]];
     end
 
     txtSize = 35;
@@ -181,7 +181,7 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
             colormap=cmap, markersize=6)
     end
     Colorbar(f[1, 2], limits=Cbar_range, size=20, ticklabelsize = tickSize, colormap=cmap,
-        flipaxis=false, label="Density ρ [cells/length]", labelsize=txtSize)
+        flipaxis=false, label="Density q [1/μm]", labelsize=txtSize)
 
     return f
 end
