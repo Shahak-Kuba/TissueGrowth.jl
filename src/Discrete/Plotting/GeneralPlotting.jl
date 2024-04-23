@@ -62,11 +62,11 @@ function plotThetaVsTime_Quadrant(u, t, var, cmap, crange, cbarlabel)
         ξ[:,i] = var[i].data
     end
     QuadSize = Int(size(θ,1)/4)
-    for j in Int(QuadSize/2):Int(3*QuadSize/2)
+    for j in Int(QuadSize/2)+1:Int(3*QuadSize/2)+1
         CairoMakie.lines!(gaxmain, θ[j,:], t, color=ξ[j,:], colorrange=CRange,
             colormap=cmap, linewidth=4)
     end
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size = 30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end

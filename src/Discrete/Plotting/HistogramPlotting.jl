@@ -17,7 +17,7 @@ function plotAttributeHistogram!(gaxmain, data, clr)
     Makie.hist!(gaxmain ,hist_data, bins = 20, strokewidth = 1, strokecolor = :black)
 end
 
-function plotForceLawCompare1D(data1, data2, Label::String)
+function plotForceLawCompareHistogram(data1, data2, Label::String)
     txtSize = 18;
     tickSize = 18;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),

@@ -45,19 +45,23 @@ sol, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir
                     prolif, death, embed, α, β, Ot, event_δt, seed, 10, ρ_lim);
 
 Density_cmap =  :cool #:rainbow1
-Stress_cmap = :brg
+Stress_cmap = :spring 
 
 geo = 1
 diffusivity = 1
 
 Density_Range = (0.05,0.2)
-Stress_Range = (-10, 10)
+Stress_Range = (-30, 5)
 
 f = TissueGrowth.plotResults2D(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q", (280,280), N, m)
 save("Experimental_Square_Pore_Nonlinear.png", f)
 f2 = TissueGrowth.plotResults2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q [1/μm]", (280,280), N, m)
 save("Experimental_Square_Pore_Nonlinear_Quadrant_f0_resting.png", f2)
 f2 = TissueGrowth.plotThetaVsTime_Quadrant(sol[diffusivity][geo].u, sol[diffusivity][geo].t, sol[diffusivity][geo].ψ, Stress_cmap, Stress_Range, "Stress ψ [N/μm²]")
+
+
+
+
 
 # Compare with regression model from Buenzli et al. 2020
 
