@@ -180,7 +180,7 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
         CairoMakie.scatter!(gbxmain, [R_cont[i,:]; R_cont[i,1]].*cos.([θ_cont;θ_cont[1]]), [R_cont[i,:]; R_cont[i,1]].*sin.([θ_cont;θ_cont[1]]), color=[ρ_cont[i,:];ρ_cont[i,1]], colorrange=Cbar_range,
             colormap=cmap, markersize=6)
     end
-    Colorbar(f[1, 2], limits=Cbar_range, size=20, ticklabelsize = tickSize, colormap=cmap,
+    Colorbar(f[1, 2], limits=Cbar_range, size=30, ticklabelsize = tickSize, colormap=cmap,
         flipaxis=false, label="Density q [1/μm]", labelsize=txtSize)
 
     return f

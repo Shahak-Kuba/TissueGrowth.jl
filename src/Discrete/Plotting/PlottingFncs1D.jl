@@ -43,14 +43,16 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-0.01, 1.51, -0.1, 1.1), aspect=DataAspect(), 
-              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="x [mm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y [mm]", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
     for i in eachindex(u)
-        plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 5)
+        plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4) - 10, 3)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4) + 10, 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)

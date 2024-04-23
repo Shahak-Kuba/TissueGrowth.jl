@@ -23,7 +23,7 @@ prolif = false; death = false; embed = false;
 β = 0.0001;        γ = 0.005;      Ot = 62.5;
 event_δt = 0.05
 
-cmap = :spring
+cmap = :cool
 cmap2 = :jet
 cmap3 = :RdBu_6
 geo = 1
@@ -57,7 +57,7 @@ sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,d
 
 diffusivity = 1
 
-fig_interface_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, "Density q", D[diffusivity], kf, m, N)
+fig_interface_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, "Density q [1/mm]", D[diffusivity], kf, m, N)
 save("Bone_Nonlinear_1D.png", fig_interface_nonlinear)
 
 fig_interface_nonlinear_stationary_bounds = TissueGrowth.plotStationaryBoundary(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Vₙ, cmap2, crange2, "velocity [mm day⁻¹]")

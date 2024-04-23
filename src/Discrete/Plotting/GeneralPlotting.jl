@@ -140,6 +140,6 @@ function plotCellTrajectory!(gaxmain, u, m, cell_index, lw)
     CairoMakie.lines!(gaxmain, hcat(left_cell_traj...)'[:,1], hcat(left_cell_traj...)'[:,2], color=:black, linewidth=lw)
     #CairoMakie.arrows(gaxmain, hcat(left_cell_traj...)'[end-1,1], hcat(left_cell_traj...)'[end-1,2], hcat(left_cell_traj...)'[end,1], hcat(left_cell_traj...)'[end,2], color=:black, arrowsize=10)
     CairoMakie.lines!(gaxmain, hcat(right_cell_traj...)'[:,1], hcat(right_cell_traj...)'[:,2], color=:black, linewidth=lw)
-    CairoMakie.lines!(gaxmain, hcat(spring_traj...)'[:,1], hcat(spring_traj...)'[:,2], color=:green, linewidth=lw)
+    CairoMakie.lines!(gaxmain, hcat(spring_traj...)'[:,1], hcat(spring_traj...)'[:,2], color=:red, linewidth=lw)
 
 end

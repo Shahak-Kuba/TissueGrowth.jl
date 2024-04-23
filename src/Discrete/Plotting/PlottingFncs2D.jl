@@ -42,14 +42,14 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     for i in eachindex(u)
-        plotInterface_Quadrant!(gaxmain, u, var, cmap, CRange, i, 5)
+        plotInterface_Quadrant!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
-    plotCellTrajectory!(gaxmain, u, m, 15, 3)
-    plotCellTrajectory!(gaxmain, u, m, 20, 3)
-    plotCellTrajectory!(gaxmain, u, m, 25, 3)
-    plotCellTrajectory!(gaxmain, u, m, 30, 3)
-    plotCellTrajectory!(gaxmain, u, m, 35, 3)
+    plotCellTrajectory!(gaxmain, u, m, 15, 5)
+    plotCellTrajectory!(gaxmain, u, m, 20, 5)
+    plotCellTrajectory!(gaxmain, u, m, 25, 5)
+    plotCellTrajectory!(gaxmain, u, m, 30, 5)
+    plotCellTrajectory!(gaxmain, u, m, 35, 5)
 
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
