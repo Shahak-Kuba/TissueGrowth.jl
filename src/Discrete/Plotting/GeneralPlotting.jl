@@ -154,6 +154,6 @@ function plotSpringBoundaryTrajectory!(gaxmain, u, var, lw, cmap, Crange, idx)
             push!(spring_boundary_var, var[ii][idx])
         end
 
-        CairoMakie.lines!(gaxmain, hcat(spring_boundary_traj...)'[:,1], hcat(spring_boundary_traj...)'[:,2], color=:redirect_stderr, linewidth=lw)
+        CairoMakie.lines!(gaxmain, hcat(spring_boundary_traj...)'[:,1], hcat(spring_boundary_traj...)'[:,2], color=vcat(spring_boundary_var...), colorrange=Crange,colormap=cmap, linewidth=lw)
 
 end

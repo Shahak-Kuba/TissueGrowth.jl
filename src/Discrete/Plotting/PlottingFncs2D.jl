@@ -56,23 +56,32 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m)
     return f
 end
 
-function plotStress2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims)
+function plotStress2D_Quadrant(u, var, cmap, Crange, cbarlabel, axisLims)
     txtSize = 35;
-    tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
-              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel=L"x \; \text{[μm]}", xlabelsize = txtSize+10, xticklabelsize = txtSize,
+              ylabel=L"y \; \text{[μm]}", ylabelsize = txtSize+10, yticklabelsize = txtSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
-    CRange = crange
-    for i in axes(u[1],1)
-        plotSpringBoundaryTrajectory!(gaxmain, u, var, 5, cmap, crange, i)
+    lw = 5
+    for index in eachindex(u)
+        if index == 1 || index == size(u,1)
+            CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:black,linewidth=lw)
+            CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:black, markersize=lw+1)
+        else
+            #CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:grey,linewidth=lw)
+            #CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:grey, markersize=lw+1)    
+        end
     end
 
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
-        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    for i in axes(u[1],1)
+        plotSpringBoundaryTrajectory!(gaxmain, u, var, 5, cmap, Crange, i)
+    end
+
+    Colorbar(f[1, 2], limits=Crange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize + 10, ticklabelsize = txtSize)
     return f
 end
 
