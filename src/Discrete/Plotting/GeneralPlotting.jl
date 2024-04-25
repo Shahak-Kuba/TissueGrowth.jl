@@ -143,3 +143,17 @@ function plotCellTrajectory!(gaxmain, u, m, cell_index, lw)
     CairoMakie.lines!(gaxmain, hcat(spring_traj...)'[:,1], hcat(spring_traj...)'[:,2], color=:red, linewidth=lw)
 
 end
+
+function plotSpringBoundaryTrajectory!(gaxmain, u, var, lw, cmap, Crange, idx)
+
+        spring_boundary_traj = []
+        spring_boundary_var = []
+        
+        for ii in axes(u,1)
+            push!(spring_boundary_traj, u[ii][idx,:])
+            push!(spring_boundary_var, var[ii][idx])
+        end
+
+        CairoMakie.lines!(gaxmain, hcat(spring_boundary_traj...)'[:,1], hcat(spring_boundary_traj...)'[:,2], color=:redirect_stderr, linewidth=lw)
+
+end

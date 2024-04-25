@@ -45,7 +45,7 @@ sol, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir
                     prolif, death, embed, α, β, Ot, event_δt, seed, 10, ρ_lim);
 
 Density_cmap =  :cool #:rainbow1
-Stress_cmap = :spring 
+Stress_cmap = :winter 
 
 geo = 1
 diffusivity = 1
@@ -57,7 +57,11 @@ f = TissueGrowth.plotResults2D(sol[geo][diffusivity].u, sol[geo][diffusivity].De
 save("Experimental_Square_Pore_Nonlinear.png", f)
 f2 = TissueGrowth.plotResults2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q [1/μm]", (280,280), N, m)
 save("Experimental_Square_Pore_Nonlinear_Quadrant_f0_resting.png", f2)
-f2 = TissueGrowth.plotThetaVsTime_Quadrant(sol[diffusivity][geo].u, sol[diffusivity][geo].t, sol[diffusivity][geo].ψ, Stress_cmap, Stress_Range, "Stress ψ [N/μm²]")
+f3 = TissueGrowth.plotResults2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].ψ, Stress_cmap, Stress_Range,  "Stress ψ [N/μm²]", (280,280), N, m)
+save("Experimental_Square_Pore_Hookean_Quadrant_Stress.png", f3)
+f4 = TissueGrowth.plotStress2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].ψ, Stress_cmap, Stress_Range, "Stress ψ [N/μm²]", (280,280))
+
+#f2 = TissueGrowth.plotThetaVsTime_Quadrant(sol[diffusivity][geo].u, sol[diffusivity][geo].t, sol[diffusivity][geo].ψ, Stress_cmap, Stress_Range, "Stress ψ [N/μm²]")
 
 
 

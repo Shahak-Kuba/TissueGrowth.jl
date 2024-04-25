@@ -5,9 +5,9 @@ include("ComparisonSimulation.jl")
 # Shared variables
 R₀ = 1.05#1.2694265629824517;
 D_array = [0.0001, 0.01, 1];
-kf = 0.0015;
+kf = 0.006;
 growth_dir = "inward";
-Tmax = 22.0; # days
+Tmax = 26.0; # days
 btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
 # Discrete Simulation Variables
@@ -15,8 +15,8 @@ btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cros
 seed = 88;
 
 # setting up simulation parameters
-N = 100; # number of cells
-m = 2; # number of springs per cell
+N = 20; # number of cells
+m = 10; # number of springs per cell
 l₀ = 10.0;
 η = 1.0 ;
 δt = 0.01;
@@ -37,8 +37,8 @@ Discrete_Solution, Continuum_Solution = ComparisonSim_Density(N,m,R₀,D_array,l
 cmap = :cool
 xbound = 1.1
 ybound = 1.1
-Cbar_min = 0
-Cbar_max = 30
-idx = 1
+Cbar_min = 2
+Cbar_max = 5
+idx = 3
 f2 = DiscVSContShape_plot(Discrete_Solution[idx], m, Continuum_Solution[idx], xbound, ybound, cmap, Cbar_min, Cbar_max)
-save("Disc_VS_Cont_D_Low.png", f2)
+save("Disc_VS_Cont_D_High.png", f2)

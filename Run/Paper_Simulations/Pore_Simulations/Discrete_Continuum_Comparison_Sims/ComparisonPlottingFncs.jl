@@ -19,12 +19,12 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solu
     
     # plotting Discrete
     disc_index = index;
-    disc_stair1 = CairoMakie.stairs!(gaxmain, θ_disc1[disc_index,:], ρ_disc1[disc_index,:], step=:center, linewidth=2, color=:blue)
-    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:center, linewidth=2, color=:green)
+    disc_stair1 = CairoMakie.stairs!(gaxmain, θ_disc1[disc_index,:], ρ_disc1[disc_index,:], step=:center, linewidth=6, color=:blue)
+    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:center, linewidth=6, color=:green)
 
     # plotting Continuum
     cont_index = 1 + (index - 1)*1000
-    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red, linestyle=:solid)
+    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=6, color=:red, linestyle=:solid)
 
     #text!(gaxmain, 0.2, max_y-0.8 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=16)
     
@@ -52,11 +52,11 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m, m, Continuum_Solut
     
     # plotting Discrete
     disc_index = index;
-    disc_stair = CairoMakie.stairs!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], step=:center, linewidth=2, color=clr)
+    disc_stair = CairoMakie.stairs!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], step=:center, linewidth=3, color=clr)
 
     # plotting Continuum
     cont_index = 1 + (index - 1)*1000
-    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red, linestyle=:solid)
+    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=3, color=:red, linestyle=:solid)
 
     #text!(gaxmain, 0.2, max_y-0.8 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=16)
     
@@ -181,7 +181,7 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
             colormap=cmap, markersize=6)
     end
     Colorbar(f[1, 2], limits=Cbar_range, size=30, ticklabelsize = tickSize, colormap=cmap,
-        flipaxis=false, label="Density q [1/μm]", labelsize=txtSize)
+        flipaxis=false, label="Density q [1/length]", labelsize=txtSize)
 
     return f
 end

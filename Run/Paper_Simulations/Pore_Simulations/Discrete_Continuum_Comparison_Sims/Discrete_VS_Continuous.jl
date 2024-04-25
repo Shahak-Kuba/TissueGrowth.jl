@@ -7,7 +7,7 @@ R₀ = 1.05#1.2694265629824517;
 D = 0.001;
 kf = 0.005;
 growth_dir = "inward";
-Tmax = 26.0; # days
+Tmax = 22.0; # days
 btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
 # Discrete Simulation Variables
@@ -15,10 +15,10 @@ btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cros
 seed = 88;
 
 # setting up simulation parameters
-N = 24; # number of cells
+N = 20; # number of cells
 m1 = 1; # number of springs per cell
 m2 = 4;
-l₀ = 1.0;
+l₀ = 10.0;
 η = 1.0 ;
 δt = 0.01;
 dist_type = "Linear"; #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
