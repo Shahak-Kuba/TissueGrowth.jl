@@ -16,7 +16,7 @@ kf = KF/N
 # set random seed number for reproducability 
 seed = 99
 
-# scaling factor to simulate μm instead of mm
+# scaling factor 
 Λ = 10000
 
 # setting up simulation parameters
