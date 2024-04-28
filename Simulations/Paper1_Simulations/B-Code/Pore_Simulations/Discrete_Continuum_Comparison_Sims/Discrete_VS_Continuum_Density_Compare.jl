@@ -4,10 +4,10 @@ include("ComparisonSimulation.jl")
 
 # Shared variables
 R₀ = 1.05#1.2694265629824517;
-D_array = [0.0001, 0.01, 1];
+D_array = [0.0001, 0.0075, 1];
 kf = 0.006;
 growth_dir = "inward";
-Tmax = 26.0; # days
+Tmax = 22.0; # days
 btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
 # Discrete Simulation Variables
@@ -35,10 +35,10 @@ Discrete_Solution, Continuum_Solution = ComparisonSim_Density(N,m,R₀,D_array,l
                                                                             prolif, death, embed, α, βv, γv, event_δt, seed, Av);
 
 cmap = :cool
-xbound = 1.1
-ybound = 1.1
+xbound = 1.2
+ybound = 1.2
 Cbar_min = 2
-Cbar_max = 5
+Cbar_max = 7.5
 idx = 3
-f2 = DiscVSContShape_plot(Discrete_Solution[idx], m, Continuum_Solution[idx], xbound, ybound, cmap, Cbar_min, Cbar_max)
+f2 = TissueGrowth.DiscVSContShape_plot(Discrete_Solution[idx], m, Continuum_Solution[idx], xbound, ybound, cmap, Cbar_min, Cbar_max)
 save("Disc_VS_Cont_D_High.png", f2)

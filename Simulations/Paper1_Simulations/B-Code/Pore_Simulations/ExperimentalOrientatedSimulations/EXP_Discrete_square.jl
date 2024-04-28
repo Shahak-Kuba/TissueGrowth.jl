@@ -17,12 +17,12 @@ kf = KF/N
 seed = 99
 
 # scaling factor 
-Λ = 10000
+Λ = 100000
 
 # setting up simulation parameters
-m = 1 # number of springs per cell
+m = 2 # number of springs per cell
 R₀ = 282.095  # shape radius μm
-D = [0.05].*Λ
+D = [0.0075].*Λ
 l₀ = 10.0
 #kf = 70#93.13 
 η = 1.0 
@@ -42,7 +42,7 @@ event_δt = δt
 
 # 2D simulations 
 sol, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
-                    prolif, death, embed, α, β, Ot, event_δt, seed, 20, ρ_lim);
+                    prolif, death, embed, α, β, Ot, event_δt, seed, 11);
 
 Density_cmap =  :cool #:rainbow1
 Stress_cmap = :winter 
@@ -55,8 +55,8 @@ Stress_Range = (-30, 5)
 
 f = TissueGrowth.plotResults2D(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q", (280,280), N, m)
 save("Experimental_Square_Pore_Nonlinear.png", f)
-f2 = TissueGrowth.plotResults2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  "Density q [1/μm]", (280,280), N, m)
-save("Experimental_Square_Pore_Nonlinear_Quadrant_f0_resting.png", f2)
+f2 = TissueGrowth.plotResults2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", (280,280), N, m)
+save("Experimental_Square_Pore_Hookean_Quadrant_f0_resting.png", f2)
 f3 = TissueGrowth.plotStress2D_Quadrant(sol[geo][diffusivity].u, sol[geo][diffusivity].ψ, Stress_cmap, Stress_Range, L"\text{Stress} \; ψ \; \text{[N/μm²]}", (280,280))
 save("Experimental_Square_Pore_Hookean_Quadrant_Stress_$l₀.png", f3)
 

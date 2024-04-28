@@ -19,8 +19,8 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solu
     
     # plotting Discrete
     disc_index = index;
-    disc_stair1 = CairoMakie.stairs!(gaxmain, θ_disc1[disc_index,:], ρ_disc1[disc_index,:], step=:center, linewidth=6, color=:blue)
-    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:center, linewidth=6, color=:green)
+    disc_stair1 = CairoMakie.stairs!(gaxmain, θ_disc1[disc_index,:], ρ_disc1[disc_index,:], step=:center, linewidth=7, color=:blue)
+    disc_stair2 = CairoMakie.stairs!(gaxmain, θ_disc2[disc_index,:], ρ_disc2[disc_index,:], step=:center, linewidth=7, color=:green)
 
     # plotting Continuum
     cont_index = 1 + (index - 1)*1000
@@ -52,11 +52,11 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m, m, Continuum_Solut
     
     # plotting Discrete
     disc_index = index;
-    disc_stair = CairoMakie.stairs!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], step=:center, linewidth=3, color=clr)
+    disc_stair = CairoMakie.stairs!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], step=:center, linewidth=2, color=clr)
 
     # plotting Continuum
     cont_index = 1 + (index - 1)*1000
-    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=3, color=:red, linestyle=:solid)
+    cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red, linestyle=:solid)
 
     #text!(gaxmain, 0.2, max_y-0.8 ,text= "t=$(Discrete_Solution_m1.t[index])", fontsize=16)
     
@@ -106,7 +106,7 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
     end
     
     txtSize = 16;
-    tickSize = 16;
+    tickSize = 14;
     plot_font = "Arial"
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(655, 400))
@@ -138,8 +138,8 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
         #Legend(f[1,1], [cont_line, disc_stair1, disc_stair2], ["Continuum", "Discrete m = $m1", "Discrete m = $m2"], labelsize=tickSize)
     end
     #Label(ga[0, :], "Pore: Square", fontsize = 45)
-    Label(ga[:, 0], "Density q [1/μm]", fontsize = 18, rotation=π/2)
-    Label(ga[row_size+1, :], "Angle θ", fontsize = 18)
+    Label(ga[:, 0], L"\text{Density} \; q \; \text{[1/μm]}", fontsize = 16, rotation=π/2)
+    Label(ga[row_size+1, :], L"\text{Angle} \; θ", fontsize = 16)
     return f
 end
 
@@ -157,7 +157,7 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     end
 
     txtSize = 35;
-    tickSize = 20;
+    tickSize = 28;
     plot_font = "Arial"
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(600, 900))
@@ -167,21 +167,23 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     Cbar_range = (Cbar_min, Cbar_max)
     
     # plotting Discrete
-    gaxmain = Axis(ga[1, 1], limits=(-xbound, xbound, -ybound, ybound), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize)
+    gaxmain = Axis(ga[1, 1], limits=(-xbound, xbound, -ybound, ybound), xticklabelsvisible = false, 
+     xticklabelsize = tickSize, yticklabelsize = tickSize)
     for i in axes(x_disc,1)
-        CairoMakie.lines!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, linewidth=5)
-        CairoMakie.scatter!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, markersize=6)
+        CairoMakie.lines!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, linewidth=4)
+        CairoMakie.scatter!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, markersize=5)
     end
+    
     # plotting Continuum
     gbxmain = Axis(ga[2, 1], limits=(-xbound, xbound, -ybound, ybound), xticklabelsize = tickSize, yticklabelsize = tickSize)
     for i in 1:1000:size(R_cont,1)
         CairoMakie.lines!(gbxmain, [R_cont[i,:]; R_cont[i,1]].*cos.([θ_cont;θ_cont[1]]), [R_cont[i,:]; R_cont[i,1]].*sin.([θ_cont;θ_cont[1]]), color=[ρ_cont[i,:];ρ_cont[i,1]], colorrange=Cbar_range,
-            colormap=cmap, linewidth=5)
+            colormap=cmap, linewidth=4)
         CairoMakie.scatter!(gbxmain, [R_cont[i,:]; R_cont[i,1]].*cos.([θ_cont;θ_cont[1]]), [R_cont[i,:]; R_cont[i,1]].*sin.([θ_cont;θ_cont[1]]), color=[ρ_cont[i,:];ρ_cont[i,1]], colorrange=Cbar_range,
-            colormap=cmap, markersize=6)
+            colormap=cmap, markersize=5)
     end
     Colorbar(f[1, 2], limits=Cbar_range, size=30, ticklabelsize = tickSize, colormap=cmap,
-        flipaxis=false, label="Density q [1/length]", labelsize=txtSize)
+        flipaxis=false, label=L"\text{Density} \; q \; \text{[1/length]}", labelsize=txtSize)
 
     return f
 end

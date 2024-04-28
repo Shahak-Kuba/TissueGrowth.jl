@@ -4,18 +4,18 @@ using TissueGrowth
 seed = 99
 
 # setting up simulation parameters
-N = 120 # number of cells
-m = 2 # number of springs per cell
-R₀ = 1.2694265629824517 #Almie-Hex: 1.3640876152390462 #Almie-Square: 1.2694265629824517  # shape radius (NOTE: Almie was based on perimeter not same initial area)
-D = [0.001, 0.005, 1]
+N = 20 # number of cells
+m = 6 # number of springs per cell
+R₀ = 1.05 #Almie-Hex: 1.3640876152390462 #Almie-Square: 1.2694265629824517  # shape radius (NOTE: Almie was based on perimeter not same initial area)
+D = [0.0001, 0.0075, 1]
 l₀ = 1.0
-kf = 0.0012
+kf = 0.006
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "2D"
-Tmax = 26.0 # days
+Tmax = 22.0 # days
 δt = 0.01
-btypes = ["square", "hex"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["square"]#, "triangle", "square", "hex", "star","cross"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 q_lim = 100
 ρ_lim = q_lim * m
@@ -27,12 +27,12 @@ event_δt = δt
 
 # 2D simulations 
 sols2D, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
-            prolif, death, embed, α, β, Ot, event_δt, seed, 8, ρ_lim);
+            prolif, death, embed, α, β, Ot, event_δt, seed, 11);
 
 
 # Plotting
-axislims = (1.6,1.6)
-cmap = :jet
+axislims = (1.2,1.2)
+cmap = :cool
 CRange = (0.01, 0.03)
 shape_comp_fig = TissueGrowth.plotMultiSimResults2D(sols2D, axislims, cmap, CRange)
 save("Shape_Compare_Square.png", shape_comp_fig)
