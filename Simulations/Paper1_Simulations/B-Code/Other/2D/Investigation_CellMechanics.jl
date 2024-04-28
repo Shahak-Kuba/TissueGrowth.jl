@@ -6,12 +6,12 @@ using Plots
 Aₕ = (l₀, l₁, p) -> p.k * (log((1/l₁)/(1/l₀)) + p.a*((1/l₀) - (1/l₁)))
 Aₙ = (l₀, l₁, ξ, p) -> p.k * p.a^2 * ((1/l₁ - 1/l₀)/p.a + (1/l₀^2 - 1/l₁^2)/2) + ξ*(1/l₁ - 1/l₀)
 
-l_min = 5.0
+l_min = 2.5
 l_max = 20.0
 l = LinRange(l_min, l_max, 100)
 
 ks = 20.0
-a0 = 5.0
+a0 = 20.0
 p = (k = ks, a = a0)
 
 F₁ = (δ,p) -> p.k .* (δ .- p.a) # hookes law
@@ -27,21 +27,76 @@ nonlinear_area = Aₙ(l_min,l_max,Φ_value,p)
 hookean = F₁(l,p)
 nonlinear = F₂(l,p,Φ_value)
 
-
-f = plotForceCompare(l, hookean, nonlinear, a0)
-
-save("Force_Compare_2D_Square_a_$a0.png", f)
-
-
 function plotForceCompare(l, F_hookean, F_nonlinear, a0)
     f = Figure(fontsize = 35,backgroundcolor=RGBf(1.0, 1.0, 1.0),
-    resolution=(800, 800))
+    resolution=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    ymin = minimum([minimum(F_hookean), minimum(F_nonlinear)])
-    ymax = maximum([maximum(F_hookean), maximum(F_nonlinear)])
-    gaxmain = Axis(ga[1, 1], limits=(l[1], l[end], ymin, ymax), xlabel=L"\text{Spring length [μm]}", ylabel=L"\text{Force Amplitude}")
+    ymin = minimum([minimum(F_hookean), minimum(F_nonlinear)]) - 10
+    ymax = maximum([maximum(F_hookean), maximum(F_nonlinear)]) + 10
+    gaxmain = Axis(ga[1, 1], limits=(l[1], l[end], ymin, ymax), aspect=AxisAspect(1), 
+                    xlabel=L"\text{Spring length [μm]}", ylabel=L"\text{Force Amplitude}")
     CairoMakie.lines!(gaxmain,l, F_hookean, linewidth=5, color=:blue)
     CairoMakie.lines!(gaxmain,l, F_nonlinear,linewidth=5, color=:green)
     CairoMakie.vlines!(gaxmain, [a0, a1], linewidth=5, linestyle=:dash, color=[:black, :grey])
     return f
 end
+
+f = plotForceCompare(l, hookean, nonlinear, a0)
+
+save("Force_Compare_2D_a_$a0.png", f)
+
+
+
+## Stress Plots
+ψ = (F, A) -> F./A
+
+ψ_hookean = ψ(hookean,l)
+ψ_nonlinear = ψ(nonlinear,l)
+
+
+function plotStressCompare(l, ψ_hookean, ψ_nonlinear, a0)
+    f = Figure(fontsize = 35,backgroundcolor=RGBf(1.0, 1.0, 1.0),
+    resolution=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    ymin = minimum([minimum(ψ_hookean), minimum(ψ_hookean)]) - 10
+    ymax = maximum([maximum(ψ_nonlinear), maximum(ψ_nonlinear)]) + 10
+    gaxmain = Axis(ga[1, 1], limits=(l[1], l[end], ymin, ymax), aspect=AxisAspect(1), 
+                    xlabel=L"\text{Spring length [μm]}", ylabel=L"\text{Stress [N/μm²]}")
+    CairoMakie.lines!(gaxmain,l, ψ_hookean, linewidth=5, color=:blue)
+    CairoMakie.lines!(gaxmain,l, ψ_nonlinear,linewidth=5, color=:green)
+    CairoMakie.vlines!(gaxmain, [a0, a1], linewidth=5, linestyle=:dash, color=[:black, :grey])
+    return f
+end
+
+f = plotStressCompare(l, ψ_hookean, ψ_nonlinear, a0)
+
+save("Stress_Compare_2D_a_$a0.png", f)
+
+## Checking relationship between D and kₛ where D is a function of resting length a => D(a)
+
+kₛ_func = (D,a,η) -> D.*η ./ (a.^2)
+
+D = 0.0075
+η = 1
+a_min = 5
+a_max =  15
+a = LinRange(a_min, a_max, 100)
+
+stiffness = kₛ_func(D,a,η)
+
+function plotStiffnessVSRestingLength(a, stiffness)
+    f = Figure(fontsize = 35,backgroundcolor=RGBf(1.0, 1.0, 1.0),
+    resolution=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    ymin = minimum(stiffness)
+    ymax = maximum(stiffness)
+    gaxmain = Axis(ga[1, 1], limits=(a[1], a[end], ymin, ymax), aspect=AxisAspect(1), 
+                    xlabel=L"\text{Spring length [μm]}", ylabel=L"\text{Stiffness}",
+                    title=L"D = 0.0075")
+    
+    CairoMakie.lines!(gaxmain, a, stiffness, linewidth=5, color=:blue)
+    return f
+end
+
+f_stiffness = plotStiffnessVSRestingLength(a, stiffness)
+

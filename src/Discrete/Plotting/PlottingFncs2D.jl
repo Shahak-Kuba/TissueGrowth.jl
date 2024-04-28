@@ -10,7 +10,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m)
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
-              xlabel=L"\text{x [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
+              ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     for i in eachindex(u)
@@ -45,11 +45,15 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m)
         plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
-    plotCellTrajectory!(gaxmain, u, m, 15, 5)
-    plotCellTrajectory!(gaxmain, u, m, 20, 5)
-    plotCellTrajectory!(gaxmain, u, m, 25, 5)
-    plotCellTrajectory!(gaxmain, u, m, 30, 5)
-    plotCellTrajectory!(gaxmain, u, m, 35, 5)
+    for i in 5:5:95
+        plotCellTrajectory!(gaxmain, u, m, i, 5)
+    end
+
+    #plotCellTrajectory!(gaxmain, u, m, 15, 5)
+    #plotCellTrajectory!(gaxmain, u, m, 20, 5)
+    #plotCellTrajectory!(gaxmain, u, m, 25, 5)
+    #plotCellTrajectory!(gaxmain, u, m, 30, 5)
+    #plotCellTrajectory!(gaxmain, u, m, 35, 5)
 
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)

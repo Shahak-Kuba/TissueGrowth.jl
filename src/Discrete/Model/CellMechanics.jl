@@ -8,7 +8,7 @@ nonlinear_restoring_force_vert_shift = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* l₀.
 
 
 # When changing force law make sure to run all of these
-FORCE_FNC = (rᵢ, rⱼ, kₛ, l₀) -> hookean_restoring_force(rᵢ, rⱼ, kₛ, l₀)
+FORCE_FNC = (rᵢ, rⱼ, kₛ, l₀) -> nonlinear_restoring_force(rᵢ, rⱼ, kₛ, l₀)
 
 # Force functions used in ODEs
 Fₛ⁺(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) =  FORCE_FNC(rᵢ, rᵢ₊₁, kₛ, l₀) .* τ(rᵢ₊₁, rᵢ)
