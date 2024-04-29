@@ -24,7 +24,7 @@ function Growth_ODE!(du,u,p,t)
         #               Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,growth_dir))'
     else
         if btype == "InvertedBellCurve"
-            dom = 1.5; # For Bell curve
+            dom = 1500; # For Bell curve
         else
             dom = 2*pi; # FOR Cosine SineWave
         end

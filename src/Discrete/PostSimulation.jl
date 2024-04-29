@@ -16,7 +16,7 @@ function PostCalcs1D(u, p)
     m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype = p
 
     if btype == "InvertedBellCurve"
-        dom = 1.5; # For Bell curve
+        dom = 1500; # For Bell curve
     else
         dom = 2*pi; # FOR Cosine SineWave
     end
@@ -125,7 +125,7 @@ function postSimulation(btype, sol, p)
     # adding periodic boundary node in 1D case
     if domain_type == "1D"
         if btype == "InvertedBellCurve"
-            dom = 1.5
+            dom = 1500
         end
         u = [[vec; (vec[1,:] + [dom,0])'] for vec in u]
     end

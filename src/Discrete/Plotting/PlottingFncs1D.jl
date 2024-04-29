@@ -23,7 +23,7 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf)
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, 1.5, -0.1, 1.1), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], limits=(0, 1500, -0.1, 1100), aspect=DataAspect(), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -42,9 +42,9 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-0.01, 1.51, -0.1, 1.1), aspect=DataAspect(), 
-              xlabel="x [mm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y [mm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+    gaxmain = Axis(ga[1, 1], limits=(0, 1500, -0.1, 1100), aspect=DataAspect(), 
+              xlabel=L"x \; \text{[μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"y \; \text{[μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
     for i in eachindex(u)
         plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 7)

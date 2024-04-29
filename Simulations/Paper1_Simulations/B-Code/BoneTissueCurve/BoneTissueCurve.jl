@@ -6,14 +6,15 @@ seed = 99
 # setting up simulation parameters
 N = 100 # number of cells
 m = 2 # number of springs per cell
-R₀ = 1.05  # shape radius (does not matter for 1D)
-D = [0.0075]
-l₀ = 0.02
-kf = 0.000316
+R₀ = 0.0  # shape radius (does not matter for 1D)
+Λ = 100000
+D = [0.05].*Λ
+l₀ = 10.0
+kf = 316
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "1D"
-Tmax = 28.0 # days
+Tmax = 40.0 # days
 δt = 0.01
 btypes = ["InvertedBellCurve"] #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
@@ -27,7 +28,7 @@ cmap = :cool
 cmap2 = :jet
 cmap3 = :RdBu_6
 geo = 1
-crange = (30,80)
+crange = (0.03,0.06)
 crange2 = (0.01, 0.03)
 crange3 = (-5, 5)
 
@@ -56,8 +57,9 @@ sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,d
                 prolif, death, embed, β, γ, Ot, event_δt, seed, 8);
 
 diffusivity = 1
+geo = 1
 
-fig_interface_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, "Density q [1/mm]", D[diffusivity], kf, m, N)
+fig_interface_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, L"\text{Density} \; q \; \text{[1/μm]}", D[diffusivity], kf, m, N)
 save("Bone_Nonlinear_1D.png", fig_interface_nonlinear)
 
 fig_interface_nonlinear_stationary_bounds = TissueGrowth.plotStationaryBoundary(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Vₙ, cmap2, crange2, "velocity [mm day⁻¹]")
