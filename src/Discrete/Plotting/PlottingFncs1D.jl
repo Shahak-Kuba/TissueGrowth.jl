@@ -59,6 +59,32 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     return f
 end
 
+# NoI: Number of Interfaces to plot (equally spaced)
+
+function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N, NoI)
+    txtSize = 40;
+    tickSize = 35;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 800))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(0, 1500, -10, 1100), aspect=DataAspect(), 
+              xlabel=L"x \; \text{[μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"y \; \text{[μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
+    CRange = crange
+    Interface_Step = Int(floor(size(u,1)/NoI))
+    for i in 1:Interface_Step:size(u,1)
+        plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 7)
+    end
+
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4) - 10, 3)
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4) + 10, 3)
+    #plotCellTrajectory!(gaxmain, u, m,  100, 3)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
 function plotResults1D_spatial_density(u, var)
     #f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
     #    resolution=(500, 500))

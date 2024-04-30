@@ -14,12 +14,12 @@ using CairoMakie
 Aₕ = (l₀, l₁, p) -> p.k .* ((l₁.^2 - l₀.^2)./2 + p.a .* (l₀ - l₁))
 Aₙ = (l₀, l₁, p) -> p.k .* p.a^2 .* ((l₁ .- l₀)./p.a .+ log.(l₀) .- log.(l₁))
 
-l_min = 5.0
+l_min = 2.5
 l_max = 20.0
 l = LinRange(l_min, l_max, 100)
 
-ks = 15.0
-a0 = 10.0
+ks = 30.0
+a0 = 5.0
 p = (k = ks, a = a0)
 
 a1 = (l_min - l_max - √((l_max - l_min)^2 - 4*log(l_min/l_max)*(a0*(l_max - l_min) + (l_min^2 - l_max^2)/2))) / (2*log(l_min/l_max))
