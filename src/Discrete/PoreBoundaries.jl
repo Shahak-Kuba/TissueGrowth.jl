@@ -101,6 +101,131 @@ function position_vectors_polygon(vertices, N, dist_type)
     return [all_x'; all_y']
 end
 
+
+function equidistant_points_on_polar_curve(x_function, y_function, num_points)
+
+    function numerical_derivative(f, θ, h=1e-7)
+        return (f(θ + h) - f(θ - h)) / (2h)
+    end
+
+    # Define the integrand for the arc length in polar coordinates
+    integrand = θ -> sqrt(numerical_derivative(x_function, θ)^2 + numerical_derivative(y_function, θ)^2)
+
+    function arc_length(θ)
+        result, _ = quadgk(integrand, 0, θ)
+        return result
+    end
+
+    # Equally spaced points along the polar curve in terms of arc length
+    L, _ = quadgk(integrand, 0, 2π)  # Total length of the curve
+    Δl = L / (num_points)
+    Δθ = 2π / (num_points)
+
+    theta_points = Float64[0.0]
+    current_length = 0.0
+
+   rootsFunc = (θ,curr_length) -> arc_length(θ) - (curr_length + Δl)
+
+
+    for i in 1:num_points - 1
+        θ = find_zero(θ->rootsFunc(θ,current_length), (theta_points[i], theta_points[i] + 2*Δθ))
+        push!(theta_points, θ)
+        current_length = arc_length(θ)
+    end
+
+    # Get equally spaced θ values along the polar curve
+    θ_values = theta_points
+
+    # Calculate corresponding (x, y) values
+    x_values = x_function.(θ_values)
+    y_values = y_function.(θ_values)
+
+    return hcat(x_values, y_values)
+end
+
+"""
+    u0SetUp(btype, R₀, N, dist_type)
+
+Set up initial conditions for simulations based on the boundary type and distribution.
+
+This function initializes the positions of particles or cells based on the specified boundary type and distribution.
+
+# Arguments
+- `btype`: Type of boundary (e.g., 'circle', 'triangle').
+- `R₀`: Initial radius or characteristic length.
+- `N`: Number of points or particles.
+- `dist_type`: Type of distribution for the points.
+
+# Returns
+An array of initial positions.
+"""
+function u0SetUp(btype,R₀,N,dist_type,domain_type)
+    # setting up initial conditions
+    u0 = ElasticMatrix{Float64}(undef,2,N)
+
+    if domain_type == "2D"
+        if btype == "circle"
+            R = R₀ # to produce identical areas
+            θ = collect(NodeDistribution(0.0,2*π,N+1,dist_type)) 
+            pop!(θ)
+            @views u0 .= [X(R,θ)'; Y(R,θ)'];
+        elseif btype == "triangle"
+            #R = √((2*π*R₀^2)/sin(π/3))
+            R = √((π*R₀^2)/(√(3)*cos(π/6)^2))
+            # calc verticies
+            vertices = polygon_vertices(3, R, -π/2)
+            # calc number of nodes per segment 
+            w = Int64(N/3) + 1
+            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
+        elseif btype == "square"
+            #R = √(π*(R₀^2)) # to produce identical areas
+            R = (R₀√(2π))/2
+            # calc verticies
+            vertices = polygon_vertices(4, R, -π/4)
+            # calc number of nodes per segment 
+            w = Int64(N/4) + 1
+            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
+        elseif btype == "hex"
+            R = √((2/3√3)*π*(R₀^2)) # to produce identical areas
+            # calc verticies
+            vertices = polygon_vertices(6, R, 0)
+            # calc number of nodes per segment 
+            w = Int64(N/6) + 1
+            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
+        elseif btype == "star"
+            star_points = 5
+            Rotation_Angle = pi/2
+            rotation_angle = Rotation_Angle + pi/star_points
+            vertices = StarVerticies(star_points, R₀, Rotation_Angle, rotation_angle)
+            w = Int64(N/(2star_points)) + 1
+            u0 .= position_vectors_polygon(vertices, w, dist_type)
+        elseif btype == "cross"
+            side_length = √((π*R₀^2)/5)
+            offset = side_length/2
+            vertices = CrossVertecies(side_length, offset)
+            w = Int64(N/12) + 1
+            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
+        end
+    else
+        if btype == "SineWave"
+            xfunc = θ -> θ;
+            yfunc = θ -> 2 .+ 0.5 .* cos.(3 .* θ);
+            #integrand(θ) = sqrt(numerical_derivative(xfunc, θ)^2 + numerical_derivative(yfunc, θ)^2)
+            #rootsFunc(θ,curr_length,Δl) = arc_length(θ) - (curr_length + Δl)
+            @views u0 .= equidistant_points_on_polar_curve(xfunc, yfunc, N)';
+        elseif btype == "InvertedBellCurve"
+            μ = 0.75 * 1000
+            c = 0.2 * 1000^3
+            xfunc = θ -> θ.*(1500/(2π));
+            yfunc = θ -> -500 .* exp.((-((θ.*(1500/(2π))) .- μ).^6) ./ c.^2) .+ 500
+            @views u0 .= equidistant_points_on_polar_curve(xfunc, yfunc, N)';
+        end
+    end
+    return u0
+end
+
+
+
 """
     NodeDistribution(start, stop, length, type)
 
@@ -175,45 +300,4 @@ function nonLinearRange(start, stop, length, dist_type)
     else
         error("Unsupported distribution type")
     end
-end
-
-function equidistant_points_on_polar_curve(x_function, y_function, num_points)
-
-    function numerical_derivative(f, θ, h=1e-7)
-        return (f(θ + h) - f(θ - h)) / (2h)
-    end
-
-    # Define the integrand for the arc length in polar coordinates
-    integrand = θ -> sqrt(numerical_derivative(x_function, θ)^2 + numerical_derivative(y_function, θ)^2)
-
-    function arc_length(θ)
-        result, _ = quadgk(integrand, 0, θ)
-        return result
-    end
-
-    # Equally spaced points along the polar curve in terms of arc length
-    L, _ = quadgk(integrand, 0, 2π)  # Total length of the curve
-    Δl = L / (num_points)
-    Δθ = 2π / (num_points)
-
-    theta_points = Float64[0.0]
-    current_length = 0.0
-
-   rootsFunc = (θ,curr_length) -> arc_length(θ) - (curr_length + Δl)
-
-
-    for i in 1:num_points - 1
-        θ = find_zero(θ->rootsFunc(θ,current_length), (theta_points[i], theta_points[i] + 2*Δθ))
-        push!(theta_points, θ)
-        current_length = arc_length(θ)
-    end
-
-    # Get equally spaced θ values along the polar curve
-    θ_values = theta_points
-
-    # Calculate corresponding (x, y) values
-    x_values = x_function.(θ_values)
-    y_values = y_function.(θ_values)
-
-    return hcat(x_values, y_values)
 end

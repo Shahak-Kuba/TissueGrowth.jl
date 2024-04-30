@@ -4,11 +4,10 @@
 hookean_restoring_force = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* ( δ(rⱼ,rᵢ) .- ones(size(rᵢ,1))*l₀ ) 
 ## Nonlinear restoring force
 nonlinear_restoring_force = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* l₀.^2 .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rⱼ, rᵢ))
-nonlinear_restoring_force_vert_shift = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* l₀.^2 .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rⱼ, rᵢ)) .+ 8.70981203732967
 
 
 # When changing force law make sure to run all of these
-FORCE_FNC = (rᵢ, rⱼ, kₛ, l₀) -> nonlinear_restoring_force(rᵢ, rⱼ, kₛ, l₀)
+FORCE_FNC = (rᵢ, rⱼ, kₛ, l₀) -> hookean_restoring_force(rᵢ, rⱼ, kₛ, l₀)
 
 # Force functions used in ODEs
 Fₛ⁺(rᵢ, rᵢ₊₁, rᵢ₋₁, kₛ, l₀) =  FORCE_FNC(rᵢ, rᵢ₊₁, kₛ, l₀) .* τ(rᵢ₊₁, rᵢ)
