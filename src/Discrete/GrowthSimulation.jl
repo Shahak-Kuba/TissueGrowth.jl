@@ -32,7 +32,7 @@ all_results = sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
                         prolif, death, embed, α, β, γ, event_δt, seed, NumSaveTimePoints);
 ```
 """
-function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type, 
+function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type, 
                 prolif, death, embed, β, γ, Ot, event_δt, seed, NumSaveTimePoints)
 
     Set_Random_Seed(seed)
@@ -43,7 +43,7 @@ function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,
     global embedded_cells = []
     embedded_cells_count = []
 
-    all_results = Vector{Vector{SimResults_t}}(undef, 0)
+    #all_results = Vector{Vector{SimResults_t}}(undef, 0)
 
     event_cb = PeriodicCallback(event_affect!,event_δt; save_positions=(false, false))
 
@@ -54,9 +54,8 @@ function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,
     # generating a set of callbacks
     cbs = CallbackSet(event_cb,save_cb)
 
-    for jj in eachindex(D)
-        @views kₛ = D[jj]*(η)/((l₀)^2)
-        #@views kₛ = 0.001
+    if D > 0.0 # Simulations for constant diffusion (Nonlinear restoring force) where user specifies diffusivity
+        kₛ = D*(η)/((l₀)^2)
         results = Vector{SimResults_t}(undef, 0)
 
         for ii in eachindex(btypes)
@@ -66,18 +65,29 @@ function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,
             @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
             push!(results, postSimulation(btype, sol, p))
             push!(embedded_cells_count, floor.(saved_values.saveval))
-            printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D[jj])
+            printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D)
         end
-        push!(all_results,results)
+
+    else # simulations where user specifies spring stiffness (used for a general restoring force)
+        results = Vector{SimResults_t}(undef, 0)
+        for ii in eachindex(btypes)
+            @views btype = btypes[ii]
+            prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
+                                        growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type)
+            @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
+            push!(results, postSimulation(btype, sol, p))
+            push!(embedded_cells_count, floor.(saved_values.saveval))
+            printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D)
+        end
     end
 
-    return all_results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
+    return results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
 
 end
 
 
 # Growth simulation for when cell denisty limit is applied
-function GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type, 
+function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type, 
     prolif, death, embed, β, γ, Ot, event_δt, seed, NumSaveTimePoints, q_lim)
 
         Set_Random_Seed(seed)
