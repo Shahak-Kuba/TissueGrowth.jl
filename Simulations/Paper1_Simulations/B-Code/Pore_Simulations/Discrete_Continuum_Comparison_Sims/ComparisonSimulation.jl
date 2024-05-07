@@ -4,16 +4,16 @@ function ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_
     ### Discrete Simulation
     
     # simulation with m1 cells
-    sols2D_m1, z, c = TissueGrowth.GrowthSimulation(N,m1,R₀,D,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
+    sols2D_m1, z, c = TissueGrowth.GrowthSimulation(N,m1,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
     # simulation with m2 cells
-    sols2D_m2, z, c = TissueGrowth.GrowthSimulation(N,m2,R₀,D,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
+    sols2D_m2, z, c = TissueGrowth.GrowthSimulation(N,m2,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
 
     ### Continuum Simulation
-    ρ₀ = sols2D_m1[1][1].Density[1][1];
+    ρ₀ = sols2D_m1[1].Density[1][1];
 
     #using FVM for low diffusivity and FD for mid-high diffusivity
     if D >= 0.005
@@ -24,8 +24,8 @@ function ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_
 
 
     # plotting
-    Discrete_Solution_m1 = sols2D_m1[1][1];
-    Discrete_Solution_m2 = sols2D_m2[1][1];
+    Discrete_Solution_m1 = sols2D_m1[1];
+    Discrete_Solution_m2 = sols2D_m2[1];
     Continuum_Solution = (θ_cont,R_cont,ρ_cont);
     indicies = [1,3,5,7,9,11]
     num_cols = 2
@@ -42,22 +42,25 @@ function ComparisonSim_Density(N,m,R₀,D_array,l₀,kf,η,growth_dir,Tmax,δt,b
         ### Discrete Simulation
         
         # simulation with m1 cells
-        sol_Discrete, z, c = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
+        sol_Discrete, z, c = TissueGrowth.GrowthSimulation(N,m,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
         prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
+        Λ = 100000
+        D_cont = D/Λ
+
         ### Continuum Simulation
-        ρ₀ = sol_Discrete[1][1].Density[1][1];
+        ρ₀ = sol_Discrete[1].Density[1][1];
 
         #using FVM for low diffusivity and FD for mid-high diffusivity
         if D >= 0.005
-            θ_cont,R_cont,ρ_cont = TissueGrowth.FD_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype,growth_dir);
+            θ_cont,R_cont,ρ_cont = TissueGrowth.FD_SolveContinuumLim_Polar(D_cont,kf,Av,ρ₀,Tmax,R₀,btype,growth_dir);
         else 
-            θ_cont,R_cont,ρ_cont = TissueGrowth.FVM_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype, growth_dir);
+            θ_cont,R_cont,ρ_cont = TissueGrowth.FVM_SolveContinuumLim_Polar(D_cont,kf,Av,ρ₀,Tmax,R₀,btype, growth_dir);
         end
 
 
         # plotting
-        push!(Discrete_Solution, sol_Discrete[1][1]);
+        push!(Discrete_Solution, sol_Discrete[1]);
         push!(Continuum_Solution,(θ_cont,R_cont,ρ_cont));
     end
 

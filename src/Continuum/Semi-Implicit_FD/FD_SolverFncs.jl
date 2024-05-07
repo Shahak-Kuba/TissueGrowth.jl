@@ -21,7 +21,7 @@ function FD_InitialBoundary(type,r₀,θ,M)
     if type == "circle"
         r .= ones(size(r)).*r₀
     elseif type == "square"
-        R = 0.9307680059028808;#((r₀√(2π))/2)*atan(π/4);
+        R = 50;
         for i in 1:M
             if θ[i] < π/2
                 r[i] = min((R/cos(θ[i])), (R/sin(θ[i])))

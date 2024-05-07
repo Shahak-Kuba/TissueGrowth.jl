@@ -109,23 +109,33 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
         # generating a set of callbacks
         cbs = CallbackSet(event_cb,q_lim_cb,save_cb)
 
-        for jj in eachindex(D)
-            @views kₛ = D[jj]*(η)/((l₀)^2)
-            #@views kₛ = 0.001
+        if D > 0.0 # Simulations for constant diffusion (Nonlinear restoring force) where user specifies diffusivity
+            kₛ = D*(η)/((l₀)^2)
             results = Vector{SimResults_t}(undef, 0)
-
-                for ii in eachindex(btypes)
+    
+            for ii in eachindex(btypes)
                 @views btype = btypes[ii]
                 prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
-                                            growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type, q_lim)
+                                            growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type)
                 @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
                 push!(results, postSimulation(btype, sol, p))
                 push!(embedded_cells_count, floor.(saved_values.saveval))
-                printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D[jj])
-                end
-            push!(all_results,results)
+                printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D)
+            end
+    
+        else # simulations where user specifies spring stiffness (used for a general restoring force)
+            results = Vector{SimResults_t}(undef, 0)
+            for ii in eachindex(btypes)
+                @views btype = btypes[ii]
+                prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
+                                            growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type)
+                @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
+                push!(results, postSimulation(btype, sol, p))
+                push!(embedded_cells_count, floor.(saved_values.saveval))
+                printInfo(ii,length(btypes),btype,N,kₛ*m,η/m,kf/m,M,D)
+            end
         end
 
-        return all_results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
+        return results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
 
 end

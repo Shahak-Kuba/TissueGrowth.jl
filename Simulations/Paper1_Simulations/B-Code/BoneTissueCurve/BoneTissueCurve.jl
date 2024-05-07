@@ -9,11 +9,13 @@ N = 100 # number of cells
 m = 2 # number of springs per cell
 R₀ = 0.0  # shape radius (does not matter for 1D)
 Λ = 100000
-D = 0.0075.*Λ
-kₛ = 0.0
-l₀ = 15.0
-kf = 316
+# spring parameters
+D = 0.00 .*Λ
+kₛ = 50.0
+l₀ = 12.51671505660981
 η = 1.0 
+# tissue formation 
+kf = 316
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "1D"
 Tmax = 40.0 # days
@@ -39,7 +41,7 @@ crange3 = (-5, 5)
 # HOOKEAN SPRINGS SIMULATION
 
 sol_hookean = TissueGrowth.GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
-                prolif, death, embed, β, γ, Ot, event_δt, seed, 31);
+                prolif, death, embed, β, γ, Ot, event_δt, seed, 51);
 
 fig_interface_hookean = TissueGrowth.plotResults1D(sol_hookean[geo][1].u, sol_hookean[geo][1].Density, cmap, crange,  L"\text{Density} \; q \; \text{[1/μm]}", D, kf, m, N, 10)
 save("Bone_Hookean_$l₀.png", fig_interface_hookean)
@@ -53,13 +55,12 @@ save("Bone_Hookean_Stress_1D.png", fig_hookean_stress_time)
 
 # NONLINEAR SPRINGS SIMULATION
 
-sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
-                prolif, death, embed, β, γ, Ot, event_δt, seed, 31);
+sol_nonlinear = TissueGrowth.GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,dist_type,
+                prolif, death, embed, β, γ, Ot, event_δt, seed, 51);
 
-diffusivity = 1
 geo = 1
 
-fig_interface_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Density, cmap, crange, L"\text{Density} \; q \; \text{[1/μm]}", D[diffusivity], kf, m, N, 10)
+fig_interface_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo][1].u, sol_nonlinear[geo][1].Density, cmap, crange, L"\text{Density} \; q \; \text{[1/μm]}", D, kf, m, N, 10)
 save("Bone_Nonlinear_$l₀.png", fig_interface_nonlinear)
 
 #fig_interface_nonlinear_stationary_bounds = TissueGrowth.plotStationaryBoundary(sol_nonlinear[geo][diffusivity][1].u, sol_nonlinear[geo][diffusivity][1].Vₙ, cmap2, crange2, "velocity [mm day⁻¹]")

@@ -3,11 +3,12 @@ using TissueGrowth
 include("ComparisonSimulation.jl")
 
 # Shared variables
-R₀ = 1.05#1.2694265629824517;
-D_array = [0.0001, 0.0075, 1];
-kf = 0.006;
+R₀ = 56.41895835477563
+Λ = 100000
+D_array = [0.0001].*Λ;
+kf = 30;
 growth_dir = "inward";
-Tmax = 22.0; # days
+Tmax = 15.0; # days
 btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
 # Discrete Simulation Variables
@@ -35,10 +36,10 @@ Discrete_Solution, Continuum_Solution = ComparisonSim_Density(N,m,R₀,D_array,l
                                                                             prolif, death, embed, α, βv, γv, event_δt, seed, Av);
 
 cmap = :cool
-xbound = 1.2
-ybound = 1.2
+xbound = 60
+ybound = 60
 Cbar_min = 2
 Cbar_max = 7.5
-idx = 3
+idx = 1
 f2 = TissueGrowth.DiscVSContShape_plot(Discrete_Solution[idx], m, Continuum_Solution[idx], xbound, ybound, cmap, Cbar_min, Cbar_max)
 save("Disc_VS_Cont_D_High.png", f2)

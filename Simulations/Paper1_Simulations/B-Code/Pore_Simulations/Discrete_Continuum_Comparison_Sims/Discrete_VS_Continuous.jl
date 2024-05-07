@@ -3,9 +3,9 @@ using TissueGrowth
 include("ComparisonSimulation.jl")
 
 # Shared variables
-R₀ = 1.05#1.2694265629824517;
+R₀ = 56.41895835477563;
 D = 0.0075;
-kf = 0.006;
+kf = 20;
 growth_dir = "inward";
 Tmax = 22.0; # days
 btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cross"]
@@ -43,9 +43,9 @@ save("m_springs_compare.png",f1)
 Density_cmap =  :cool #:rainbow1
 Density_Range = (2,7)
 
-f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (1.2,1.2), N, m1)
+f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (1.2,1.2), N, m1, 10)
 save("Square_infill_m1_springs.png",f2)
-f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (1.2,1.2), N, m2)
+f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (1.2,1.2), N, m2, 10)
 save("Square_infill_m2_springs.png",f3)
 cmap = :jet
 xbound = 1.1

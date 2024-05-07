@@ -62,14 +62,14 @@ end
 # NoI: Number of Interfaces to plot (equally spaced)
 
 function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N, NoI)
-    txtSize = 40;
+    txtSize = 45;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], limits=(0, 1500, -10, 1100), aspect=DataAspect(), 
-              xlabel=L"x \; \text{[μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel=L"y \; \text{[μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
     for i in 1:Interface_Step:size(u,1)
