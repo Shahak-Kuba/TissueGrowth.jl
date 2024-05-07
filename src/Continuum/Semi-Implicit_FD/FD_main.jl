@@ -1,6 +1,8 @@
 using TissueGrowth
+using LinearAlgebra
 include("FD_ContinuumSolvers.jl")
 include("../PlottingFncsPDE.jl")
+include("FD_SolverFncs.jl")
 
 # simulation parameters
 D = 0.15;
@@ -18,14 +20,14 @@ f1 = plotContinuumResults_Cartesian(x, h, ρ, D, kf, cmap)
 
 
 # simulation parameters
-D = 0.05;
-kf = 0.001;
+D = 1000;
+kf = 20.0;
 A = 0.00;
-ρ₀ = 20;
+ρ₀ = 0.05;
 growth_dir = "inward"
-btype = "hex"
-Tmax = 21
-r₀ = 1.05
+btype = "square"
+Tmax = 22
+r₀ = 50
 
 θ,R,ρ = FD_SolveContinuumLim_Polar(D,kf,A,ρ₀,Tmax,r₀,btype,growth_dir);
 

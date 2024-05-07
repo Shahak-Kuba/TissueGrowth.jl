@@ -4,7 +4,7 @@ include("ComparisonSimulation.jl")
 
 # Shared variables
 R₀ = 56.41895835477563;
-D = 0.0075;
+D = 25;
 kf = 20;
 growth_dir = "inward";
 Tmax = 22.0; # days
@@ -41,15 +41,15 @@ f1 = TissueGrowth.DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_
 save("m_springs_compare.png",f1)
 
 Density_cmap =  :cool #:rainbow1
-Density_Range = (2,7)
+Density_Range = (0.05,0.15)
 
-f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (1.2,1.2), N, m1, 10)
+f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (60,60), N, m1, 10)
 save("Square_infill_m1_springs.png",f2)
-f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (1.2,1.2), N, m2, 10)
+f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (60,60), N, m2, 10)
 save("Square_infill_m2_springs.png",f3)
 cmap = :jet
-xbound = 1.1
-ybound = 1.1
+xbound = 60
+ybound = 60
 Cbar_min = 0
 Cbar_max = 10
-f2 = DiscVSContShape_plot(Discrete_Solution_m2, m2, Continuum_Solution, xbound, ybound, cmap, Cbar_min, Cbar_max)
+f2 = DiscVSContShape_plot(Discrete_Solution_m1, m1, Continuum_Solution, xbound, ybound, cmap, Cbar_min, Cbar_max)

@@ -4,11 +4,10 @@ include("ComparisonSimulation.jl")
 
 # Shared variables
 R₀ = 56.41895835477563
-Λ = 100000
-D_array = [0.0001].*Λ;
-kf = 30;
+D_array = [1, 25, 1000];
+kf = 20;
 growth_dir = "inward";
-Tmax = 15.0; # days
+Tmax = 20.0; # days
 btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
 # Discrete Simulation Variables
