@@ -54,20 +54,19 @@ function ComparisonSim_Density(N,m,R₀,D_array,l₀,kf,η,growth_dir,Tmax,δt,b
         ρ₀ = sol_Discrete[1].Density[1][1];
 
         #using FVM for low diffusivity and FD for mid-high diffusivity
-        #using FVM for low diffusivity and FD for mid-high diffusivity
-        if D <= 1
-            if D >= 0.005
-                θ_cont,R_cont,ρ_cont = TissueGrowth.FD_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype,growth_dir);
-            else 
-                θ_cont,R_cont,ρ_cont = TissueGrowth.FVM_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype, growth_dir);
-            end
-        else
+        #if D <= 1
+        #    if D >= 0.005
+        #        θ_cont,R_cont,ρ_cont = TissueGrowth.FD_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype,growth_dir);
+        #    else 
+        #        θ_cont,R_cont,ρ_cont = TissueGrowth.FVM_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype, growth_dir);
+        #    end
+        #else
             if D >= 5
                 θ_cont,R_cont,ρ_cont = TissueGrowth.FD_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype,growth_dir);
             else 
                 θ_cont,R_cont,ρ_cont = TissueGrowth.FVM_SolveContinuumLim_Polar(D,kf,Av,ρ₀,Tmax,R₀,btype, growth_dir);
             end
-        end
+        #end
 
 
         # plotting

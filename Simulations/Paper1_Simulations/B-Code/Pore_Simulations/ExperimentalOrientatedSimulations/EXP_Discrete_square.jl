@@ -17,13 +17,11 @@ kf = KF/N
 # set random seed number for reproducability 
 seed = 99
 
-# scaling factor 
-Λ = 100000
 
 # setting up simulation parameters
 m = 2 # number of springs per cell
 R₀ = 282.095  # shape radius μm
-D = 0.00.*Λ
+D = 0.00
 kₛ = 7.5
 l₀ = 18.29
 η = 1.0 
@@ -58,7 +56,7 @@ f2 = TissueGrowth.plotResults2D_Quadrant(sol[geo].u, sol[geo].Density, Density_c
 f3 = TissueGrowth.plotStress2D_Quadrant(sol[geo].u, sol[geo].ψ, Stress_cmap, Stress_Range, L"\text{Stress} \; ψ \; \text{[N/μm²]}", (280,280))
 #save("Experimental_Square_Pore_Nonlinear.png", f)
 #save("Experimental_Circle_Pore_Nonlinear_Quadrant_f0_resting.png", f2)
-save("Experimental_Square_Pore_Hookean_Quadrant_Stress_$l₀.png", f3)
+#save("Experimental_Square_Pore_Hookean_Quadrant_Stress_$l₀.png", f3)
 
 
 
@@ -78,7 +76,6 @@ save("Experimental_Square_Pore_Hookean_Quadrant_Stress_$l₀.png", f3)
 #nonlinear_cell_lengths = 1 ./ sol_nonlinear[geo][diffusivity].Density[INDEX].data
 
 #f4 = TissueGrowth.plotForceLawCompareHistogram(hookean_cell_lengths, nonlinear_cell_lengths, L"\text{Cell length} \text{[μm]}")
-
 
 
 

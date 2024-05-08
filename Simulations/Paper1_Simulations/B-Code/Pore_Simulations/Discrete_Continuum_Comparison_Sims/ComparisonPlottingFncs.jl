@@ -152,8 +152,12 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     gaxmain = Axis(ga[1, 1], limits=(-xbound, xbound, -ybound, ybound), xticklabelsvisible = false, 
      xticklabelsize = tickSize, yticklabelsize = tickSize)
     for i in axes(x_disc,1)
-        CairoMakie.lines!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, linewidth=4)
-        CairoMakie.scatter!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, markersize=5)
+        #if i == size(x_disc,1)
+            
+        #else
+            CairoMakie.lines!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, linewidth=4)
+            CairoMakie.scatter!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, markersize=5)
+        #end
     end
     
     # plotting Continuum

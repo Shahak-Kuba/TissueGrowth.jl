@@ -14,7 +14,7 @@ end
 
 function plotAttributeHistogram!(gaxmain, data, clr)
     hist_data = round.(data,digits=4)
-    Makie.hist!(gaxmain ,hist_data, strokewidth = 1, strokecolor = :black)
+    Makie.hist!(gaxmain,hist_data, normalize=:density,bins = 3,strokewidth = 1, strokecolor = :black)
 end
 
 function plotForceLawCompareHistogram(data1, data2, Label)
@@ -31,6 +31,6 @@ function plotForceLawCompareHistogram(data1, data2, Label)
     clr2 = :blue
     plotAttributeHistogram!(gaxmain, data2, clr2)
     CairoMakie.xlims!(5, 20)
-    CairoMakie.ylims!(0,100)
+    CairoMakie.ylims!(0,110)
     return f
 end
