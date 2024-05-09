@@ -3,7 +3,8 @@
 ## Hookean Restoring force
 hookean_restoring_force = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* ( δ(rⱼ,rᵢ) .- ones(size(rᵢ,1))*l₀ ) 
 ## Nonlinear restoring force
-nonlinear_restoring_force = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* l₀.^2 .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rⱼ, rᵢ))
+nonlinear_restoring_force2 = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* l₀.^2 .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rⱼ, rᵢ))
+nonlinear_restoring_force = (rᵢ, rⱼ, kₛ, l₀) -> kₛ .* (ones(size(rᵢ,1),1) ./ l₀ - 1 ./ δ(rⱼ, rᵢ))
 
 
 # When changing force law make sure to run all of these
