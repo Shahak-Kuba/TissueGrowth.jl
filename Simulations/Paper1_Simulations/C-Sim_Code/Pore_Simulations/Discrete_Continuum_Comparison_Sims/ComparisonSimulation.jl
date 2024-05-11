@@ -4,11 +4,11 @@ function ComparisonSim(N,m1,m2,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btype,dist_
     ### Discrete Simulation
     
     # simulation with m1 cells
-    sols2D_m1, z, c = TissueGrowth.GrowthSimulation(N,m1,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
+    sols2D_m1, z, c = TissueGrowth.GrowthSimulation(N,m1,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],"nonlinear2",dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
     # simulation with m2 cells
-    sols2D_m2, z, c = TissueGrowth.GrowthSimulation(N,m2,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
+    sols2D_m2, z, c = TissueGrowth.GrowthSimulation(N,m2,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],"nonlinear2",dist_type,
     prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
 
@@ -47,7 +47,7 @@ function ComparisonSim_Density(N,m,R₀,D_array,l₀,kf,η,growth_dir,Tmax,δt,b
         ### Discrete Simulation
         
         # simulation with m1 cells
-        sol_Discrete, z, c = TissueGrowth.GrowthSimulation(N,m,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],dist_type,
+        sol_Discrete, z, c = TissueGrowth.GrowthSimulation(N,m,R₀,D,0,l₀,kf,η,growth_dir,"2D",Tmax,δt,[btype],"nonlinear",dist_type,
         prolif, death, embed, α, β, γ, event_δt, seed, 11);
 
         ### Continuum Simulation

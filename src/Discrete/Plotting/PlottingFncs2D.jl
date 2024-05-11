@@ -24,7 +24,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
-    show_initial_boundaries = false
+    show_initial_boundaries = true
     if show_initial_boundaries
         #plotting spring boundaries
         CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)

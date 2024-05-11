@@ -13,7 +13,7 @@ This function computes various physical quantities like force, density, velocity
 A tuple containing the sum of forces, normal velocity, density, stress, and curvature for each element in the state vector.
 """
 function PostCalcs1D(u, p)
-    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype = p
+    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,restoring_force = p
 
     if btype == "InvertedBellCurve"
         dom = 1500; # For Bell curve
@@ -33,7 +33,7 @@ function PostCalcs1D(u, p)
     uᵢ₋₁[end,:] .= uᵢ₋₁[end,:] + [dom,0]
     uᵢ₊₁[1,:] .= uᵢ₊₁[1,:] - [dom,0]
 
-    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(u,uᵢ₋₁)))
+    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(u,uᵢ₋₁)))
     density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./(2*m)
     density[1] = density[2];
     density[end] = density[end - 1];
@@ -64,7 +64,7 @@ This function is similar to `PostCalcs1D`, but it is tailored for 2D simulation 
 A tuple containing the sum of forces, normal velocity, density, stress, and curvature for each element in the state vector.
 """
 function PostCalcs2D(u, p)
-    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype = p
+    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,restoring_force = p
 
     #u = reshape(u, Int(length(u)/2), 2)
 
@@ -77,7 +77,7 @@ function PostCalcs2D(u, p)
     uᵢ₊₁ = circshift(u,1)
     uᵢ₋₁ = circshift(u,-1)
 
-    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) * transpose(τ(u,uᵢ₋₁)))
+    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(u,uᵢ₋₁)))
     #diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
     density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./(2*m)
     ψ = ∑F ./ δ(uᵢ₊₁, u)
@@ -107,7 +107,7 @@ An instance of `SimResults_t` containing the calculated data.
 """
 function postSimulation(btype, sol, p)
 
-    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,prolif,death,embed,α,β,γ = p
+    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,restoring_force,prolif,death,embed,α,β,γ = p
 
     c = size(sol.t, 1)
 
