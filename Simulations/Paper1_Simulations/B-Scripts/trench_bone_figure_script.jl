@@ -27,10 +27,10 @@ l₀ = 10.0
 L₀ = 5.196975125634779
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
-domain_type = "2D"
-Tmax = 24 # days
+domain_type = "1D"
+Tmax = 120 # days
 δt = 0.01
-btypes = ["circle"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["InvertedBellCurve"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 q_lim = 0.2
 ρ_lim = q_lim * m
@@ -52,21 +52,17 @@ Stress_cmap = :winter
 
 geo = 1
 
-Density_Range = (0.05,0.2)
+Density_Range = (0.05,0.1)
 Stress_Range_Hookean = (-2, 2)
 Stress_Range_Nonlinear = (-2, 2)
 
-f1_hookean = TissueGrowth.plotResults2D_Quadrant(sol_hookean[geo].u, sol_hookean[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", (300,300), N, m, 10)
-f2_hookean = TissueGrowth.plotStress2D_Quadrant(sol_hookean[geo].u, sol_hookean[geo].ψ, Stress_cmap, Stress_Range_Hookean, L"σ/E \; \text{[-]}", (300,300))
+f1_hookean = TissueGrowth.plotResults1D(sol_hookean[geo].u, sol_hookean[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", D, kf, m, N, 10)
 
-f1_nonlinear = TissueGrowth.plotResults2D_Quadrant(sol_nonlinear[geo].u, sol_nonlinear[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", (300,300), N, m, 10)
-f2_nonlinear = TissueGrowth.plotStress2D_Quadrant(sol_nonlinear[geo].u, sol_nonlinear[geo].ψ, Stress_cmap, Stress_Range_Nonlinear, L"σ/E \; \text{[-]}", (300,300))
+f1_nonlinear = TissueGrowth.plotResults1D(sol_nonlinear[geo].u, sol_nonlinear[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", D, kf, m, N, 10)
 
-save("circle_hookean_cell_traj.png", f1_hookean)
-save("circle_hookean_stress.png", f2_hookean)
+save("trench_hookean_cell_traj.png", f1_hookean)
 
-save("circle_nonlinear_cell_traj.png", f1_nonlinear)
-save("circle_nonlinear_stress.png", f2_nonlinear)
+save("trench_nonlinear_cell_traj.png", f1_nonlinear)
 
 
 

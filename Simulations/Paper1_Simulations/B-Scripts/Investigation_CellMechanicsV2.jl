@@ -9,13 +9,14 @@ Aₙ = (l₀, l₁, p) -> p.k .* ((l₁ .- l₀)./p.a .+ log.(l₀) .- log.(l₁
 
 l_min = 5
 l_max = 20.0
-l = LinRange(0.01, l_max, 100)
+l = LinRange(l_min, l_max, 100)
 
-ks = 7.5
+ks = 10.0
+Ks = ks/(1/l_min^2)
 a_hookean = 10
-a_nonlinear = (l_max - l_min)/((l_max^2 - l_min^2)/2 + a_hookean*(l_min - l_max) - log(l_min/l_max))
+a_nonlinear = ((l_max - l_min)/((ks/Ks)*((l_max^2 - l_min^2)/2 + a_hookean*(l_min - l_max)) - log(l_min/l_max)))
 
-p_nonlinear = (k = ks, a = a_nonlinear)
+p_nonlinear = (k = Ks, a = a_nonlinear)
 p_hookean = (k = ks, a = a_hookean)
 
 F₁ = (δ,p) -> p.k .* (δ .- p.a) # Hookes law (Linear springs)

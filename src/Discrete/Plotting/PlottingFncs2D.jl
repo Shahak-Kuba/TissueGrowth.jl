@@ -56,7 +56,7 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m,
         plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
-    for i in 1:5:95
+    for i in 2:5:95
         plotCellTrajectory!(gaxmain, u, m, i, 5)
     end
 
