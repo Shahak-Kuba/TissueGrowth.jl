@@ -142,14 +142,14 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     tickSize = 28;
     plot_font = "Arial"
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(600, 900))
+        size=(700, 1000))
     ga = f[1, 1] = GridLayout()
     col_size = 1;
     #row_size = Int64(ceil(length(indicies)/col_size))
     Cbar_range = (Cbar_min, Cbar_max)
     
     # plotting Discrete
-    gaxmain = Axis(ga[1, 1], limits=(-xbound, xbound, -ybound, ybound), xticklabelsvisible = false, 
+    gaxmain = Axis(ga[1, 1], width=450, height=450,limits=(-xbound, xbound, -ybound, ybound), xticklabelsvisible = false, 
      xticklabelsize = tickSize, yticklabelsize = tickSize)
     for i in axes(x_disc,1)
         #if i == size(x_disc,1)
@@ -161,7 +161,7 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     end
     
     # plotting Continuum
-    gbxmain = Axis(ga[2, 1], limits=(-xbound, xbound, -ybound, ybound), xticklabelsize = tickSize, yticklabelsize = tickSize)
+    gbxmain = Axis(ga[2, 1], width=450, height=450,limits=(-xbound, xbound, -ybound, ybound), xticklabelsize = tickSize, yticklabelsize = tickSize)
     for i in 1:1000:size(R_cont,1)
         CairoMakie.lines!(gbxmain, [R_cont[i,:]; R_cont[i,1]].*cos.([θ_cont;θ_cont[1]]), [R_cont[i,:]; R_cont[i,1]].*sin.([θ_cont;θ_cont[1]]), color=[ρ_cont[i,:];ρ_cont[i,1]], colorrange=Cbar_range,
             colormap=cmap, linewidth=4)
@@ -171,5 +171,67 @@ function DiscVSContShape_plot(Discrete_Solution, m, Continuum_Solution, xbound, 
     Colorbar(f[1, 2], limits=Cbar_range, size=30, ticklabelsize = tickSize, colormap=cmap,
         flipaxis=false, label=L"\text{Density} \; q \; \text{[1/length]}", labelsize=txtSize)
 
+    return f
+end
+
+
+function DiscVSContShape_plot_all(Discrete_Solutions, m, Continuum_Solutions, xbound, ybound, cmap, Cbar_min, Cbar_max)
+    txtSize = 35;
+    tickSize = 28;
+    plot_font = "Arial"
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(2100, 1000))
+    #ga = f[1, 1] = GridLayout()
+    ga = f
+    Cbar_range = (Cbar_min, Cbar_max)
+
+
+    for ii in axes(Discrete_Solutions,1)
+        # getting Continuum data
+        θ_cont, R_cont, ρ_cont =  Continuum_Solutions[ii];
+        # getting Discrete data
+        x_disc = zeros(size(Discrete_Solutions[ii].u,1),size(Discrete_Solutions[ii].u[1],1)+1)
+        y_disc = zeros(size(x_disc))
+        ρ_disc = zeros(size(x_disc))
+        for i in axes(x_disc,1)
+            x_disc[i,:] .= [Discrete_Solutions[ii].u[i][:,1];Discrete_Solutions[ii].u[i][1,1]];
+            y_disc[i,:] .= [Discrete_Solutions[ii].u[i][:,2];Discrete_Solutions[ii].u[i][1,2]];
+            ρ_disc[i,:] .= [Discrete_Solutions[ii].Density[i].data;Discrete_Solutions[ii].Density[i].data[1]];
+        end
+
+        # plotting Discrete
+        if ii == 1
+            gaxmain = Axis(ga[1, ii], width=450, height=450,limits=(-xbound, xbound, -ybound, ybound), xticks = ([-50, -25, 0, 25, 50]),xticklabelsvisible = false, 
+                xticklabelsize = tickSize, yticks = ([-50, -25, 0, 25, 50]), yticklabelsize = tickSize, title="", titlesize = 50)
+        else
+            gaxmain = Axis(ga[1, ii], width=450, height=450,limits=(-xbound, xbound, -ybound, ybound), xticks = ([-50, -25, 0, 25, 50]),xticklabelsvisible = false, 
+            xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = ([-50, -25, 0, 25, 50]), yticklabelsvisible=false, title="", titlesize = 50)
+        end
+        for i in axes(x_disc,1)
+            #if i == size(x_disc,1)
+                
+            #else
+                CairoMakie.lines!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, linewidth=4)
+                CairoMakie.scatter!(gaxmain, x_disc[i,:],  y_disc[i,:], color=ρ_disc[i,:], colorrange=Cbar_range, colormap=cmap, markersize=5)
+            #end
+        end
+        
+        # plotting Continuum
+        if ii == 1
+            gbxmain = Axis(ga[2, ii], width=450, height=450,limits=(-xbound, xbound, -ybound, ybound), xticks = ([-50, -25, 0, 25, 50]), xticklabelsize = tickSize, yticks = ([-50, -25, 0, 25, 50]), yticklabelsize = tickSize, title="",titlesize = 50)
+        else
+            gbxmain = Axis(ga[2, ii], width=450, height=450,limits=(-xbound, xbound, -ybound, ybound), xticks = ([-50, -25, 0, 25, 50]), xticklabelsize = tickSize, yticks = ([-50, -25, 0, 25, 50]), yticklabelsize = tickSize, yticklabelsvisible=false, title="",titlesize = 50)
+        end
+        for i in 1:1000:size(R_cont,1)
+            CairoMakie.lines!(gbxmain, [R_cont[i,:]; R_cont[i,1]].*cos.([θ_cont;θ_cont[1]]), [R_cont[i,:]; R_cont[i,1]].*sin.([θ_cont;θ_cont[1]]), color=[ρ_cont[i,:];ρ_cont[i,1]], colorrange=Cbar_range,
+                colormap=cmap, linewidth=4)
+            CairoMakie.scatter!(gbxmain, [R_cont[i,:]; R_cont[i,1]].*cos.([θ_cont;θ_cont[1]]), [R_cont[i,:]; R_cont[i,1]].*sin.([θ_cont;θ_cont[1]]), color=[ρ_cont[i,:];ρ_cont[i,1]], colorrange=Cbar_range,
+                colormap=cmap, markersize=5)
+        end
+    end
+
+    Colorbar(f[1:2, 4], limits=Cbar_range, size=30, ticklabelsize = tickSize, colormap=cmap,
+            flipaxis=false, label=L"\text{Density} \; q \; \text{[1/length]}", labelsize=txtSize)
+    Makie.resize_to_layout!(f)
     return f
 end

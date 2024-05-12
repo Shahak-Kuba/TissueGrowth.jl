@@ -6,9 +6,9 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
     txtSize = 40;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(800, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel=L"x\text{ [\mu m]}", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel=L"y\text{ [\mu m]}", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -24,7 +24,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
-    show_initial_boundaries = true
+    show_initial_boundaries = false
     if show_initial_boundaries
         #plotting spring boundaries
         CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)
@@ -44,9 +44,9 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m,
     txtSize = 45;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
               xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -56,7 +56,7 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m,
         plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
-    for i in 2:5:95
+    for i in 1:5:95
         plotCellTrajectory!(gaxmain, u, m, i, 5)
     end
 
@@ -68,11 +68,11 @@ end
 function plotStress2D_Quadrant(u, var, cmap, Crange, cbarlabel, axisLims)
     txtSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
-              xlabel=L"x \; \text{[μm]}", xlabelsize = txtSize+10, xticklabelsize = txtSize,
-              ylabel=L"y \; \text{[μm]}", ylabelsize = txtSize+10, yticklabelsize = txtSize)
+    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
+              xlabel=L"\text{x [μm]}", xlabelsize = txtSize+10, xticklabelsize = txtSize,
+              ylabel=L"\text{y [μm]}", ylabelsize = txtSize+10, yticklabelsize = txtSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     lw = 5
     for index in eachindex(u)
@@ -99,9 +99,9 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedde
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(800, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "D = $D, kf = $kf", titlesize = txtSize)

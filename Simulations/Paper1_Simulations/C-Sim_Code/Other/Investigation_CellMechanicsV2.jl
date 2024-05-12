@@ -9,7 +9,7 @@ Aₙ = (l₀, l₁, p) -> p.k .* ((l₁ .- l₀)./p.a .+ log.(l₀) .- log.(l₁
 
 l_min = 5
 l_max = 20.0
-l = LinRange(l_min, l_max, 100)
+l = LinRange(0.01, l_max, 100)
 
 ks = 7.5
 a_hookean = 10
