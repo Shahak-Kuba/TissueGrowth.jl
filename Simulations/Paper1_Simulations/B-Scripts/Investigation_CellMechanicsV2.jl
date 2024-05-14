@@ -12,7 +12,7 @@ l_max = 20.0
 l = LinRange(l_min, l_max, 100)
 
 ks = 10.0
-Ks = ks/(1/l_min^2)
+Ks = ks#/(1/l_min^2)
 a_hookean = 10
 a_nonlinear = ((l_max - l_min)/((ks/Ks)*((l_max^2 - l_min^2)/2 + a_hookean*(l_min - l_max)) - log(l_min/l_max)))
 

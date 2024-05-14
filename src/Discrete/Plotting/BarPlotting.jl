@@ -3,6 +3,9 @@ function CountLengths(Lengths, value)
 end
 
 function plotForceLawCompareStairs(data1)
+    function CountLengths(Lengths, value)
+        return count(value .== Lengths)
+    end
     txtSize = 18;
     tickSize = 18;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),

@@ -1,7 +1,7 @@
 using TissueGrowth
 using Makie
-include("../C-Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sims/ComparisonSimulation.jl")
-include("../C-Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sims/ComparisonPlottingFncs.jl")
+include("../../C-OLD_Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sims/ComparisonSimulation.jl")
+include("../../C-OLD_Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sims/ComparisonPlottingFncs.jl")
 
 # Shared variables
 R₀ = 56.41895835477563

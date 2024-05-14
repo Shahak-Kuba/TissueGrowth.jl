@@ -56,8 +56,14 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m,
         plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
-    for i in 2:5:95
-        plotCellTrajectory!(gaxmain, u, m, i, 5)
+    if u[1][1,2] == 0
+        for i in 2:5:95
+            plotCellTrajectory!(gaxmain, u, m, i, 5)
+        end
+    else
+        for i in 1:5:95
+            plotCellTrajectory!(gaxmain, u, m, i, 5)
+        end
     end
 
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,

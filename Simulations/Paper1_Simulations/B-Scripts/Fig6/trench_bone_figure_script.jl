@@ -12,6 +12,8 @@ P = l*4
 q₀ = 1/20; 
 N = Int(P*q₀) # number of cells
 kf = KF/N
+l_min = 5
+l_max = 20
 
 # set random seed number for reproducability 
 seed = 99
@@ -21,7 +23,7 @@ seed = 99
 m = 2 # number of springs per cell
 R₀ = 282.095  # shape radius μm
 D = 0.00
-kₛ = 10
+kₛ = 7.5
 Kₛ = kₛ / 0.2^2
 l₀ = 10.0
 L₀ = 5.196975125634779
@@ -53,8 +55,7 @@ Stress_cmap = :winter
 geo = 1
 
 Density_Range = (0.05,0.1)
-Stress_Range_Hookean = (-2, 2)
-Stress_Range_Nonlinear = (-2, 2)
+
 
 f1_hookean = TissueGrowth.plotResults1D(sol_hookean[geo].u, sol_hookean[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", D, kf, m, N, 10)
 

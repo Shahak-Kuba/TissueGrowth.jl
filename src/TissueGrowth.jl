@@ -57,5 +57,5 @@ module TissueGrowth
     include("Continuum/PlottingFncsPDE.jl")
 
     # including for comparion plotting 
-    include("../Simulations/Paper1_Simulations/C-Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sims/ComparisonPlottingFncs.jl")
+    include("../Simulations/Paper1_Simulations/C-OLD_Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sims/ComparisonPlottingFncs.jl")
 end
