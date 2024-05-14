@@ -1,87 +1,4 @@
 
-
-"""
-    u0SetUp(btype, R₀, N, dist_type)
-
-Set up initial conditions for simulations based on the boundary type and distribution.
-
-This function initializes the positions of particles or cells based on the specified boundary type and distribution.
-
-# Arguments
-- `btype`: Type of boundary (e.g., 'circle', 'triangle').
-- `R₀`: Initial radius or characteristic length.
-- `N`: Number of points or particles.
-- `dist_type`: Type of distribution for the points.
-
-# Returns
-An array of initial positions.
-"""
-function u0SetUp(btype,R₀,N,dist_type,domain_type)
-    # setting up initial conditions
-    u0 = ElasticMatrix{Float64}(undef,2,N)
-
-    if domain_type == "2D"
-        if btype == "circle"
-            R = R₀ # to produce identical areas
-            θ = collect(NodeDistribution(0.0,2*π,N+1,dist_type)) 
-            pop!(θ)
-            @views u0 .= [X(R,θ)'; Y(R,θ)'];
-        elseif btype == "triangle"
-            #R = √((2*π*R₀^2)/sin(π/3))
-            R = √((π*R₀^2)/(√(3)*cos(π/6)^2))
-            # calc verticies
-            vertices = polygon_vertices(3, R, -π/2)
-            # calc number of nodes per segment 
-            w = Int64(N/3) + 1
-            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
-        elseif btype == "square"
-            #R = √(π*(R₀^2)) # to produce identical areas
-            R = (R₀√(2π))/2
-            # calc verticies
-            vertices = polygon_vertices(4, R, -π/4)
-            # calc number of nodes per segment 
-            w = Int64(N/4) + 1
-            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
-        elseif btype == "hex"
-            R = √((2/3√3)*π*(R₀^2)) # to produce identical areas
-            # calc verticies
-            vertices = polygon_vertices(6, R, 0)
-            # calc number of nodes per segment 
-            w = Int64(N/6) + 1
-            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
-        elseif btype == "star"
-            star_points = 5
-            Rotation_Angle = pi/2
-            rotation_angle = Rotation_Angle + pi/star_points
-            vertices = StarVerticies(star_points, R₀, Rotation_Angle, rotation_angle)
-            w = Int64(N/(2star_points)) + 1
-            u0 .= position_vectors_polygon(vertices, w, dist_type)
-        elseif btype == "cross"
-            side_length = √((π*R₀^2)/5)
-            offset = side_length/2
-            vertices = CrossVertecies(side_length, offset)
-            w = Int64(N/12) + 1
-            @views u0 .= position_vectors_polygon(vertices, w, dist_type)
-        end
-    else
-        if btype == "SineWave"
-            xfunc = θ -> θ;
-            yfunc = θ -> 2 .+ 0.5 .* cos.(3 .* θ);
-            #integrand(θ) = sqrt(numerical_derivative(xfunc, θ)^2 + numerical_derivative(yfunc, θ)^2)
-            #rootsFunc(θ,curr_length,Δl) = arc_length(θ) - (curr_length + Δl)
-            @views u0 .= equidistant_points_on_polar_curve(xfunc, yfunc, N)';
-        elseif btype == "InvertedBellCurve"
-            μ = 0.75
-            c = 0.2
-            xfunc = θ -> θ.*(1.5/(2π));
-            yfunc = θ -> -0.5 .* exp.((-((θ.*(1.5/(2π))) .- μ).^6) ./ c.^2) .+ 0.5
-            @views u0 .= equidistant_points_on_polar_curve(xfunc, yfunc, N)';
-        end
-    end
-    return u0
-end
-
-
 """
     SetupODEproblem(btype, M, m, R₀, kₛ, η, kf, l₀, δt, Tmax, growth_dir, prolif, death, embed, α, β, γ, dist_type)
 
@@ -111,25 +28,25 @@ This function initializes the conditions and parameters for a 2D ODE problem bas
 - `ODEProblem`: An ODE problem instance set up with the specified parameters and initial conditions.
 - `p`: A tuple containing the parameters used in setting up the ODE problem.
 """
-function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type)
+function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type,restoring_force)
     l₀ = l₀/m
     kₛ = kₛ*m
     η = η/m
     kf = kf/m
     u0 = u0SetUp(btype,R₀,M,dist_type,domain_type)
-    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,prolif,death,embed,β,γ,Ot)
+    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,restoring_force,prolif,death,embed,β,γ,Ot)
     tspan = (0.0,Tmax)
-    return ODEProblem(Growth_ODE!,u0,tspan,p), p
+    return ODEProblem(Growth_ODE2!,u0,tspan,p), p
 end
 
 # Setup for when cell density limit is applied
-function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type, q_lim)
+function SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type,restoring_force,q_lim)
     l₀ = l₀/m
     kₛ = kₛ*m
     η = η/m
     kf = kf/m
     u0 = u0SetUp(btype,R₀,M,dist_type,domain_type)
-    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,prolif,death,embed,β,γ,Ot, q_lim)
+    p = (m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,restoring_force,prolif,death,embed,β,γ,Ot, q_lim)
     tspan = (0.0,Tmax)
-    return ODEProblem(Growth_ODE!,u0,tspan,p), p
+    return ODEProblem(Growth_ODE2!,u0,tspan,p), p
 end

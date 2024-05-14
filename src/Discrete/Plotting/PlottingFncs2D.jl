@@ -2,77 +2,101 @@
 # Colormaps available at: https://docs.juliahub.com/MakieGallery/Ql23q/0.2.17/generated/colors.html#Colormaps
 
 
-function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m)
-    txtSize = 35;
-    tickSize = 25;
+function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
+    txtSize = 40;
+    tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(800, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
-              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
+              xlabel=L"x\text{ [\mu m]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"y\text{ [\mu m]}", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
-    for i in eachindex(u)
-        plotInterface!(gaxmain, u, var, cmap, CRange, i)
+    Interface_Step = Int(floor(size(u,1)/NoI))
+    for i in 1:Interface_Step:size(u,1)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
     plot_cell_traj = false # User set
-
     if plot_cell_traj
         for j = 1:3:N
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
-    plotCellTrajectory!(gaxmain, u, m, 35, 3)
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
-        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
-    return f
-end
-
-function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m)
-    txtSize = 35;
-    tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
-    ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
-              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
-              #title = "D = $D, kf = $kf", titlesize = txtSize)
-    CRange = crange
-    for i in eachindex(u)
-        plotInterface_Quadrant!(gaxmain, u, var, cmap, CRange, i, 7)
+    show_initial_boundaries = false
+    if show_initial_boundaries
+        #plotting spring boundaries
+        CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)
+        #plotting cell boundaries
+        for ii in 1:m:size(u[1],1)
+            CairoMakie.scatter!(gaxmain, u[1][ii, 1], u[1][ii, 2], color="black", marker=:xcross,markersize=25)
+        end
     end
 
-    plotCellTrajectory!(gaxmain, u, m, 15, 5)
-    plotCellTrajectory!(gaxmain, u, m, 20, 5)
-    plotCellTrajectory!(gaxmain, u, m, 25, 5)
-    plotCellTrajectory!(gaxmain, u, m, 30, 5)
-    plotCellTrajectory!(gaxmain, u, m, 35, 5)
+    #plotCellTrajectory!(gaxmain, u, m, 35, 3)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
+function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
+    txtSize = 45;
+    tickSize = 35;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 900))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
+              xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
+              #title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    Interface_Step = Int(floor(size(u,1)/NoI))
+    for i in 1:Interface_Step:size(u,1)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
+    end
+
+    if u[1][1,2] == 0
+        for i in 2:5:95
+            plotCellTrajectory!(gaxmain, u, m, i, 5)
+        end
+    else
+        for i in 1:5:95
+            plotCellTrajectory!(gaxmain, u, m, i, 5)
+        end
+    end
 
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
 
-function plotStress2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims)
+function plotStress2D_Quadrant(u, var, cmap, Crange, cbarlabel, axisLims)
     txtSize = 35;
-    tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
-              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
+              xlabel=L"\text{x [μm]}", xlabelsize = txtSize+10, xticklabelsize = txtSize,
+              ylabel=L"\text{y [μm]}", ylabelsize = txtSize+10, yticklabelsize = txtSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
-    CRange = crange
+    lw = 5
+    for index in eachindex(u)
+        if index == 1 || index == size(u,1)
+            CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:black,linewidth=lw)
+            CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:black, markersize=lw+1)
+        else
+            #CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:grey,linewidth=lw)
+            #CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=:grey, markersize=lw+1)    
+        end
+    end
+
     for i in axes(u[1],1)
-        plotSpringBoundaryTrajectory!(gaxmain, u, var, 5, cmap, crange, i)
+        plotSpringBoundaryTrajectory!(gaxmain, u, var, 5, cmap, Crange, i)
     end
 
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
-        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    Colorbar(f[1, 2], limits=Crange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize + 10, ticklabelsize = txtSize)
     return f
 end
 
@@ -81,9 +105,9 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedde
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(800, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -180,22 +204,24 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
     return f
 end
 
-function plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,N,kf)
+function plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,Ω₄,t₄,N,kf)
     txtSize = 18;
     tickSize = 18;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(455, 455))
+        size=(800, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], 
+    gaxmain = Axis(ga[1, 1], height = 650, width=650,
                     xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
                     ylabel="Ω [μm^2]", ylabelsize = txtSize, yticklabelsize = tickSize)
     
     t = LinRange(0,t₁[end],500)
     Ωₐ = Ω_analytic(Ω₁[1],N,kf,t)
 
-    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, "Analytic")
-    Square_Sol = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :dash, "Square Pore")
-    Hex_Sol = plotAreaVsTime!(gaxmain, t₂, Ω₂, :black, :dot, "Hex Pore")
+    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, "Analytic", 7)
+    Square_Sol_Hook = plotAreaVsTime!(gaxmain, t₁, Ω₁, :purple, :dash, "Square Pore (Hookean)", 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t₂, Ω₂, :blue, :dash, "Hex Pore (Hookean)", 6)
+    Square_Sol_Nonlin = plotAreaVsTime!(gaxmain, t₃, Ω₃, :green, :dot, "Square Pore (Nonlinear)",5)
+    Hex_Sol_Nonlin = plotAreaVsTime!(gaxmain, t₄, Ω₄, :black, :dot, "Hex Pore (Nonlinear)",5)
 
     #Legend(f[1,1],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
     axislegend(gaxmain, merge = true, unique = true)
@@ -206,6 +232,9 @@ function plotAreaVsTime!(gaxmain, t, Ωₛ, clr, style, name)
     CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, label = name, linewidth=4, linestyle=style)
 end
 
+function plotAreaVsTime!(gaxmain, t, Ωₛ, clr, style, name, lw)
+    CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, label = name, linewidth=lw, linestyle=style)
+end
 
 
 

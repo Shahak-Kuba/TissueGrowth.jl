@@ -21,9 +21,9 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, 1.5, -0.1, 1.1), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, 1500, -0.1, 1100), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -37,14 +37,14 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf)
 end
 
 function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
-    txtSize = 35;
-    tickSize = 25;
+    txtSize = 40;
+    tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-0.01, 1.51, -0.1, 1.1), aspect=DataAspect(), 
-              xlabel="x [mm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y [mm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, 1500, -10, 1100), 
+              xlabel=L"x \; \text{[μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"y \; \text{[μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
     for i in eachindex(u)
         plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 7)
@@ -54,7 +54,33 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4) + 10, 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,height=650,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
+# NoI: Number of Interfaces to plot (equally spaced)
+
+function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N, NoI)
+    txtSize = 45;
+    tickSize = 35;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 900))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], width=650, height=450, limits=(0, 1500, -10, 1100), 
+              xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
+    CRange = crange
+    Interface_Step = Int(floor(size(u,1)/NoI))
+    for i in 1:Interface_Step:size(u,1)
+        plotInterface1D!(gaxmain, u, var, cmap, CRange, i, 7)
+    end
+
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4) - 10, 3)
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
+    plotCellTrajectory!(gaxmain, u, m, Int(N/4) + 10, 3)
+    #plotCellTrajectory!(gaxmain, u, m,  100, 3)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30, height=450,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end

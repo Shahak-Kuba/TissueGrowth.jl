@@ -20,11 +20,9 @@ function Growth_ODE!(du,u,p,t)
     if domain_type == "2D"
         du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
                        Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
-        #du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
-        #               Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,growth_dir))'
     else
         if btype == "InvertedBellCurve"
-            dom = 1.5; # For Bell curve
+            dom = 1500; # For Bell curve
         else
             dom = 2*pi; # FOR Cosine SineWave
         end
@@ -32,8 +30,29 @@ function Growth_ODE!(du,u,p,t)
         uᵢ₊₁[1,:] = uᵢ₊₁[1,:]-[dom;0]
         du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
                             Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
-        #du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
-        #                    Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,growth_dir))'
+    end
+    nothing
+end
+
+
+function Growth_ODE2!(du,u,p,t) 
+    m,kₛ,η,kf,l₀,δt,growth_dir,domain_type,btype,restoring_force = p
+    uᵢ₊₁ = circshift(u',1)
+    uᵢ₋₁ = circshift(u',-1)
+
+    if domain_type == "2D"
+        du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+                       Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
+    else
+        if btype == "InvertedBellCurve"
+            dom = 1500; # For Bell curve
+        else
+            dom = 2*pi; # FOR Cosine SineWave
+        end
+        uᵢ₋₁[end,:] = uᵢ₋₁[end,:]+[dom;0]
+        uᵢ₊₁[1,:] = uᵢ₊₁[1,:]-[dom;0]
+        du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+                            Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
     end
     nothing
 end

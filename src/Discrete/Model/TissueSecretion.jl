@@ -32,6 +32,7 @@ function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf, δt,type)
 end
 
 
+
 # alternate normal velocity function
 function Vₙ(rᵢ₋₁, rᵢ, rᵢ₊₁, kf,type)
     ρₗ = ρ(rᵢ, rᵢ₋₁)

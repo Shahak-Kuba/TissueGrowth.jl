@@ -27,9 +27,15 @@ struct SimResults_t
     Density::Vector{ElasticMatrix{Float64,Vector{Float64}}}
     Vₙ::Vector{Vector{Float64}}
     Ω::Vector{Float64}
-    ψ::Vector{ElasticMatrix{Float64,Vector{Float64}}}
+    ψ::Vector{ElasticVector{Float64,Vector{Float64}}}
     Κ::Vector{ElasticMatrix{Float64,Vector{Float64}}}
     CellCount::Vector{Int64}
-    #EmbeddedCellCount::Vector{Float64}
-    #EmbeddedCellPos::
 end
+
+#@kwdef struct CellParams_t
+#    kₛ::Float64 = 0.0
+#    η::Float64 = 1.0
+#    kf::Float64
+#    D::Float64 = 0.0
+#    a::Float64 = 1.0
+#end

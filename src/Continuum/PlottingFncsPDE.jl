@@ -30,12 +30,12 @@ function plotContinuumResults_Polar(θ, R, ρ, cmap, D, kf)
     f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    lim = 1.5
+    lim = 60
     gaxmain = Axis(ga[1, 1], limits=(-lim, lim, -lim, lim), aspect=DataAspect(), 
                     xlabel="x", xlabelsize=txtSize, xlabelfont = plot_font,
                     ylabel="y", ylabelsize=txtSize,  ylabelfont = plot_font,
                     title = "D = $D, kf = $kf", titlesize = txtSize, titlefont = plot_font)
-    CRange = (20,65)
+    CRange = (0.05,0.2)
     for i in 1:1000:size(R,1)
         CairoMakie.lines!(gaxmain, [R[i,:]; R[i,1]].*cos.([θ;θ[1]]), [R[i,:]; R[i,1]].*sin.([θ;θ[1]]), color=[ρ[i,:];ρ[i,1]], colorrange=CRange,
             colormap=cmap, linewidth=5)
