@@ -204,22 +204,24 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
     return f
 end
 
-function plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,N,kf)
+function plotMultiAreaVsTime(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,Ω₄,t₄,N,kf)
     txtSize = 18;
     tickSize = 18;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(455, 455))
+        size=(800, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], 
+    gaxmain = Axis(ga[1, 1], height = 650, width=650,
                     xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
                     ylabel="Ω [μm^2]", ylabelsize = txtSize, yticklabelsize = tickSize)
     
     t = LinRange(0,t₁[end],500)
     Ωₐ = Ω_analytic(Ω₁[1],N,kf,t)
 
-    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, "Analytic")
-    Square_Sol = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :dash, "Square Pore")
-    Hex_Sol = plotAreaVsTime!(gaxmain, t₂, Ω₂, :black, :dot, "Hex Pore")
+    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, "Analytic", 7)
+    Square_Sol_Hook = plotAreaVsTime!(gaxmain, t₁, Ω₁, :purple, :dash, "Square Pore (Hookean)", 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t₂, Ω₂, :blue, :dash, "Hex Pore (Hookean)", 6)
+    Square_Sol_Nonlin = plotAreaVsTime!(gaxmain, t₃, Ω₃, :green, :dot, "Square Pore (Nonlinear)",5)
+    Hex_Sol_Nonlin = plotAreaVsTime!(gaxmain, t₄, Ω₄, :black, :dot, "Hex Pore (Nonlinear)",5)
 
     #Legend(f[1,1],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
     axislegend(gaxmain, merge = true, unique = true)
@@ -230,6 +232,9 @@ function plotAreaVsTime!(gaxmain, t, Ωₛ, clr, style, name)
     CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, label = name, linewidth=4, linestyle=style)
 end
 
+function plotAreaVsTime!(gaxmain, t, Ωₛ, clr, style, name, lw)
+    CairoMakie.lines!(gaxmain, t, Ωₛ, color=clr, label = name, linewidth=lw, linestyle=style)
+end
 
 
 

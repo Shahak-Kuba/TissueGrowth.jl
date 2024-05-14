@@ -21,9 +21,9 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, 1500, -0.1, 1100), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, 1500, -0.1, 1100), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -40,9 +40,9 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     txtSize = 40;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, 1500, -10, 1100), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, 1500, -10, 1100), 
               xlabel=L"x \; \text{[μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel=L"y \; \text{[μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
@@ -54,7 +54,7 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4) + 10, 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,height=650,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
@@ -65,9 +65,9 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N, NoI)
     txtSize = 45;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(1000, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(0, 1500, -10, 1100), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=450, limits=(0, 1500, -10, 1100), 
               xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
@@ -80,7 +80,7 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N, NoI)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4) + 10, 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30, height=450,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end

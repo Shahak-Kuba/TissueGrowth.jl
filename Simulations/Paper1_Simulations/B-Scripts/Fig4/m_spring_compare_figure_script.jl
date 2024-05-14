@@ -44,7 +44,7 @@ save("m_springs_compare.png",f1)
 Density_cmap =  :cool #:rainbow1
 Density_Range = (0.05,0.15)
 
-f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (60,60), N, m1, 10)
+f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [\text{μm^{-1}}]", (60,60), N, m1, 10)
 save("Square_infill_m1_springs.png",f2)
-f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (60,60), N, m2, 10)
+f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [\text{μm^{-1}}]", (60,60), N, m2, 10)
 save("Square_infill_m2_springs.png",f3)

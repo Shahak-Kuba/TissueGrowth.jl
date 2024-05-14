@@ -25,9 +25,9 @@ m2 = 2
 R₀ = 282.095  # shape radius μm
 D = 0.00
 kₛ = 7.5
-Kₛ = 200
+Kₛ = 100
 l₀ = 20.0
-L₀ = ((l_max - l_min)/((ks/Ks)*((l_max^2 - l_min^2)/2 + a_hookean*(l_min - l_max)) - log(l_min/l_max)))
+L₀ = 20.0
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "2D"
@@ -61,8 +61,8 @@ Density_cmap =  :cool #:rainbow1
 Stress_cmap = :winter 
 
 geo = 1
-Stress_Range_Hookean = (-2, 2)
-Stress_Range_Nonlinear = (48, 52)
+Stress_Range_Hookean = (-1, 1)
+Stress_Range_Nonlinear = (-1, 1)
 
 f_length_Hookean = TissueGrowth.plotForceLawCompareStairs(sol_hookean[geo].Density)
 f2_hookean = TissueGrowth.plotStress2D_Quadrant(sol_hookean2[geo].u, sol_hookean2[geo].ψ, Stress_cmap, Stress_Range_Hookean, L"σ/E \; \text{[-]}", (300,300))

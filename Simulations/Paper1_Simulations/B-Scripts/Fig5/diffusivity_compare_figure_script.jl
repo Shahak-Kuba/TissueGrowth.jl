@@ -11,7 +11,7 @@ growth_dir = "inward";
 Tmax = 5; # days
 btype = "square"; #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 
-# Discrete Simulation Variables
+# Discrete Simulation Variables     
 # set random seed number for reproducability 
 seed = 88;
 
