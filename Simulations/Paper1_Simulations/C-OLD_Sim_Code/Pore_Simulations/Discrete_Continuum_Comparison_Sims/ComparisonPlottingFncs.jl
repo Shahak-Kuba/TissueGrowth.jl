@@ -102,18 +102,18 @@ function DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_
         if col == 1
             clr = :blue
             if row == row_size
-                gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]), xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [0, 0.05, 0.15, max_y])
+                gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]), xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [0, 0.15, max_y])
             else
-                gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [0, 0.05, 0.15, max_y])
+                gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [0, 0.15, max_y])
             end
                 DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Continuum_Solution, indicies[i])
         elseif row == row_size
             clr = :green
-            gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]),  yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [0, 0.05, 0.15, max_y])
+            gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]),  yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [0, 0.15, max_y])
             DiscVSContDensity_plot(gaxmain, Discrete_Solution_m2, m2, Continuum_Solution, indicies[i])
         else
             clr = :green
-            gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize, yticks = [0, 0.05, 0.15, max_y])
+            gaxmain = Axis(ga[row, col], limits=(0, 2π, 0, max_y), xticks = ([0, π/2, π, 3π/2, 2π],["0", "π/2", "π", "3π/2", "2π"]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize, yticks = [0, 0.15, max_y])
             DiscVSContDensity_plot(gaxmain, Discrete_Solution_m2, m2, Continuum_Solution, indicies[i])
         end
         #cont_line, disc_stair1, disc_stair2 = DiscVSContDensity_plot(gaxmain, Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies[i])

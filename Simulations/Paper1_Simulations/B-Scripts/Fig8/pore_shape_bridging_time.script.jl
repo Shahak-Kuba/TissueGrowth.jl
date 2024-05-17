@@ -24,7 +24,7 @@ m = 2 # number of springs per cell
 R₀ = 282.095  # shape radius μm
 D = 0.00
 kₛ = 7.5
-Kₛ = kₛ / 0.2^2
+Kₛ = 150
 l₀ = 10.0
 L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
 η = 1.0 
@@ -55,23 +55,35 @@ Stress_cmap = :winter
 
 Density_Range = (0.05,0.2)
 
-#f1_hookean = TissueGrowth.plotResults2D(sol_hookean[1].u, sol_hookean[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (280,280), N, m, 10)
-#f2_hookean = TissueGrowth.plotResults2D(sol_hookean[2].u, sol_hookean[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (300,300), N, m, 10)
+f1_hookean = TissueGrowth.plotResults2D(sol_hookean[1].u, sol_hookean[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (280,280), N, m, 10)
+f2_hookean = TissueGrowth.plotResults2D(sol_hookean[2].u, sol_hookean[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (320,320), N, m, 10)
 
-#f1_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[1].u, sol_nonlinear[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (280,280), N, m, 10)
-#f2_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[2].u, sol_nonlinear[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (300,300), N, m, 10)
+f1_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[1].u, sol_nonlinear[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (280,280), N, m, 10)
+f2_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear[2].u, sol_nonlinear[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (320,320), N, m, 10)
 
-#save("fig8_square_hookean_cell.png", f1_hookean)
-#save("fig8_hex_hookean_cell.png", f2_hookean)
-#save("square_hookean_stress.png", f2_hookean)
+save("fig8_square_hookean_cell.png", f1_hookean)
+save("fig8_hex_hookean_cell.png", f2_hookean)
 
-#save("fig8_square_nonlinear_cell.png", f1_nonlinear)
-#save("fig8_hex_nonlinear_cell.png", f2_nonlinear)
-#save("square_nonlinear_stress.png", f2_nonlinear)
+save("fig8_square_nonlinear_cell.png", f1_nonlinear)
+save("fig8_hex_nonlinear_cell.png", f2_nonlinear)
 
 
 f = TissueGrowth.plotMultiAreaVsTime(sol_hookean[1].Ω,sol_hookean[1].t,sol_hookean[2].Ω,sol_hookean[1].t,sol_nonlinear[1].Ω,sol_nonlinear[1].t,sol_nonlinear[2].Ω,sol_nonlinear[1].t,N,kf)
 save("fig8_area_compare.png", f)
 
 
+# Time to bridge based on side length
+Tbₛ = (sₛ, kf, q₀) -> sₛ./(4*kf*q₀)
+Tbₕ = (sₕ, kf, q₀) -> (√3 .* sₕ)./(4*kf*q₀)
+
+Ω₀ = [250000, 100000, 50000, 20000, 10000]
+Sₛ = sqrt.(Ω₀)
+Sₕ = sqrt.(2/(3√3).*Ω₀)
+
+ratio = Sₛ ./ Sₕ
+
+q₀ = 1/20
+
+Tb_square = Tbₛ(Sₛ, kf, q₀)
+Tb_hex = Tbₕ(Sₛ, kf, q₀)
 
