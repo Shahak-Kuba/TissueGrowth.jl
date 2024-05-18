@@ -11,10 +11,11 @@ l_min = 5
 l_max = 20.0
 l = LinRange(l_min, l_max, 100)
 
-ks = 10.0
-Ks = ks#/(1/l_min^2)
-a_hookean = 10
+ks = 7.5
+Ks = 100
+a_hookean = 5
 a_nonlinear = ((l_max - l_min)/((ks/Ks)*((l_max^2 - l_min^2)/2 + a_hookean*(l_min - l_max)) - log(l_min/l_max)))
+# latex code: $a_{1} = \frac{\ell_{max} - \ell_{min}}{\left(\frac{k_{0}}{k_{1}}\right)\left(\frac{\ell_{max}^{2} - \ell_{min}^{2}}{2} + a_{0}(\ell_{min} - \ell_{max})\right) - \ln\left(\frac{\ell_{min}}{\ell_{max}}\right)}$
 
 p_nonlinear = (k = Ks, a = a_nonlinear)
 p_hookean = (k = ks, a = a_hookean)

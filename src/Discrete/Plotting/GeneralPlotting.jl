@@ -158,7 +158,7 @@ function plotSpringBoundaryTrajectory!(gaxmain, u, var, lw, cmap, Crange, idx)
 
 end
 
-function plotForceLawCompareStairs(data1, t)
+function plotForceLawCompareStairs(data1, t, binSize)
     function CountLengths(Lengths, value)
         return count(value .== Lengths)
     end
@@ -172,22 +172,48 @@ function plotForceLawCompareStairs(data1, t)
                     ylabel="Count", ylabelsize = txtSize, yticklabelsize = tickSize)
     colors = [:darkorange, :red, :green, :purple, :blue]
     for ii in axes(data1,1)
-        data_length = round.(1 ./ data1[ii].data, digits=0)
+        data_length = round.(1 ./ data1[ii].data, digits=1)
         lengths = Float64[]
         data1_count = Float64[]
 
-        for length in round.(LinRange(0,21,210), digits=0)
+        for length in 4:0.1:22
             push!(lengths, length)
             push!(data1_count, CountLengths(data_length, length))
         end
+
+        # new array based on user specified bin size
+        data_count_bin_unit = Float64[]
+        data_count_bin_3 = Float64[]
+        lengths2 = Float64[]
+
+        for jj in 1:10:171
+            count_of_unit_length = sum(data1_count[jj:jj+9])
+            push!(data_count_bin_unit,count_of_unit_length)
+            push!(lengths2, lengths[jj])
+        end
+
+        lengths = Float64[3,3,5,5,8,8,11,11,14,14,17,17,20,20,23,23]
+        push!(data_count_bin_3, 0)
+        push!(data_count_bin_3, 0)
+        for jj in 1:3:16
+            push!(data_count_bin_3, sum(data_count_bin_unit[jj:jj+2]))
+            push!(data_count_bin_3, sum(data_count_bin_unit[jj:jj+2]))
+        end
+        push!(data_count_bin_3, 0)
+        push!(data_count_bin_3, 0)
+
         time = t[ii]
         
         #CairoMakie.barplot!(lengths, data2_count, strokecolor = :black, strokewidth = 1, alpha=0.1)
         #CairoMakie.barplot!(lengths, data1_count, strokecolor = :black, strokewidth = 1, alpha=0.1)
-        CairoMakie.stairs!(gaxmain,lengths,data1_count,linewidth=4, color= colors[ii], label="t = $time")
+        if binSize == 3
+            CairoMakie.stairs!(gaxmain,lengths,data_count_bin_3,linewidth=4, color= colors[ii], label="t = $time")
+        else
+            CairoMakie.stairs!(gaxmain,lengths2.+0.5,data_count_bin_unit,linewidth=4, color= colors[ii], label="t = $time")
+        end
         #CairoMakie.lines!(gaxmain,lengths,data1_count,linewidth=2)
 
-        CairoMakie.xlims!(4, 21)
+        CairoMakie.xlims!(0, 25)
         CairoMakie.ylims!(0,110)
     end
     axislegend(gaxmain, merge = true, unique = true, labelsize=tickSize, position = :lt)
