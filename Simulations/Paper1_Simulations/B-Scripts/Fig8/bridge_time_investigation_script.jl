@@ -50,14 +50,25 @@ function plotAnalytic_vs_Regression(S, Tb_2020, Tb_Square_2024, Tb_Hex_2024)
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(850, 850))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(100,700,0,75),
-                    xlabel="L [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-                    ylabel="Tb [days]", ylabelsize = txtSize, yticklabelsize = tickSize)
-    
-    
-    CairoMakie.lines!(gaxmain,S,Tb_Square_2024,label=L"\text{Square:}\;T_{b}(L)", linewidth=4, linestyle=:solid, color=:blue)
-    CairoMakie.lines!(gaxmain,S,Tb_Hex_2024,label=L"\text{Hex:}\;T_{b}(L)", linewidth=4, linestyle=:solid, color=:red)
-    CairoMakie.lines!(gaxmain,S,Tb_2020,label=L"\text{Buenzli et al. 2020}", linewidth=4, linestyle=:dash, color=:black)
+    HexON = false
+    if HexON
+        gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(100,700,0,75),
+                        xlabel="L [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+                        ylabel="Tb [days]", ylabelsize = txtSize, yticklabelsize = tickSize)
+        
+        
+        CairoMakie.lines!(gaxmain,S,Tb_Square_2024,label=L"\text{Square:}\;T_{b}(L)", linewidth=4, linestyle=:solid, color=:blue)
+        CairoMakie.lines!(gaxmain,S,Tb_Hex_2024,label=L"\text{Hex:}\;T_{b}(L)", linewidth=4, linestyle=:solid, color=:red)
+        CairoMakie.lines!(gaxmain,S,Tb_2020,label=L"\text{Buenzli et al. 2020}", linewidth=4, linestyle=:dash, color=:black)
+    else
+        gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(100,700,0,45),
+                        xlabel="L [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+                        ylabel="Tb [days]", ylabelsize = txtSize, yticklabelsize = tickSize)
+        
+        
+        CairoMakie.lines!(gaxmain,S,Tb_Square_2024,label=L"\text{Square:}\;T_{\text{b}}(L)", linewidth=4, linestyle=:solid, color=:blue)
+        CairoMakie.lines!(gaxmain,S,Tb_2020,label=L"\text{Buenzli et al. 2020}", linewidth=4, linestyle=:dash, color=:black)
+    end
 
 
     #Legend(f[1,1],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
@@ -66,3 +77,4 @@ function plotAnalytic_vs_Regression(S, Tb_2020, Tb_Square_2024, Tb_Hex_2024)
 end
 
 f = plotAnalytic_vs_Regression(S, Tb_2020, Tb_Square_2024, Tb_Hex_2024)
+save("fig8_Side_Length_Compare.png", f)

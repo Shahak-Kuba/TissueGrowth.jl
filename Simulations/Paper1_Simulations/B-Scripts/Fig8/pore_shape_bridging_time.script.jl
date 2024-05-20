@@ -52,23 +52,29 @@ sol_nonlinear_500, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N1,m,R₀,D,Kₛ,L
 Density_cmap =  :cool #:rainbow1
 Stress_cmap = :winter 
 Density_Range = (0.05,0.2)
+axisTicks = [-600, -400, -200, 0, 200, 400, 600]
 
-f1_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_500[1].u, sol_nonlinear_500[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (280,280), N, m, 10)
-f2_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_500[2].u, sol_nonlinear_500[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (320,320), N, m, 10)
+f1_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_500[1].u, sol_nonlinear_500[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (350,350), axisTicks, N1, m, 10)
+f2_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_500[2].u, sol_nonlinear_500[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (350,350), axisTicks, N1, m, 10)
 
-save("fig8_square_nonlinear_cell.png", f1_nonlinear)
-save("fig8_hex_nonlinear_cell.png", f2_nonlinear)
+save("fig8_square_500.png", f1_nonlinear)
+save("fig8_hex_500.png", f2_nonlinear)
 
 
 ####### 100μm side length square pores ############
 # setting up simulation parameters
-N2 = 144
-R₀ = 394.9327084834294  # shape radius μm
+N2 = 150
+R₀ = 423.1421876608172  # shape radius μm
 
 # 2D simulations
-sol_nonlinear_700, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N2,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
+sol_nonlinear_750, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N2,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
                     prolif, death, embed, α, β, Ot, event_δt, seed, 31);
 
+f1_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_750[1].u, sol_nonlinear_750[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (500,500), axisTicks, N2, m, 10)
+f2_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_750[2].u, sol_nonlinear_750[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (500,500), axisTicks, N2, m, 10)
+
+save("fig8_square_750.png", f1_nonlinear)
+save("fig8_hex_750.png", f2_nonlinear)                    
 
 ####### 1000μm side length square pores ############
 # setting up simulation parameters
@@ -80,13 +86,18 @@ sol_nonlinear_1000, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N3,m,R₀,D,Kₛ,
                     prolif, death, embed, α, β, Ot, event_δt, seed, 31);
 
 
+f1_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_1000[1].u, sol_nonlinear_1000[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (650,650), axisTicks, N3, m, 10)
+f2_nonlinear = TissueGrowth.plotResults2D(sol_nonlinear_1000[2].u, sol_nonlinear_1000[2].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[μm^{-1}]}", (650,650), axisTicks, N3, m, 10)
+
+save("fig8_square_1000.png", f1_nonlinear)
+save("fig8_hex_1000.png", f2_nonlinear)       
 
 
-f = TissueGrowth.plotMultiAreaVsTime(sol_nonlinear_500[1].t,sol_nonlinear_1000[1].Ω,sol_nonlinear_1000[2].Ω,sol_nonlinear_700[1].Ω,sol_nonlinear_700[2].Ω,sol_nonlinear_500[1].Ω,sol_nonlinear_500[2].Ω,N3,N2,N1,kf)
-#save("fig8_area_compare.png", f)
+f = TissueGrowth.plotMultiAreaVsTime(sol_nonlinear_500[1].t,sol_nonlinear_1000[1].Ω,sol_nonlinear_1000[2].Ω,sol_nonlinear_750[1].Ω,sol_nonlinear_750[2].Ω,sol_nonlinear_500[1].Ω,sol_nonlinear_500[2].Ω,N3,N2,N1,kf)
+save("fig8_area_compare.png", f)
 
 ∇_500 = (sol_nonlinear_500[1].Ω[end] - sol_nonlinear_500[1].Ω[1])/Tmax
-∇_700 = (sol_nonlinear_700[1].Ω[end] - sol_nonlinear_700[1].Ω[1])/Tmax
+∇_750 = (sol_nonlinear_750[1].Ω[end] - sol_nonlinear_750[1].Ω[1])/Tmax
 ∇_1000 = (sol_nonlinear_1000[1].Ω[end] - sol_nonlinear_1000[1].Ω[1])/Tmax
 
 

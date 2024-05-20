@@ -15,7 +15,45 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
     for i in 1:Interface_Step:size(u,1)
-        plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i, 4)
+    end
+
+    plot_cell_traj = false # User set
+    if plot_cell_traj
+        for j = 1:3:N
+            plotCellTrajectory!(gaxmain, u, m, j, 3)
+        end
+    end
+    show_initial_boundaries = false
+    if show_initial_boundaries
+        #plotting spring boundaries
+        CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)
+        #plotting cell boundaries
+        for ii in 1:m:size(u[1],1)
+            CairoMakie.scatter!(gaxmain, u[1][ii, 1], u[1][ii, 2], color="black", marker=:xcross,markersize=25)
+        end
+    end
+
+    #plotCellTrajectory!(gaxmain, u, m, 35, 3)
+    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+    return f
+end
+
+function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, m, NoI)
+    txtSize = 40;
+    tickSize = 35;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 900))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
+              xlabel=L"x\text{ [\mu m]}", xlabelsize = txtSize, xticklabelsize = tickSize, xticks = axisTicks,
+              ylabel=L"y\text{ [\mu m]}", ylabelsize = txtSize, yticklabelsize = tickSize, yticks = axisTicks)
+              #title = "D = $D, kf = $kf", titlesize = txtSize)
+    CRange = crange
+    Interface_Step = Int(floor(size(u,1)/NoI))
+    for i in 1:Interface_Step:size(u,1)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i, 4)
     end
 
     plot_cell_traj = false # User set
