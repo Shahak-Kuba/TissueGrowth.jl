@@ -64,10 +64,10 @@ geo = 1
 Stress_Range_Hookean = (-1, 1)
 Stress_Range_Nonlinear = (-1, 1)
 
-f_length_Hookean = TissueGrowth.plotForceLawCompareStairs(sol_hookean[geo].Density, sol_hookean[geo].t,3)
+f_length_Hookean = TissueGrowth.plotForceLawCompareStairs(sol_hookean[geo].Density, sol_hookean[geo].t,1)
 f2_hookean = TissueGrowth.plotStress2D_Quadrant(sol_hookean2[geo].u, sol_hookean2[geo].ψ, Stress_cmap, Stress_Range_Hookean, L"σ/E \; \text{[-]}", (300,300))
 
-f_length_Nonlinear = TissueGrowth.plotForceLawCompareStairs(sol_nonlinear[geo].Density, sol_nonlinear[geo].t,3)
+f_length_Nonlinear = TissueGrowth.plotForceLawCompareStairs(sol_nonlinear[geo].Density, sol_nonlinear[geo].t,1)
 f2_nonlinear= TissueGrowth.plotStress2D_Quadrant(sol_nonlinear2[geo].u, sol_nonlinear2[geo].ψ, Stress_cmap, Stress_Range_Nonlinear, L"σ/E \; \text{[-]}", (300,300))
 
 save("Fig7_High_Hookean_Cell_Length.png", f_length_Hookean)

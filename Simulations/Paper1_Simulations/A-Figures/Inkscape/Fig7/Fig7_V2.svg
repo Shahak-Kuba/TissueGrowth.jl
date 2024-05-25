@@ -10,7 +10,7 @@
    inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    sodipodi:docname="Fig7_V2.svg"
    xml:space="preserve"
-   inkscape:export-filename="Fig7_V2_2.eps"
+   inkscape:export-filename="Fig7.eps"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -28,15 +28,15 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="1.4770342"
-     inkscape:cx="-255.57972"
-     inkscape:cy="440.40956"
-     inkscape:window-width="1920"
-     inkscape:window-height="1009"
+     inkscape:zoom="1.0444209"
+     inkscape:cx="191.97241"
+     inkscape:cy="584.53445"
+     inkscape:window-width="1280"
+     inkscape:window-height="729"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer1"
      showguides="true"><sodipodi:guide
        position="16.593501,164.73485"
        orientation="1,0"
@@ -363,8 +363,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-16.339461,-8.8666031)"
-     style="display:inline"
-     sodipodi:insensitive="true"><image
+     style="display:inline"><image
        width="60"
        height="53.999996"
        preserveAspectRatio="none"
@@ -1400,7 +1399,7 @@
    id="path6871" />&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath4925)"
    id="g6879"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,-0.00714369)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,-0.00714369)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g53">&#10;      <g
@@ -1410,7 +1409,7 @@
    id="path6875" />&#10;      </g>&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath3035)"
    id="g61"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,-0.00714369)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,-0.00714369)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g59">&#10;      <g
@@ -1459,7 +1458,7 @@
    id="path88" />&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath4720)"
    id="g60"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g58">&#10;      <g
@@ -1469,7 +1468,7 @@
    id="path92" />&#10;      </g>&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath9032)"
    id="g66"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g64">&#10;      <g
@@ -1518,7 +1517,7 @@
    id="path8739" />&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath9183)"
    id="g8751"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g8749">&#10;      <g
@@ -1528,7 +1527,7 @@
    id="path8745" />&#10;      </g>&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath7711)"
    id="g8759"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g8757">&#10;      <g
@@ -1585,7 +1584,7 @@
    id="path99" />&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath5584)"
    id="g67"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g65">&#10;      <g
@@ -1595,7 +1594,7 @@
    id="path103" />&#10;      </g>&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath2192)"
    id="g73"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g71">&#10;      <g
@@ -1652,7 +1651,7 @@
    id="path10857" />&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath3482)"
    id="g10869"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g10867">&#10;      <g
@@ -1662,7 +1661,7 @@
    id="path10863" />&#10;      </g>&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath4787)"
    id="g10877"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g10875">&#10;      <g
@@ -1731,7 +1730,7 @@
    id="path119" />&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath3593)"
    id="g79"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g77">&#10;      <g
@@ -1741,7 +1740,7 @@
    id="path123" />&#10;      </g>&#10;    </g>&#10;  </g>&#10;  <g
    clip-path="url(#clipPath7864)"
    id="g85"
-   transform="matrix(0.352778,0,0,0.352778,-0.337873,0.0424657)">&#10;    <g
+   transform="matrix(0.352778,0,0,0.352778,0.72046034,0.0424657)">&#10;    <g
    fill="#000000"
    fill-opacity="1"
    id="g83">&#10;      <g

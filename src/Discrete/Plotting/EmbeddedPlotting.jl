@@ -5,11 +5,11 @@ function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
     y[1] = 0.0
     # Creating Figure
     txtSize = 35;
-    tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        size=(1000, 800))
+    tickSize = 30;
+    f = Figure(backgroundcolor=RGBf(1, 1, 1),
+        size=(850, 850))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1],
+    gaxmain = Axis(ga[1, 1], height = 650, width=650,
               xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="Simulation Ot", ylabelsize = txtSize, yticklabelsize = tickSize,
               title = "Ot = $Ot", titlesize = txtSize)

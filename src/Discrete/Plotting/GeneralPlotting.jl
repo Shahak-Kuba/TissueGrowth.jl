@@ -19,10 +19,10 @@ Generate a plot to visualize results with lines representing angular positions o
 function plotThetaVsTime(u, t, var, cmap, crange, cbarlabel)
     txtSize = 35;
     tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        size=(1000, 800))
+    f = Figure(backgroundcolor=RGBf(1, 1, 1),
+        size=(850, 850))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], 
+    gaxmain = Axis(ga[1, 1], height = 650, width=650,
               xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel="θ [radians]", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
@@ -46,10 +46,10 @@ end
 function plotThetaVsTime_Quadrant(u, t, var, cmap, crange, cbarlabel)
     txtSize = 35;
     tickSize = 25;
-    f = Figure(backgroundcolor=RGBf(0.98, 0.98, 0.98),
-        size=(1000, 800))
+    f = Figure(backgroundcolor=RGBf(1, 1, 1),
+        size=(850, 850))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], 
+    gaxmain = Axis(ga[1, 1], height = 650, width=650,
               xlabel="θ [radians]", xlabelsize = txtSize, xticklabelsize = tickSize, xticks = ([0, π/4, π/2],["0", "π/4", "π/2"]),
               ylabel="t [days]", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
@@ -162,12 +162,12 @@ function plotForceLawCompareStairs(data1, t, binSize)
     function CountLengths(Lengths, value)
         return count(value .== Lengths)
     end
-    txtSize = 35;
-    tickSize = 25;
+    txtSize = 40;
+    tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(800, 800))
+        size=(850, 850))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], width=600, height=600,
+    gaxmain = Axis(ga[1, 1], width=650, height=650,
                     xlabel="Length", xlabelsize = txtSize, xticklabelsize = tickSize,
                     ylabel="Count", ylabelsize = txtSize, yticklabelsize = tickSize)
     colors = [:darkorange, :red, :green, :purple, :blue]

@@ -46,7 +46,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, 
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel=L"x\text{ [\mu m]}", xlabelsize = txtSize, xticklabelsize = tickSize, xticks = axisTicks,
               ylabel=L"y\text{ [\mu m]}", ylabelsize = txtSize, yticklabelsize = tickSize, yticks = axisTicks)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
@@ -176,10 +176,10 @@ end
 
 
 function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedded_cells, multiInterfaces)
-    txtSize = 35;
-    tickSize = 25;
+    txtSize = 40;
+    tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(800, 800))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
@@ -247,7 +247,7 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
     txtSize = 35;
     tickSize = 25;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(655, 400))
+        size=(850, 850))
     ga = f[1, 1] = GridLayout()
 
     for Diffusivity = axes(Solution,1)
@@ -255,14 +255,14 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
             # Setting gaxmain (axis ticks and labels)
             if Diffusivity == 1
                 if Shape == size(Solution[1],1)
-                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticks = [-1, 0, 1], xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [-1, 0, 1])
+                    gaxmain = Axis(ga[Shape, Diffusivity], height = 650, width=650, limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticks = [-1, 0, 1], xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [-1, 0, 1])
                 else
-                    gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticks = [-1, 0, 1], xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [-1, 0, 1])
+                    gaxmain = Axis(ga[Shape, Diffusivity], height = 650, width=650, limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticks = [-1, 0, 1], xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, yticks = [-1, 0, 1])
                 end
             elseif Shape == size(Solution[1],1)
-                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, xticks = [-1, 0, 1], yticks = [-1, 0, 1])
+                gaxmain = Axis(ga[Shape, Diffusivity], height = 650, width=650, limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), yticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsize = tickSize, xticks = [-1, 0, 1], yticks = [-1, 0, 1])
             else
-                gaxmain = Axis(ga[Shape, Diffusivity], limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize, xticks = [-1, 0, 1], yticks = [-1, 0, 1])
+                gaxmain = Axis(ga[Shape, Diffusivity], height = 650, width=650, limits=(-axislims[1], axislims[1], -axislims[2], axislims[2]), xticklabelsvisible = false, xticklabelsize = tickSize, yticklabelsvisible = false, yticklabelsize = tickSize, xticks = [-1, 0, 1], yticks = [-1, 0, 1])
             end
             # Plotting Interface
             u = Solution[Diffusivity][Shape].u
@@ -330,10 +330,10 @@ end
 # Plot to compare with Buenzli et al. 2020
 
 function plotCompareRegressionBuenzli(Ω_estimate, t, Ωnorm_Analytic, t_Analytic, Ωnorm_Discrete, t_Discrete)
-    txtSize = 18;
-    tickSize = 18;
+    txtSize = 40;
+    tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(455, 455))
+        size=(850, 850))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], 
                     xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
