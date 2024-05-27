@@ -3,8 +3,8 @@
 
 
 function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
-    txtSize = 40;
-    tickSize = 35;
+    txtSize = 35;
+    tickSize = 40;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
@@ -41,8 +41,8 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
 end
 
 function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, m, NoI)
-    txtSize = 40;
-    tickSize = 35;
+    txtSize = 35;
+    tickSize = 40;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
@@ -175,7 +175,7 @@ function plotStress2D_Quadrant(u, var, cmap, Crange, cbarlabel, axisLims)
 end
 
 
-function plotResults2D(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedded_cells, multiInterfaces)
+function plotResults2D_embedded(u, var, cmap, crange, cbarlabel, D, kf, axisLims, embedded_cells, multiInterfaces)
     txtSize = 40;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
@@ -279,10 +279,10 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
 end
 
 function plotMultiAreaVsTime(t_discrete, Ω_large_square, Ω_large_hex, Ω_mid_square, Ω_mid_hex, Ω_small_square, Ω_small_hex, N_large, N_mid, N_small, kf)
-    txtSize = 35;
-    tickSize = 25;
+    txtSize = 40;
+    tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(850, 850))
+        size=(900, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(0,24,0,1000000),
                     xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
@@ -307,6 +307,47 @@ function plotMultiAreaVsTime(t_discrete, Ω_large_square, Ω_large_hex, Ω_mid_s
     Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, 7)
     Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete, Ω_large_square, :black, :dash, 6)
     Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete, Ω_large_hex, :blue, :dot, 6)
+
+
+    #Legend(f[1,1],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
+    axislegend(gaxmain, merge = true, unique = true, labelsize=txtSize)
+    return f
+end
+
+function plotMultiAreaVsTime(t_discrete, Ω_large_square, Ω_large_hex, Ω_mid_square, Ω_mid_hex, Ω_small_square, Ω_small_hex, N_large, N_mid, N_small, kf, Ω_hex_ρ₀_small, Ω_hex_ρ₀_mid, Ω_hex_ρ₀_large)
+    txtSize = 40;
+    tickSize = 35;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(900, 900))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(0,24,0,1400000),
+                    xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+                    ylabel="Ω [μm²]", ylabelsize = txtSize, yticklabelsize = tickSize, yticks=[250000, 560000, 1000000])
+    
+    t = LinRange(0,t_discrete[end],500)
+
+    # Small
+    Ωₐ = Ω_analytic(Ω_small_square[1],N_small,kf,t)
+    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, L"\text{Analytic}", 7)
+    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete, Ω_small_square, :black, :dash, L"\text{Square Pore}", 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete, Ω_small_hex, :blue, :dot, L"\text{Hex Pore}", 6)
+    Hex_Sol_ρ₀ = plotAreaVsTime!(gaxmain, t_discrete, Ω_hex_ρ₀_small, :green, :solid, L"\text{Hex Pore q_{0}=0.05}", 6)
+
+
+    # Medium
+    Ωₐ = Ω_analytic(Ω_mid_square[1],N_mid,kf,t)
+    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, 7)
+    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete, Ω_mid_square, :black, :dash, 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete, Ω_mid_hex, :blue, :dot, 6)
+    Hex_Sol_ρ₀ = plotAreaVsTime!(gaxmain, t_discrete, Ω_hex_ρ₀_mid, :green, :solid, 6)
+
+
+    # Large
+    Ωₐ = Ω_analytic(Ω_large_square[1],N_large,kf,t)
+    Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, 7)
+    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete, Ω_large_square, :black, :dash, 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete, Ω_large_hex, :blue, :dot, 6)
+    Hex_Sol_ρ₀ = plotAreaVsTime!(gaxmain, t_discrete, Ω_hex_ρ₀_large, :green, :solid, 6)
 
 
     #Legend(f[1,1],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])

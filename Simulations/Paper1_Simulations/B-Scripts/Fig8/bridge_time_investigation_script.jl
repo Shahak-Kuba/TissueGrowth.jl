@@ -67,7 +67,7 @@ function plotAnalytic_vs_Regression(S, Tb_2020, Tb_Square_2024, Tb_Hex_2024, L_t
         CairoMakie.lines!(gaxmain,S,Tb_Square_2024,label=L"\text{Square:}\;T_{\text{b}}(L)", linewidth=4, linestyle=:solid, color=:blue)
         CairoMakie.lines!(gaxmain,S,Tb_2020,label=L"\text{Buenzli et al. 2020}", linewidth=4, linestyle=:dash, color=:black)
         CairoMakie.errorbars!(gaxmain,L_tested_2020,Tb_approx_2020,Tb_error_2020, color=:black, linewidth=2, whiskerwidth = 12)
-        CairoMakie.scatter!(gaxmain,L_tested_2020,Tb_approx_2020, color=:red, markersize=25, marker=:hline, label=L"\text{Data approximation}")
+        CairoMakie.scatter!(gaxmain,L_tested_2020,Tb_approx_2020, color=:red, markersize=25, marker=:hline, label=L"\text{Experimental data}")
     end
 
 
