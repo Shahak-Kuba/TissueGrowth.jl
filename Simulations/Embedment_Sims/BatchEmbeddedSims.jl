@@ -1,0 +1,77 @@
+
+using TissueGrowth
+using Makie
+using Printf
+using BenchmarkTools
+
+BatchSize = 10
+
+# See parameter approximation document
+# Calculating kf
+KF = 8784.2;
+Tb = 28.46
+l = 500;
+Ω₀ = l^2
+P = l*4
+q₀ = 1/20; 
+N = Int(P*q₀) # number of cells
+kf = KF/N
+l_min = 5
+l_max = 20
+
+
+# setting up simulation parameters
+m = 4 # number of springs per cell
+R₀ = 282.095  # shape radius μm
+D = 0.00
+kₛ = 7.5
+Kₛ = kₛ / 0.2^2
+l₀ = 10.0
+L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
+η = 1.0 
+growth_dir = "inward" # Options: "inward", "outward"
+domain_type = "2D"
+Tmax = 24 # days
+δt = 0.01
+btypes = ["circle"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
+q_lim = 0.2
+ρ_lim = q_lim * m
+
+## Cell Behaviours
+prolif = false; death = false; embed = true;
+α = 0.0;        β = 0.0;      Ot = 0.000625;
+event_δt = δt
+
+embedded_count_iteration_results = Vector{Int64}[]
+Ω_iteration_results = Vector{Float64}[]
+t = Vector{Float64}[]
+
+
+@time for iteration = 1:BatchSize
+    seed = iteration
+    sol, 🥔, embedded_cell_count = TissueGrowth.GrowthSimulation(N,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
+                    prolif, death, embed, α, β, Ot, event_δt, seed, 241);
+    push!(embedded_count_iteration_results, convert(Vector{Int64}, embedded_cell_count[1]))
+    push!(Ω_iteration_results, sol[1].Ω[1] .- sol[1].Ω)
+    if iteration == 1
+        push!(t, sol[1].t)
+    end
+    println("Simulation $iteration / $BatchSize")
+end
+
+# converting vector of vectors into a Matrix
+embedded_count_iteration_results_mat = reduce(vcat,embedded_count_iteration_results')
+Ω_iteration_results_mat = reduce(vcat,Ω_iteration_results')
+Ot_iteration_results_mat = embedded_count_iteration_results_mat ./ Ω_iteration_results_mat
+Ot_iteration_results_mat[:,1] .= zeros(size(Ot_iteration_results_mat[:,1])) 
+# calculating mins and max
+min_Ot = minimum.(eachcol(Ot_iteration_results_mat)).*m
+max_Ot = maximum.(eachcol(Ot_iteration_results_mat)).*m
+
+#Averaging Data
+Ot_average = reduce(vcat,sum(Ot_iteration_results_mat,dims=1)./size(Ot_iteration_results_mat,1)).*m
+#Ω_average = sum(Ω_iteration_results)./size(Ω_iteration_results,1);
+
+f = TissueGrowth.plotOtValueVsTime(t[1], Ot_average, Ot, min_Ot, max_Ot)
+#f2 = TissueGrowth.plotOtValueVsTime(t[1], Ω_iteration_results[95], embedded_count_average, Ot/m)

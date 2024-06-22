@@ -19,6 +19,9 @@ module TissueGrowth
     using Printf
     using JLD2
     import FilePaths
+    using CSV
+    #using Tables
+    using DataFrames
 
     # DEVELOPED SIMULATION CODE
 

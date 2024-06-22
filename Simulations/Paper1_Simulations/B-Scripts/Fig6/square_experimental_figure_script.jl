@@ -46,6 +46,9 @@ event_δt = δt
 sol_hookean, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"hookean",dist_type,
                     prolif, death, embed, α, β, Ot, event_δt, seed, 31);
 
+# Exporting Data
+#TissueGrowth.export_data_to_csv(sol_hookean[1],"square_exp_hook_20240530.csv")
+
 sol_nonlinear, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
                     prolif, death, embed, α, β, Ot, event_δt, seed, 31);
 
