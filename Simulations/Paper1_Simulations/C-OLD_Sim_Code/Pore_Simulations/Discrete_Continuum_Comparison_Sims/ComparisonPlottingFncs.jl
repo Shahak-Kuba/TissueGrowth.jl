@@ -37,16 +37,16 @@ function DiscVSContDensity_plot(gaxmain, Discrete_Solution_m, m, Continuum_Solut
     if m == 1
         clr = :blue
     else
-        clr = :green
+        clr = :blue
     end
     
-    # plotting Discrete
-    disc_index = index;
-    disc_stair = CairoMakie.stairs!(gaxmain, θ_disc[disc_index,:], ρ_disc[disc_index,:], step=:center, linewidth=2, color=clr)
-
     # plotting Continuum
     cont_index = 1 + (index - 1)*1000
     cont_line = CairoMakie.lines!(gaxmain, θ_cont, ρ_cont[cont_index,:], linewidth=2, color=:red, linestyle=:solid)
+
+    # plotting Discrete
+    disc_index = index;
+    disc_stair = CairoMakie.stairs!(gaxmain, [0 ; θ_disc[disc_index,:];2π], [ρ_cont[cont_index,1]; ρ_disc[disc_index,:]; ρ_cont[cont_index,end]], step=:center, linewidth=2, color=:blue)
     
     return cont_line, disc_stair
 end
