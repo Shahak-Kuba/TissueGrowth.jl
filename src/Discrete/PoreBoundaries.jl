@@ -205,6 +205,21 @@ function u0SetUp(btype,R₀,N,dist_type,domain_type)
             vertices = CrossVertecies(side_length, offset)
             w = Int64(N/12) + 1
             @views u0 .= position_vectors_polygon(vertices, w, dist_type)
+        elseif btype == "PerturbedCircle"
+            Random.seed!(36) # nice ones: 333
+            R_Pert = 2*R₀;
+            x_range_loess = LinRange(0,2π,150)
+            # generating random numbers
+            ΔR = rand(150)
+            # smoothing data with Loess
+            loess_model = loess(x_range_loess,ΔR,span=0.3)
+            θ_range = LinRange(0,2π,N)
+            ΔR_loess = predict(loess_model, θ_range);
+            # generating functions for equal distribution
+            R = R₀ .+ ΔR_loess.*R_Pert
+            θ = collect(NodeDistribution(0.0,2*π,N+1,dist_type)) 
+            pop!(θ)
+            @views u0 .= [X(R,θ)'; Y(R,θ)'];
         end
     else
         if btype == "SineWave"

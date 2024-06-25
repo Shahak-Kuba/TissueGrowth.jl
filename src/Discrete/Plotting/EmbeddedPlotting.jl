@@ -1,4 +1,4 @@
-function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
+function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot, m)
     # Sorting Data
     filled_Area = Ω[1] .- Ω
     y = embedded_cell_count./filled_Area
@@ -10,13 +10,14 @@ function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot)
         size=(850, 850))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], height = 650, width=650,
-              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="Simulation Ot", ylabelsize = txtSize, yticklabelsize = tickSize,
-              title = "Ot = $Ot", titlesize = txtSize)
+              xlabel=L"t \; \text{[days]}", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel=L"Ot\;[#/\mu\text{m}^{2}]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              #title = "Ot = $Ot", titlesize = txtSize)
     
-    Ot_line = CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black)
-    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, y, linewidth=5, color = :blue)
-    Legend(f[1,2],[Ot_line,Sim_Ot_Line], ["Ot value", "Simulated Ot"])
+    Ot_line = CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)).*m, linewidth=3, linestyle = :dash, color = :black, label = L"\text{Ot value}")
+    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, y.*m, linewidth=5, color = :blue, label = L"\text{Simulated Ot}")
+    #Legend(f[1,1],[Ot_line,Sim_Ot_Line], ["Ot value", "Simulated Ot"])
+    axislegend(gaxmain, merge = true, unique = true, labelsize=txtSize)
     return f
 end
 

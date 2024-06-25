@@ -7,6 +7,8 @@ module TissueGrowth
     using ElasticArrays
     using QuadGK
     using Roots
+    # PACKAGES FOR DATA SMOOTHING
+    using Loess
     # PACKAGES USED for benchmarking
     using BenchmarkTools
     # PACKAGES USED for plotting

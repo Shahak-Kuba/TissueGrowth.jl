@@ -183,8 +183,8 @@ function plotResults2D_embedded(u, var, cmap, crange, cbarlabel, D, kf, axisLims
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
               xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-              title = "D = $D, kf = $kf", titlesize = txtSize)
+              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize)
+              #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     if multiInterfaces
         for i in 1:9:size(u,1)
