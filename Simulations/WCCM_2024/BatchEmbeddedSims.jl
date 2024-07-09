@@ -4,7 +4,7 @@ using Makie
 using Printf
 using BenchmarkTools
 
-BatchSize = 10
+BatchSize = 1000
 
 # See parameter approximation document
 # Calculating kf
@@ -14,26 +14,26 @@ l = 500;
 Ω₀ = l^2
 P = l*4
 q₀ = 1/20; 
-N = Int(P*q₀) # number of cells
+N = 50#Int(P*q₀) # number of cells
 kf = KF/N
 l_min = 5
 l_max = 20
 
 
 # setting up simulation parameters
-m = 4 # number of springs per cell
-R₀ = 282.095  # shape radius μm
+m = 6 # number of springs per cell
+R₀ = 75 #282.095  # shape radius μm
 D = 0.00
-kₛ = 7.5
-Kₛ = kₛ / 0.2^2
+kₛ = 1
+Kₛ = 5
 l₀ = 10.0
 L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "2D"
-Tmax = 24 # days
+Tmax = 10 # days
 δt = 0.01
-btypes = ["circle"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["PerturbedCircle"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 q_lim = 0.2
 ρ_lim = q_lim * m
@@ -66,12 +66,14 @@ embedded_count_iteration_results_mat = reduce(vcat,embedded_count_iteration_resu
 Ot_iteration_results_mat = embedded_count_iteration_results_mat ./ Ω_iteration_results_mat
 Ot_iteration_results_mat[:,1] .= zeros(size(Ot_iteration_results_mat[:,1])) 
 # calculating mins and max
-min_Ot = minimum.(eachcol(Ot_iteration_results_mat)).*m
-max_Ot = maximum.(eachcol(Ot_iteration_results_mat)).*m
+min_Ot = minimum.(eachcol(Ot_iteration_results_mat))
+max_Ot = maximum.(eachcol(Ot_iteration_results_mat))
+σ_Ot = std.(eachcol(Ot_iteration_results_mat))
 
 #Averaging Data
-Ot_average = reduce(vcat,sum(Ot_iteration_results_mat,dims=1)./size(Ot_iteration_results_mat,1)).*m
+Ot_average = reduce(vcat,sum(Ot_iteration_results_mat,dims=1)./size(Ot_iteration_results_mat,1))
 #Ω_average = sum(Ω_iteration_results)./size(Ω_iteration_results,1);
 
-f = TissueGrowth.plotOtValueVsTime(t[1], Ot_average, Ot, min_Ot, max_Ot)
+f = TissueGrowth.plotOtValueVsTime(t[1], Ot_average, Ot, min_Ot, max_Ot, m, σ_Ot)
+save("WCCM_2024_PerturbedCircle_Batch_Plot_$BatchSize.png",f)
 #f2 = TissueGrowth.plotOtValueVsTime(t[1], Ω_iteration_results[95], embedded_count_average, Ot/m)

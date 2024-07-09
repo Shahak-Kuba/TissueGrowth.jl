@@ -1,23 +1,23 @@
 function plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
     Lplot = CairoMakie.lines!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
-            colormap=cmap, linewidth=5)
+            colormap=cmap, linewidth=8)
     Splot = CairoMakie.scatter!(gaxmain, [u[index][:, 1]; u[index][1,1]].data, [u[index][:, 2]; u[index][1,2]].data, color=[var[index]; var[index][1]].data, colorrange=CRange,
-        colormap=cmap, markersize=6)
+        colormap=cmap, markersize=9)
     return Lplot,Splot
 end
 
 
 function animateResults2D(t, u, var, cmap, crange, cbarlabel, D, kf, filename)
-    txtSize = 35;
-    tickSize = 25;
+    txtSize = 45;
+    tickSize = 40;
     CRange = crange
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 800))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], limits=(-1.5, 1.5, -1.5, 1.5), aspect=DataAspect(), 
-            xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-            ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize,
-            title = "t = $(t[1])", titlesize = txtSize)
+    gaxmain = Axis(ga[1, 1], limits=(-200, 200, -200, 200), aspect=DataAspect(), 
+            xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+            ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize,
+            title = "t = $(t[1])days", titlesize = txtSize)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
             flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, 1)
@@ -33,7 +33,7 @@ function animateResults2D(t, u, var, cmap, crange, cbarlabel, D, kf, filename)
             index = frame
         end
         T = round(t[index];digits=2)
-        gaxmain.title="t = $T"
+        gaxmain.title="t = $T days"
         Lplot,Splot = plotInterfaceAnimation(gaxmain, u, var, cmap, CRange, index)
     end
 end

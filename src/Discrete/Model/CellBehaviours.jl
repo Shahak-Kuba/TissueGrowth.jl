@@ -111,7 +111,7 @@ A tuple containing three vectors representing the probabilities for proliferatio
 """
 function cell_probs(uᵢ,m,δt,prolif,death,embed,α,β,γ,kf)
     ρ = calc_cell_densities(uᵢ,m)
-    return (P(prolif,ρ,α).*δt, A(death,ρ,β).*δt, E(embed,ρ,kf,γ).*δt)
+    return (P(prolif,ρ,α).*δt, A(death,ρ,β).*δt, E(embed,ρ,kf*m,γ).*δt)
 end
 
 """

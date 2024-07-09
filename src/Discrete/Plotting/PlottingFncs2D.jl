@@ -9,8 +9,8 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
-              xlabel=L"x\text{ [\mu m]}", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel=L"y\text{ [\mu m]}", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
@@ -35,7 +35,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
     end
 
     #plotCellTrajectory!(gaxmain, u, m, 35, 3)
-    Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
+    CairoMakie.Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
     return f
 end
@@ -47,8 +47,8 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, 
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
-              xlabel=L"x\text{ [\mu m]}", xlabelsize = txtSize, xticklabelsize = tickSize, xticks = axisTicks,
-              ylabel=L"y\text{ [\mu m]}", ylabelsize = txtSize, yticklabelsize = tickSize, yticks = axisTicks)
+              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize, xticks = axisTicks,
+              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize, yticks = axisTicks)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
@@ -121,8 +121,8 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m,
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
-              xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
@@ -151,8 +151,8 @@ function plotStress2D_Quadrant(u, var, cmap, Crange, cbarlabel, axisLims)
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(0, axisLims[1], 0, axisLims[2]), aspect=DataAspect(), 
-              xlabel=L"\text{x [μm]}", xlabelsize = txtSize+10, xticklabelsize = txtSize,
-              ylabel=L"\text{y [μm]}", ylabelsize = txtSize+10, yticklabelsize = txtSize)
+              xlabel="x [μm]", xlabelsize = txtSize+10, xticklabelsize = txtSize,
+              ylabel="y [μm]", ylabelsize = txtSize+10, yticklabelsize = txtSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     lw = 5
     for index in eachindex(u)
@@ -182,14 +182,15 @@ function plotResults2D_embedded(u, var, cmap, crange, cbarlabel, D, kf, axisLims
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
-              xlabel="x", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     if multiInterfaces
-        for i in 1:9:size(u,1)
+        for i in 1:20:size(u,1)
             plotInterface!(gaxmain, u, var, cmap, CRange, i)
         end
+        plotInterface!(gaxmain, u, var, cmap, CRange, size(u,1))
     else
         plotInterface!(gaxmain, u, var, cmap, CRange, 1)
         plotInterface!(gaxmain, u, var, cmap, CRange, size(u,1))
