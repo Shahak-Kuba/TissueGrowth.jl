@@ -206,7 +206,7 @@ function u0SetUp(btype,R₀,N,dist_type,domain_type)
             w = Int64(N/12) + 1
             @views u0 .= position_vectors_polygon(vertices, w, dist_type)
         elseif btype == "PerturbedCircle"
-            #Random.seed!(36) # nice ones: 333
+            Random.seed!(2) # nice ones: 333
             R_Pert = 2*R₀;
             x_range_loess = LinRange(0,2π,150)
             # generating random numbers

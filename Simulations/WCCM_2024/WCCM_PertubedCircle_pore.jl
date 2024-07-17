@@ -56,5 +56,6 @@ save("WCCM_2024_PerturbedCircle_Ot_Plot.png",f)
 
 f2 = TissueGrowth.plotResults2D(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range,  "Density q μm⁻¹", (200,200), N, m, 20)
 
-f3 = TissueGrowth.plotResults2D_embedded(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "Density q μm⁻¹", D, kf, (200,200), embedded_cells, true)
+f3 = TissueGrowth.plotResults2D_embedded(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "q [1/μm]", D, kf, (200,200), embedded_cells, true)
 save("WCCM_2024_PerturbedCircle_Interface_Plot.png",f3)
+

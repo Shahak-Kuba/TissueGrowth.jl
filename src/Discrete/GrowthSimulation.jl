@@ -35,7 +35,7 @@ all_results = sim2D(N,m,R₀,D,l₀,kf,η,growth_dir,Tmax,δt,btypes,dist_type,
 function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,restoring_force,dist_type, 
                 prolif, death, embed, β, γ, Ot, event_δt, seed, NumSaveTimePoints)
 
-    Set_Random_Seed(seed)
+    #Set_Random_Seed(seed)
     M = Int(m*N) # total number of springs along the interface
     savetimes = LinRange(0, Tmax, NumSaveTimePoints)
     
@@ -62,6 +62,7 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
             @views btype = btypes[ii]
             prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
                                         growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type,restoring_force)
+            Set_Random_Seed(seed)                            
             @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
             push!(results, postSimulation(btype, sol, p))
             push!(embedded_cells_count, floor.(saved_values.saveval))
@@ -74,6 +75,7 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
             @views btype = btypes[ii]
             prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
                                         growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type,restoring_force)
+            Set_Random_Seed(seed)
             @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
             push!(results, postSimulation(btype, sol, p))
             push!(embedded_cells_count, floor.(saved_values.saveval))
@@ -90,7 +92,7 @@ end
 function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,restoring_force,dist_type, 
     prolif, death, embed, β, γ, Ot, event_δt, seed, NumSaveTimePoints, q_lim)
 
-        Set_Random_Seed(seed)
+        #Set_Random_Seed(seed)
         M = Int(m*N) # total number of springs along the interface
         savetimes = LinRange(0, Tmax, NumSaveTimePoints)
 
@@ -117,6 +119,7 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
                 @views btype = btypes[ii]
                 prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
                                             growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type,restoring_force)
+                Set_Random_Seed(seed)
                 @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
                 push!(results, postSimulation(btype, sol, p))
                 push!(embedded_cells_count, floor.(saved_values.saveval))
@@ -129,6 +132,7 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
                 @views btype = btypes[ii]
                 prob, p = SetupODEproblem(btype,M,m,R₀,kₛ,η,kf,l₀,δt,Tmax,
                                             growth_dir,domain_type,prolif,death,embed,β,γ,Ot,dist_type,restoring_force)
+                Set_Random_Seed(seed)
                 @time sol = solve(prob, RK4(), save_everystep = false, saveat=savetimes, dt=δt, dtmax = δt, callback = cbs)
                 push!(results, postSimulation(btype, sol, p))
                 push!(embedded_cells_count, floor.(saved_values.saveval))

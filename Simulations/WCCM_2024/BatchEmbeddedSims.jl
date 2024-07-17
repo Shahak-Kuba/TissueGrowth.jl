@@ -4,7 +4,7 @@ using Makie
 using Printf
 using BenchmarkTools
 
-BatchSize = 1000
+BatchSize = 50
 
 # See parameter approximation document
 # Calculating kf
@@ -46,12 +46,16 @@ event_δt = δt
 embedded_count_iteration_results = Vector{Int64}[]
 Ω_iteration_results = Vector{Float64}[]
 t = Vector{Float64}[]
+all_solutions = Vector{TissueGrowth.SimResults_t}[]
+all_embedded_cell_pos = Vector{Matrix{Float64}}[]
 
 
 @time for iteration = 1:BatchSize
     seed = iteration
-    sol, 🥔, embedded_cell_count = TissueGrowth.GrowthSimulation(N,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
+    sol, embedded_cell_pos, embedded_cell_count = TissueGrowth.GrowthSimulation(N,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
                     prolif, death, embed, α, β, Ot, event_δt, seed, 241);
+    push!(all_solutions, sol)
+    push!(all_embedded_cell_pos, embedded_cell_pos)
     push!(embedded_count_iteration_results, convert(Vector{Int64}, embedded_cell_count[1]))
     push!(Ω_iteration_results, sol[1].Ω[1] .- sol[1].Ω)
     if iteration == 1
@@ -77,3 +81,15 @@ Ot_average = reduce(vcat,sum(Ot_iteration_results_mat,dims=1)./size(Ot_iteration
 f = TissueGrowth.plotOtValueVsTime(t[1], Ot_average, Ot, min_Ot, max_Ot, m, σ_Ot)
 save("WCCM_2024_PerturbedCircle_Batch_Plot_$BatchSize.png",f)
 #f2 = TissueGrowth.plotOtValueVsTime(t[1], Ω_iteration_results[95], embedded_count_average, Ot/m)
+
+
+geo = 1
+diffusivity = 1
+
+Density_cmap =  :cool #:rainbow1
+Density_Range = (0.02,0.1)
+
+for iteration in 1:50
+    f = TissueGrowth.plotResults2D_embedded(all_solutions[iteration][1].u, all_solutions[iteration][1].Density, Density_cmap, Density_Range, "q [1/μm]", D, kf, (200,200), all_embedded_cell_pos[iteration], true)
+    save("WCCM_2024_Multi_embedded_$iteration.png",f)
+end

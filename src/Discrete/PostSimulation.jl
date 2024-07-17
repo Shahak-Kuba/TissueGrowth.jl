@@ -33,7 +33,7 @@ function PostCalcs1D(u, p)
     uᵢ₋₁[end,:] .= uᵢ₋₁[end,:] + [dom,0]
     uᵢ₊₁[1,:] .= uᵢ₊₁[1,:] - [dom,0]
 
-    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(u,uᵢ₋₁)))
+    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(u,uᵢ₋₁)))
     density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./(2*m)
     density[1] = density[2];
     density[end] = density[end - 1];
@@ -77,8 +77,8 @@ function PostCalcs2D(u, p)
     uᵢ₊₁ = circshift(u,1)
     uᵢ₋₁ = circshift(u,-1)
 
-    ∑F = diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(uᵢ₊₁,u))) + diag(Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) * transpose(τ(u,uᵢ₋₁)))
-    #diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀) + Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀)) * transpose(τ(uᵢ₊₁,uᵢ₋₁)))
+    ∑F = diag((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force))* transpose(τ(uᵢ₊₁,uᵢ₋₁)))
+    #diag(((Fₛ⁺(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force)) + (Fₛ⁻(u,uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force)) )* transpose(τ(uᵢ₊₁,uᵢ₋₁)))
     density = (ρ(uᵢ₊₁, u).+ρ(u, uᵢ₋₁))./(2*m)
     ψ = ∑F / (kₛ*l₀)
     Κ = κ(uᵢ₋₁,u,uᵢ₊₁)

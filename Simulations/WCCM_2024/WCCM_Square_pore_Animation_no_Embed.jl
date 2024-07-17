@@ -48,14 +48,21 @@ geo = 1
 diffusivity = 1
 
 Density_cmap =  :cool #:rainbow1
+Stress_cmap = :winter
 Density_Range = (0.02,0.1)
+Stress_Range = (1,2)
+
 filename = "WCCM_2024_squarePore.gif"
 #f = TissueGrowth.plotOtValueVsTime(sols2D[1].t, sols2D[1].Ω, embed_cell_count[1], Ot/m, m)
 #save("WCCM_2024_Square_Ot_Plot.png",f)
 
-f2 = TissueGrowth.plotResults2D(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [\text{μm^{-1}}]", (200,200), N, m, 20)
+#f2 = TissueGrowth.plotResults2D(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range,  "q [1/μm]", (200,200), N, m, 20)
 
 #f3 = TissueGrowth.plotResults2D_embedded(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, L"\text{Density} \; q \; [\text{μm^{-1}}]", D, kf, (200,200), embedded_cells, true)
 #save("WCCM_2024_Square_Interface_Plot.png",f3)
 
-TissueGrowth.animateResults2D(sols2D[1].t, sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "Cell density q", D[diffusivity], kf, filename)
+TissueGrowth.animateResults2D(sols2D[1].t, sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "q [1/μm]", D[diffusivity], kf, filename)
+
+
+f3 = TissueGrowth.plotResults2D(sols2D[1].u, sols2D[1].ψ, Stress_cmap, Stress_Range,  "σ/E [-]", (200,200), N, m, 18)
+save("WCCM_2024_Square_Stress_Plot.png",f3)

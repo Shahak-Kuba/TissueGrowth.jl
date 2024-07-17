@@ -9,8 +9,8 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], width=650, height=650,limits=(-axisLims[1], axisLims[1], -axisLims[2], axisLims[2]), aspect=DataAspect(), 
-              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="x [μm]", xlabelsize = txtSize, xticklabelsize = txtSize,
+              ylabel="y [μm]", ylabelsize = txtSize, yticklabelsize = txtSize)
               #title = "D = $D, kf = $kf", titlesize = txtSize)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
@@ -36,7 +36,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
 
     #plotCellTrajectory!(gaxmain, u, m, 35, 3)
     CairoMakie.Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
-        flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
+        flipaxis=false, label=cbarlabel, labelsize = tickSize, ticklabelsize = txtSize)
     return f
 end
 

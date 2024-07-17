@@ -10,12 +10,12 @@ function plotOtValueVsTime(t, Ω, embedded_cell_count, Ot, m)
         size=(850, 850))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], height = 650, width=650,
-              xlabel=L"t \; \text{[days]}", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel=L"Ot\;[#/\mu\text{m}^{2}]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="Ot [#/μm²]", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "Ot = $Ot", titlesize = txtSize)
     
-    Ot_line = CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)).*m, linewidth=3, linestyle = :dash, color = :black, label = L"\text{Ot value}")
-    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, y.*m, linewidth=5, color = :red, label = L"\text{Simulated Ot}")
+    Ot_line = CairoMakie.lines!(gaxmain, t, Ot.*ones(size(t)).*m, linewidth=3, linestyle = :dash, color = :black, label = "theory")
+    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, y.*m, linewidth=5, color = :red, label = "simulated")
     #Legend(f[1,1],[Ot_line,Sim_Ot_Line], ["Ot value", "Simulated Ot"])
     CairoMakie.xlims!(gaxmain,(0,t[end]))
     axislegend(gaxmain, merge = true, unique = true, labelsize=txtSize)
@@ -30,13 +30,13 @@ function plotOtValueVsTime(t, numerical_Ot, set_Ot, min_numerical_Ot, max_numeri
         size=(850, 850))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], height = 650, width=650,
-              xlabel=L"t\;\text{[days]}", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel=L"\text{Ot}\;[#/\mu\text{m}^{2}]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="Ot [#/μm²]", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "Ot = $set_Ot", titlesize = txtSize)
     
     Sim_Range = CairoMakie.band!(gaxmain, t, min_numerical_Ot, max_numerical_Ot, color=(:blue,0.2))
-    Ot_line = CairoMakie.lines!(gaxmain, t, set_Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black, label = L"\text{Set}\;Ot\;\text{value}")
-    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, numerical_Ot, linewidth=5, color = :red, label = L"\text{Simulated Ot}")
+    Ot_line = CairoMakie.lines!(gaxmain, t, set_Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black, label = "Ot value")
+    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, numerical_Ot, linewidth=5, color = :red, label = "Simulated Ot")
     CairoMakie.xlims!(gaxmain,(0,t[end]))
     CairoMakie.ylims!(gaxmain,(0,2*set_Ot))
     #Legend(f[1,2],[Ot_line,Sim_Ot_Line], ["Ot value", "Simulated Ot"])
@@ -52,19 +52,19 @@ function plotOtValueVsTime(t, numerical_Ot, set_Ot, min_numerical_Ot, max_numeri
         size=(850, 850))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], height = 600, width=600,
-              xlabel=L"t\;\text{[days]}", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel=L"\text{Ot}\;[#/\mu\text{m}^{2}]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+              ylabel="Ot [#/μm²]", ylabelsize = txtSize, yticklabelsize = tickSize)
               #title = "Ot = $set_Ot", titlesize = txtSize)
     
-    Sim_Range = CairoMakie.band!(gaxmain, t, min_numerical_Ot, max_numerical_Ot, color=(:blue,0.2))
-    Ot_line = CairoMakie.lines!(gaxmain, t, set_Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black, label = L"\text{Set}\;Ot\;\text{value}")
-    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, numerical_Ot, linewidth=5, color = :red, label = L"\text{Simulated Ot}")
+    #Sim_Range = CairoMakie.band!(gaxmain, t, min_numerical_Ot, max_numerical_Ot, color=(:blue,0.2))
+    Ot_line = CairoMakie.lines!(gaxmain, t, set_Ot.*ones(size(t)), linewidth=3, linestyle = :dash, color = :black, label = "Theory")
+    Sim_Ot_Line = CairoMakie.lines!(gaxmain, t, numerical_Ot, linewidth=5, color = :red, label = "Simulated")
     std_upper = CairoMakie.lines!(gaxmain, t, numerical_Ot .+ std_Ot, linewidth=5, color = :black)
     std_lower = CairoMakie.lines!(gaxmain, t, numerical_Ot .- std_Ot, linewidth=5, color = :black)
     CairoMakie.xlims!(gaxmain,(0,t[end]))
     CairoMakie.ylims!(gaxmain,(0,2*set_Ot))
     #Legend(f[1,2],[Ot_line,Sim_Ot_Line], ["Ot value", "Simulated Ot"])
-    axislegend(gaxmain, merge = true, unique = true, labelsize=txtSize)
+    axislegend(gaxmain, merge = true, unique = true, labelsize=35)
     return f
 end
 
