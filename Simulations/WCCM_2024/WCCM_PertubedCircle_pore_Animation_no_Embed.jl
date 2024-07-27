@@ -14,7 +14,7 @@ P = l*4
 q₀ = 1/20; 
 N = 50 #Int(P*q₀) # number of cells
 kf = KF/N
-l_min = 5
+l_min = 10
 l_max = 20
 
 
@@ -24,7 +24,7 @@ R₀ = 80 #282.095  # shape radius μm
 D = 0.00
 kₛ = 1
 Kₛ = 15
-l₀ = 10
+l₀ = 15
 L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
@@ -52,14 +52,8 @@ diffusivity = 1
 Density_cmap =  :cool #:rainbow1
 Stress_cmap = :winter
 Density_Range = (0.02,0.1)
-Stress_Range = (-0.1,0.1)
-#f = TissueGrowth.plotOtValueVsTime(sols2D[1].t, sols2D[1].Ω, embed_cell_count[1], Ot/m, m)
-#save("WCCM_2024_PerturbedCircle_Ot_Plot.png",f)
+Stress_Range = (-0.05,0.05)
 
-#f2 = TissueGrowth.plotResults2D(sols2D[1].u, sols2D[1].ψ./maximum(maximum(sols2D[1].ψ)), Stress_cmap, Stress_Range,  L"\text{Stress} \; σ/E \; [\text{-}]", (200,200), N, m, 20)
-
-#f3 = TissueGrowth.plotResults2D_embedded(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, L"\text{Density} \; q \; [\text{μm^{-1}}]", D, kf, (200,200), embedded_cells, true)
-#save("WCCM_2024_PerturbedCircle_Interface_Plot.png",f3)
 filename = "WCCM_2024_haversianPore_no_Embed.gif"
 TissueGrowth.animateResults2D(sols2D[1].t, sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "q [1/μm]", D[diffusivity], kf, filename)
 

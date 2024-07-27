@@ -2,7 +2,7 @@ using TissueGrowth
 using Makie
 
 # set random seed number for reproducability 
-seed = 2
+seed = 42
 
 # See parameter approximation document
 # Calculating kf
@@ -14,7 +14,7 @@ P = l*4
 q₀ = 1/20; 
 N = 50 #Int(P*q₀) # number of cells
 kf = KF/N
-l_min = 5
+l_min = 10
 l_max = 20
 
 
@@ -23,8 +23,8 @@ m = 6 # number of springs per cell
 R₀ = 75 #282.095  # shape radius μm
 D = 0.00
 kₛ = 1
-Kₛ = 5
-l₀ = 10.0
+Kₛ = 15
+l₀ = 15.0
 L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"

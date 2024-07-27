@@ -41,6 +41,7 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
     
     # for cell embedment 
     global embedded_cells = []
+    global cell_embedment_times = []
     embedded_cells_count = []
 
     #all_results = Vector{Vector{SimResults_t}}(undef, 0)
@@ -83,7 +84,7 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
         end
     end
 
-    return results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
+    return results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count, cell_embedment_times
 
 end
 
@@ -98,6 +99,7 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
 
         # for cell embedment 
         global embedded_cells = []
+        global cell_embedment_times = []
         embedded_cells_count = []
 
         all_results = Vector{Vector{SimResults_t}}(undef, 0)
@@ -140,6 +142,6 @@ function GrowthSimulation(N,m,R₀,D,kₛ,l₀,kf,η,growth_dir,domain_type,Tmax
             end
         end
 
-        return results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count
+        return results, convert_matrix(hcat(embedded_cells...),m+1), embedded_cells_count, cell_embedment_times
 
 end

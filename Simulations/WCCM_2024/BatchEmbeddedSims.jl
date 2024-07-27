@@ -4,7 +4,7 @@ using Makie
 using Printf
 using BenchmarkTools
 
-BatchSize = 50
+BatchSize = 1000
 
 # See parameter approximation document
 # Calculating kf
@@ -25,7 +25,7 @@ m = 6 # number of springs per cell
 R₀ = 75 #282.095  # shape radius μm
 D = 0.00
 kₛ = 1
-Kₛ = 5
+Kₛ = 15
 l₀ = 10.0
 L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
 η = 1.0 
@@ -89,7 +89,7 @@ diffusivity = 1
 Density_cmap =  :cool #:rainbow1
 Density_Range = (0.02,0.1)
 
-for iteration in 1:50
-    f = TissueGrowth.plotResults2D_embedded(all_solutions[iteration][1].u, all_solutions[iteration][1].Density, Density_cmap, Density_Range, "q [1/μm]", D, kf, (200,200), all_embedded_cell_pos[iteration], true)
-    save("WCCM_2024_Multi_embedded_$iteration.png",f)
-end
+#for iteration in 1:50
+#    f = TissueGrowth.plotResults2D_embedded(all_solutions[iteration][1].u, all_solutions[iteration][1].Density, Density_cmap, Density_Range, "q [1/μm]", D, kf, (200,200), all_embedded_cell_pos[iteration], true)
+#    save("WCCM_2024_Multi_embedded_$iteration.png",f)
+#end
