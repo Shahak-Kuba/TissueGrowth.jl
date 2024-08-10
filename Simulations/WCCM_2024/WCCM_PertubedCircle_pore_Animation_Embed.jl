@@ -23,7 +23,7 @@ m = 6 # number of springs per cell
 R₀ = 75 #282.095  # shape radius μm
 D = 0.00
 kₛ = 1
-Kₛ = 30
+Kₛ = 50
 l₀ = 10.0
 L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
 η = 1.0 
@@ -58,5 +58,10 @@ Density_Range = (0.02,0.10)
 
 f3 = TissueGrowth.plotResults2D_embedded(sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, L"\text{Density} \; q \; [\text{μm^{-1}}]", D, kf, (200,200), embedded_cells, true)
 #save("WCCM_2024_PerturbedCircle_Interface_Plot.png",f3)
-filename = "WCCM_2024_haversianPore.gif"
-TissueGrowth.animateResults2D(sols2D[1].t, sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "q [1/μm]", filename, embedded_cells, embed_times)
+filename = "Embedding_haversianPore_Mid.gif"
+#TissueGrowth.animateResults2D(sols2D[1].t, sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "q [1/μm]", filename, embedded_cells, embed_times)
+f = TissueGrowth.plotOtValueVsTime(sols2D[1].t, sols2D[1].Ω, embed_cell_count[1], Ot, m)
+Ot_sim = embed_cell_count[1]./(sols2D[1].Ω[1] .- sols2D[1].Ω)
+Ot_sim[1] = 0.0
+filename2 = "haversianPore_Ot_vs_time.gif"
+TissueGrowth.animateOt(sols2D[1].t, Ot_sim, Ot, filename2)

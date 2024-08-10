@@ -74,3 +74,29 @@ function plotEmbeddedCells!(gaxmain, embedded_cell_pos)
         CairoMakie.lines!(gaxmain, cell[1,:], cell[2,:],color=:black,linewidth=8)
     end
 end
+
+function animateOt(t, Ot, exptected_Ot, filename)
+    txtSize = 45;
+    tickSize = 40;
+    f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
+        size=(1000, 1000))
+    ga = f[1, 1] = GridLayout()
+    gaxmain = Axis(ga[1, 1], limits=(0, t[end], 0, 2*exptected_Ot), 
+            xlabel="t [days]", xlabelsize = txtSize, xticklabelsize = tickSize,
+            ylabel="Ot [#/μm²]", ylabelsize = txtSize, yticklabelsize = tickSize,
+            title = "t = $(t[1])days", titlesize = txtSize)
+
+    CairoMakie.lines!(gaxmain, t,exptected_Ot.*ones(size(t)),color=:black, linewidth=7, linestyle = :dash)
+
+    frames = 2:length(t)+50
+    record(f,filename,frames; framerate = 10) do frame
+        if frame > length(t)
+            index = length(t)
+        else
+            index = frame
+        end
+        T = round(t[index];digits=2)
+        gaxmain.title="t = $T days"
+        CairoMakie.lines!(gaxmain, t[1:index],Ot[1:index],color=:red, linewidth=7)
+    end
+end

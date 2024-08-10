@@ -39,12 +39,12 @@ Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution = ComparisonSim(N
 indicies = [1,1,5,5,11,11]
 num_cols = 2
 f1 = TissueGrowth.DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)
-save("m_springs_compare.png",f1)
+save("m_springs_compare.pdf",f1)
 
 Density_cmap =  :cool #:rainbow1
 Density_Range = (0.05,0.15)
 
 f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [\text{μm^{-1}}]", (60,60), N, m1, 10)
-save("Square_infill_m1_springs.png",f2)
+save("Square_infill_m1_springs.pdf",f2)
 f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [\text{μm^{-1}}]", (60,60), N, m2, 10)
-save("Square_infill_m2_springs.png",f3)
+save("Square_infill_m2_springs.pdf",f3)

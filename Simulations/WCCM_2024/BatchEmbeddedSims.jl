@@ -4,7 +4,7 @@ using Makie
 using Printf
 using BenchmarkTools
 
-BatchSize = 1000
+BatchSize = 50
 
 # See parameter approximation document
 # Calculating kf
@@ -89,7 +89,7 @@ diffusivity = 1
 Density_cmap =  :cool #:rainbow1
 Density_Range = (0.02,0.1)
 
-#for iteration in 1:50
-#    f = TissueGrowth.plotResults2D_embedded(all_solutions[iteration][1].u, all_solutions[iteration][1].Density, Density_cmap, Density_Range, "q [1/μm]", D, kf, (200,200), all_embedded_cell_pos[iteration], true)
-#    save("WCCM_2024_Multi_embedded_$iteration.png",f)
-#end
+for iteration in 1:30
+    f = TissueGrowth.plotResults2D_embedded(all_solutions[iteration][1].u, all_solutions[iteration][1].Density, Density_cmap, Density_Range, "q [1/μm]", D, kf, (200,200), all_embedded_cell_pos[iteration], true)
+    save("WCCM_2024_Multi_embedded_$iteration.pdf",f)
+end
