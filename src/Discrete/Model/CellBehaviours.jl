@@ -111,7 +111,7 @@ A tuple containing three vectors representing the probabilities for proliferatio
 """
 function cell_probs(uᵢ,m,δt,prolif,death,embed,α,β,γ,kf)
     ρ = calc_cell_densities(uᵢ,m)
-    return (P(prolif,ρ,α).*δt, A(death,ρ,β).*δt, E(embed,ρ,kf,γ).*δt)
+    return (P(prolif,ρ,α).*δt, A(death,ρ,β).*δt, E(embed,ρ,kf*m,γ).*δt)
 end
 
 """
@@ -180,9 +180,7 @@ function event_affect!(integrator)
             idx = find_cell_index(e, r3 * sum(e))
             # converting back to spring index
             spring_index = idx*m - (m-1)
-            #println("embedded at: ",idx)
-            store_embedded_cell(u, spring_index, m)
-
+            store_embedded_cell(u, spring_index, m, integrator.t)
             for i = spring_index:(spring_index + m)-1
                 deleteat!(u,spring_index)
             end
@@ -213,7 +211,9 @@ function store_embed_cell_pos(pos)
     return nothing
 end
 
-function store_embedded_cell(u, idx, m)
+function store_embedded_cell(u, idx, m, t)
+    global cell_embedment_times
+    push!(cell_embedment_times, t)
     for i = idx:idx+m
         if i > size(u,2)
             store_embed_cell_pos(u[:,1].data)
@@ -221,6 +221,7 @@ function store_embedded_cell(u, idx, m)
             store_embed_cell_pos(u[:,i].data)
         end
     end
+
     return nothing
 end
 

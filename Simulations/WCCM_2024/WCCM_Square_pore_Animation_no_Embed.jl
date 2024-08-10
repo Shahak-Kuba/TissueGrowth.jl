@@ -51,7 +51,10 @@ Density_cmap =  :cool #:rainbow1
 Stress_cmap = :winter
 Density_Range = (0.02,0.1)
 Stress_Range = (-0.05,0.05)
-filename = "squarePore.gif"
 
-# making Animation
+filename = "WCCM_2024_squarePore.gif"
 TissueGrowth.animateResults2D(sols2D[1].t, sols2D[1].u, sols2D[1].Density, Density_cmap, Density_Range, "q [1/μm]", filename)
+
+
+f3 = TissueGrowth.plotResults2D(sols2D[1].u, sols2D[1].ψ, Stress_cmap, Stress_Range,  "σ/E [-]", (200,200), N, m, 18)
+save("WCCM_2024_Square_Stress_Plot.png",f3)
