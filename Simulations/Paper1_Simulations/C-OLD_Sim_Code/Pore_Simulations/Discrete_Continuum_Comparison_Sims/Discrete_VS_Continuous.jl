@@ -38,18 +38,25 @@ Discrete_Solution_m1, Discrete_Solution_m2, Continuum_Solution = ComparisonSim(N
 indicies = [1,1,5,5,11,11]
 num_cols = 2
 f1 = TissueGrowth.DiscVSContDensity_plot_all(Discrete_Solution_m1, m1, Discrete_Solution_m2, m2, Continuum_Solution, indicies, num_cols)
-save("m_springs_compare.png",f1)
+save("m_springs_compare.pdf",f1)
+
+θ_cont,r_cont,ρ_cont = Continuum_Solution;
+θ_disc,r_disc,ρ_disc = Convert_Discrete_Data(Discrete_Solution_m1,m1);
+
+test = (θ_disc[1,:] + circshift(θ_disc[1,:],-1))/2
+test[end] = θ_disc[1,end]
+findall.(round.(θ_cont,digits=2) == round.(test,digits=2))
 
 Density_cmap =  :cool #:rainbow1
 Density_Range = (0.05,0.15)
 
 f2 = TissueGrowth.plotResults2D(Discrete_Solution_m1.u, Discrete_Solution_m1.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (60,60), N, m1, 10)
-save("Square_infill_m1_springs.png",f2)
+save("Square_infill_m1_springs2.pdf",f2)
 f3 = TissueGrowth.plotResults2D(Discrete_Solution_m2.u, Discrete_Solution_m2.Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; [1/\text{μm}]", (60,60), N, m2, 10)
-save("Square_infill_m2_springs.png",f3)
+save("Square_infill_m2_springs2.pdf",f3)
 cmap = :jet
 xbound = 60
 ybound = 60
 Cbar_min = 0
 Cbar_max = 10
-f2 = DiscVSContShape_plot(Discrete_Solution_m1, m1, Continuum_Solution, xbound, ybound, cmap, Cbar_min, Cbar_max)
+#f2 = DiscVSContShape_plot(Discrete_Solution_m1, m1, Continuum_Solution, xbound, ybound, cmap, Cbar_min, Cbar_max)

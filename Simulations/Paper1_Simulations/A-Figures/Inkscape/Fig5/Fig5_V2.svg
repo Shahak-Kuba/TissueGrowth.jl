@@ -10,7 +10,7 @@
    xml:space="preserve"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
    sodipodi:docname="Fig5_V2.svg"
-   inkscape:export-filename="Fig5_V2.pdf"
+   inkscape:export-filename="Fig5_V2.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -18,7 +18,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:ns8="http://www.iki.fi/pav/software/textext/"><sodipodi:namedview
+   xmlns:ns14="http://www.iki.fi/pav/software/textext/"><sodipodi:namedview
      id="namedview1"
      pagecolor="#ffffff"
      bordercolor="#999999"
@@ -34,7 +34,7 @@
      inkscape:cy="144.11195"
      inkscape:window-width="1920"
      inkscape:window-height="1052"
-     inkscape:window-x="1920"
+     inkscape:window-x="0"
      inkscape:window-y="28"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer2"
@@ -2500,17 +2500,17 @@
   </g>
 </g><g
        transform="matrix(0.705556,0,0,0.705556,29.805778,-3.6986189)"
-       ns8:version="1.10.2"
-       ns8:texconverter="pdflatex"
-       ns8:pdfconverter="inkscape"
-       ns8:text="$k/\\eta = 0.01$"
-       ns8:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
-       ns8:scale="2.0"
-       ns8:alignment="middle center"
-       ns8:stroke-to-path="0"
-       ns8:inkscapeversion="1.3.2"
+       ns14:version="1.10.2"
+       ns14:texconverter="pdflatex"
+       ns14:pdfconverter="inkscape"
+       ns14:text="$k/\\eta = 0.01$"
+       ns14:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
+       ns14:scale="2.0"
+       ns14:alignment="middle center"
+       ns14:stroke-to-path="0"
+       ns14:inkscapeversion="1.3.2"
        id="g6255"
-       ns8:jacobian_sqrt="0.705556"><defs
+       ns14:jacobian_sqrt="0.705556"><defs
    id="id-80140448-1ff8-4090-8073-0678e2616c2d">
     <g
    id="id-e30bba7e-10b3-4ac5-b234-46430e6611bc">
@@ -2566,17 +2566,17 @@
   
 </g></g><g
      transform="matrix(0.529167,0,0,0.529167,29.538246,1.2844614)"
-     ns8:version="1.10.2"
-     ns8:texconverter="pdflatex"
-     ns8:pdfconverter="inkscape"
-     ns8:text="$k_{1}/\\eta = 0.01$"
-     ns8:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
-     ns8:scale="1.5"
-     ns8:alignment="middle center"
-     ns8:stroke-to-path="0"
-     ns8:inkscapeversion="1.3.2"
+     ns14:version="1.10.2"
+     ns14:texconverter="pdflatex"
+     ns14:pdfconverter="inkscape"
+     ns14:text="$k_{1}/\\eta = 0.01$"
+     ns14:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
+     ns14:scale="1.5"
+     ns14:alignment="middle center"
+     ns14:stroke-to-path="0"
+     ns14:inkscapeversion="1.3.2"
      id="g1798"
-     ns8:jacobian_sqrt="0.529167"><defs
+     ns14:jacobian_sqrt="0.529167"><defs
    id="id-2219ce24-fa38-453d-b0f4-2e04ef24944b">
     <g
    id="id-8f0389d7-d43e-4981-976c-39c9cd937df8">
@@ -2719,17 +2719,17 @@
       </g></g>
 </g><g
      transform="matrix(0.529167,0,0,0.529167,89.664408,0.58803002)"
-     ns8:version="1.10.2"
-     ns8:texconverter="pdflatex"
-     ns8:pdfconverter="inkscape"
-     ns8:text="$k_{1}/\\eta = 1$"
-     ns8:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
-     ns8:scale="1.5"
-     ns8:alignment="middle center"
-     ns8:stroke-to-path="0"
-     ns8:inkscapeversion="1.3.2"
+     ns14:version="1.10.2"
+     ns14:texconverter="pdflatex"
+     ns14:pdfconverter="inkscape"
+     ns14:text="$k_{1}/\\eta = 1$"
+     ns14:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
+     ns14:scale="1.5"
+     ns14:alignment="middle center"
+     ns14:stroke-to-path="0"
+     ns14:inkscapeversion="1.3.2"
      id="g2368"
-     ns8:jacobian_sqrt="0.529167"><defs
+     ns14:jacobian_sqrt="0.529167"><defs
    id="id-7314c36b-dcf2-4f9b-82ef-e11f46644a41">
     <g
    id="id-f22dca67-6e02-4fb6-8d27-e8b5c4e25a10">
@@ -2833,17 +2833,17 @@
       </g></g>
 </g><g
      transform="matrix(0.529167,0,0,0.529167,147.48356,0.58803002)"
-     ns8:version="1.10.2"
-     ns8:texconverter="pdflatex"
-     ns8:pdfconverter="inkscape"
-     ns8:text="$k_{1}/\\eta = 100$"
-     ns8:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
-     ns8:scale="1.5"
-     ns8:alignment="middle center"
-     ns8:stroke-to-path="0"
-     ns8:inkscapeversion="1.3.2"
+     ns14:version="1.10.2"
+     ns14:texconverter="pdflatex"
+     ns14:pdfconverter="inkscape"
+     ns14:text="$k_{1}/\\eta = 100$"
+     ns14:preamble="/Users/shahakmac/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions/textext/default_packages.tex"
+     ns14:scale="1.5"
+     ns14:alignment="middle center"
+     ns14:stroke-to-path="0"
+     ns14:inkscapeversion="1.3.2"
      id="g5726"
-     ns8:jacobian_sqrt="0.529167"><defs
+     ns14:jacobian_sqrt="0.529167"><defs
    id="id-02e97378-cedb-4018-9610-5916294d5741">
     <g
    id="id-1c49b315-f7dc-4b43-a573-0bd16ad71292">

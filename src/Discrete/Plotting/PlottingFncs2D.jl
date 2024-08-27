@@ -15,7 +15,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
     for i in 1:Interface_Step:size(u,1)
-        plotInterface!(gaxmain, u, var, cmap, CRange, i, 4)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i, 5)
     end
 
     plot_cell_traj = false # User set
@@ -24,13 +24,23 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
-    show_initial_boundaries = false
+    show_initial_boundaries = true
     if show_initial_boundaries
         #plotting spring boundaries
         CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)
         #plotting cell boundaries
         for ii in 1:m:size(u[1],1)
             CairoMakie.scatter!(gaxmain, u[1][ii, 1], u[1][ii, 2], color="black", marker=:xcross,markersize=25)
+        end
+    end
+
+    show_final_boundaries = true
+    if show_final_boundaries
+        #plotting spring boundaries
+        #CairoMakie.scatter!(gaxmain, [u[end][:, 1]; u[end][1,1]].data, [u[end][:, 2]; u[end][1,2]].data, color="grey", markersize=15)
+        #plotting cell boundaries
+        for ii in 1:m:size(u[1],1)
+            CairoMakie.scatter!(gaxmain, u[end][ii, 1], u[end][ii, 2], color="black", marker=:xcross,markersize=25)
         end
     end
 
@@ -62,13 +72,23 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, 
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
-    show_initial_boundaries = false
+    show_initial_boundaries = true
     if show_initial_boundaries
         #plotting spring boundaries
         CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)
         #plotting cell boundaries
         for ii in 1:m:size(u[1],1)
             CairoMakie.scatter!(gaxmain, u[1][ii, 1], u[1][ii, 2], color="black", marker=:xcross,markersize=25)
+        end
+    end
+
+    show_final_boundaries = true
+    if show_final_boundaries
+        #plotting spring boundaries
+        CairoMakie.scatter!(gaxmain, [u[end][:, 1]; u[end][1,1]].data, [u[end][:, 2]; u[end][1,2]].data, color="grey", markersize=15)
+        #plotting cell boundaries
+        for ii in 1:m:size(u[1],1)
+            CairoMakie.scatter!(gaxmain, u[end][ii, 1], u[end][ii, 2], color="black", marker=:xcross,markersize=25)
         end
     end
 
@@ -79,7 +99,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, 
 end
 
 function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, xTicks, yTicks, N, m, NoI, 
-    show_cell_traj, show_initial_boundaries)
+    show_cell_traj, show_initial_boundaries, show_final_boundaries)
     txtSize = 40;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
@@ -108,6 +128,15 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, xTicks, yTicks
             CairoMakie.scatter!(gaxmain, u[1][ii, 1], u[1][ii, 2], color="black", marker=:xcross,markersize=25)
         end
     end
+
+    if show_final_boundaries
+        #plotting spring boundaries
+        CairoMakie.scatter!(gaxmain, [u[end][:, 1]; u[end][1,1]].data, [u[end][:, 2]; u[end][1,2]].data, color="grey", markersize=15)
+        #plotting cell boundaries
+        for ii in 1:m:size(u[1],1)
+            CairoMakie.scatter!(gaxmain, u[end][ii, 1], u[end][ii, 2], color="black", marker=:xcross,markersize=25)
+        end
+    end
     
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30,
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)
@@ -131,11 +160,11 @@ function plotResults2D_Quadrant(u, var, cmap, crange, cbarlabel, axisLims, N, m,
     end
 
     if u[1][1,2] == 0
-        for i in 2:5:95
+        for i in 2:5:50
             plotCellTrajectory!(gaxmain, u, m, i, 5)
         end
     else
-        for i in 1:5:95
+        for i in 1:5:50
             plotCellTrajectory!(gaxmain, u, m, i, 5)
         end
     end
@@ -285,7 +314,7 @@ function plotMultiAreaVsTime(t_discrete, Ω_large_square, Ω_large_hex, Ω_mid_s
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(900, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(0,24,0,1000000),
+    gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(0,24,0,1500000),
                     xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
                     ylabel="Ω [μm²]", ylabelsize = txtSize, yticklabelsize = tickSize)
     

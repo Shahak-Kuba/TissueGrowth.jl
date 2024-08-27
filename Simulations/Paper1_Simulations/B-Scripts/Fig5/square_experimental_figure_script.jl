@@ -57,7 +57,7 @@ Stress_cmap = :winter
 
 geo = 1
 
-Density_Range = (0.05,0.2)
+Density_Range = (0.05,0.1)
 Stress_Range_Hookean = (-2, 2)
 Stress_Range_Nonlinear = (20, 50)
 
@@ -67,10 +67,10 @@ f1_hookean = TissueGrowth.plotResults2D_Quadrant(sol_hookean[geo].u, sol_hookean
 f1_nonlinear = TissueGrowth.plotResults2D_Quadrant(sol_nonlinear[geo].u, sol_nonlinear[geo].Density, Density_cmap, Density_Range,  L"q \; \text{[μm^{-1}]}", (280,280), N, m, 10)
 #f2_nonlinear = TissueGrowth.plotStress2D_Quadrant(sol_nonlinear[geo].u, sol_nonlinear[geo].ψ, Stress_cmap, Stress_Range_Nonlinear, L"σ/E \; \text{[-]}", (280,280))
 
-save("square_hookean_cell_traj.pdf", f1_hookean)
+save("square_hookean_cell_traj.png", f1_hookean)
 #save("square_hookean_stress.png", f2_hookean)
 
-save("square_nonlinear_cell_traj.pdf", f1_nonlinear)
+save("square_nonlinear_cell_traj.png", f1_nonlinear)
 #save("square_nonlinear_stress.png", f2_nonlinear)
 
 

@@ -121,13 +121,12 @@ sol_nonlinear_hex_ρ_1000, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N_hex_1000
 
 
 
-f = TissueGrowth.plotMultiAreaVsTime(sol_nonlinear_500[1].t,sol_nonlinear_1000[1].Ω,sol_nonlinear_1000[2].Ω,sol_nonlinear_750[1].Ω,sol_nonlinear_750[2].Ω,sol_nonlinear_500[1].Ω,sol_nonlinear_500[2].Ω,N3,N2,N1,kf,
-                                        sol_nonlinear_hex_ρ_500[1].Ω, sol_nonlinear_hex_ρ_750[1].Ω, sol_nonlinear_hex_ρ_1000[1].Ω)
+f = TissueGrowth.plotMultiAreaVsTime(sol_nonlinear_500[1].t,sol_nonlinear_1000[1].Ω,sol_nonlinear_1000[2].Ω,sol_nonlinear_750[1].Ω,sol_nonlinear_750[2].Ω,sol_nonlinear_500[1].Ω,sol_nonlinear_500[2].Ω,N3,N2,N1,kf)
 save("fig8_area_compare.png", f)
 
-∇_500 = (sol_nonlinear_500[1].Ω[end] - sol_nonlinear_500[1].Ω[1])/Tmax
-∇_750 = (sol_nonlinear_750[1].Ω[end] - sol_nonlinear_750[1].Ω[1])/Tmax
-∇_1000 = (sol_nonlinear_1000[1].Ω[end] - sol_nonlinear_1000[1].Ω[1])/Tmax
+∇_500 = ((sol_nonlinear_500[1].Ω[end] - sol_nonlinear_500[1].Ω[1])/Tmax)/N1
+∇_750 = ((sol_nonlinear_750[1].Ω[end] - sol_nonlinear_750[1].Ω[1])/Tmax)/N2
+∇_1000 = ((sol_nonlinear_1000[1].Ω[end] - sol_nonlinear_1000[1].Ω[1])/Tmax)/N3
 
 
 # Time to bridge based on side length

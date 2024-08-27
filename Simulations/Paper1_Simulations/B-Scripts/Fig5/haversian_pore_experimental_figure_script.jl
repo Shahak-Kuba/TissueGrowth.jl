@@ -16,30 +16,44 @@ l_min = 5
 l_max = 20
 
 # set random seed number for reproducability 
-seed = 99
+seed = 2
+
+# See parameter approximation document
+# Calculating kf
+KF = 8784.2;
+Tb = 28.46
+l = 500;
+Ω₀ = l^2
+P = l*4
+q₀ = 1/20; 
+N = 50 #Int(P*q₀) # number of cells
+kf = KF/N
+l_min = 10
+l_max = 20
 
 
 # setting up simulation parameters
 m = 2 # number of springs per cell
-R₀ = 282.095  # shape radius μm
+R₀ = 80 #282.095  # shape radius μm
 D = 0.00
-kₛ = 7.5
-Kₛ = kₛ / 0.2^2
-l₀ = 10.0
-L₀ = ((l_max - l_min)/((ks/Ks)*((l_max^2 - l_min^2)/2 + a_hookean*(l_min - l_max)) - log(l_min/l_max)))
+kₛ = 1
+Kₛ = 15
+l₀ = 15
+L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "2D"
-Tmax = 24 # days
+Tmax = 8 # days
 δt = 0.01
-btypes = ["circle"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
+btypes = ["PerturbedCircle"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 q_lim = 0.2
 ρ_lim = q_lim * m
+restoring_force = "nonlinear"
 
 ## Cell Behaviours
 prolif = false; death = false; embed = false;
-α = 0.0;        β = 0.0;      Ot = 0.0;
+α = 0.0;        β = 0.0;      Ot = 0.003;
 event_δt = δt
 
 # 2D simulations
@@ -58,16 +72,16 @@ Density_Range = (0.05,0.2)
 Stress_Range_Hookean = (-2, 2)
 Stress_Range_Nonlinear = (-2, 2)
 
-f1_hookean = TissueGrowth.plotResults2D_Quadrant(sol_hookean[geo].u, sol_hookean[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", (300,300), N, m, 10)
+f1_hookean = TissueGrowth.plotResults2D_Quadrant(sol_hookean[geo].u, sol_hookean[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", (180,160), N, m, 10)
 #f2_hookean = TissueGrowth.plotStress2D_Quadrant(sol_hookean[geo].u, sol_hookean[geo].ψ, Stress_cmap, Stress_Range_Hookean, L"σ/E \; \text{[-]}", (300,300))
 
-f1_nonlinear = TissueGrowth.plotResults2D_Quadrant(sol_nonlinear[geo].u, sol_nonlinear[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", (300,300), N, m, 10)
+f1_nonlinear = TissueGrowth.plotResults2D_Quadrant(sol_nonlinear[geo].u, sol_nonlinear[geo].Density, Density_cmap, Density_Range,  L"\text{Density} \; q \; \text{[1/μm]}", (180,160), N, m, 10)
 #f2_nonlinear = TissueGrowth.plotStress2D_Quadrant(sol_nonlinear[geo].u, sol_nonlinear[geo].ψ, Stress_cmap, Stress_Range_Nonlinear, L"σ/E \; \text{[-]}", (300,300))
 
-save("circle_hookean_cell_traj.png", f1_hookean)
+save("haversianPore_hookean_cell_traj.pdf", f1_hookean)
 #save("circle_hookean_stress.png", f2_hookean)
 
-save("circle_nonlinear_cell_traj.png", f1_nonlinear)
+save("haversianPore_nonlinear_cell_traj.pdf", f1_nonlinear)
 #save("circle_nonlinear_stress.png", f2_nonlinear)
 
 
