@@ -4,7 +4,7 @@ include("../../C-OLD_Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sim
 include("../../C-OLD_Sim_Code/Pore_Simulations/Discrete_Continuum_Comparison_Sims/ComparisonPlottingFncs.jl")
 
 # Shared variables
-R₀ = 56.41895835477563
+R₀ = 56.41895835477563;
 D_array = [1, 100, 10000];
 kf = 87.84;
 growth_dir = "inward";

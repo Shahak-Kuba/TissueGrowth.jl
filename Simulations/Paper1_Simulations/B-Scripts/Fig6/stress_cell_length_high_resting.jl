@@ -26,8 +26,9 @@ R₀ = 282.095  # shape radius μm
 D = 0.00
 kₛ = 7.5
 Kₛ = 100
-l₀ = 15.0
-L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
+l₀ = 15
+#L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_max)) - log(l_min/l_max)))
+L₀ = l₀ 
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "2D"
@@ -61,8 +62,8 @@ Density_cmap =  :cool #:rainbow1
 Stress_cmap = :winter 
 
 geo = 1
-Stress_Range_Hookean = (-1, 1)
-Stress_Range_Nonlinear = (-1, 1)
+Stress_Range_Hookean = (-0.1, 0.1)
+Stress_Range_Nonlinear = (-0.01, 0.01)
 
 f_length_Hookean = TissueGrowth.plotForceLawCompareStairs(sol_hookean[geo].Density, sol_hookean[geo].t,1)
 f2_hookean = TissueGrowth.plotStress2D_Quadrant(sol_hookean2[geo].u, sol_hookean2[geo].ψ, Stress_cmap, Stress_Range_Hookean, L"σ/E \; \text{[-]}", (300,300))
@@ -70,8 +71,8 @@ f2_hookean = TissueGrowth.plotStress2D_Quadrant(sol_hookean2[geo].u, sol_hookean
 f_length_Nonlinear = TissueGrowth.plotForceLawCompareStairs(sol_nonlinear[geo].Density, sol_nonlinear[geo].t,1)
 f2_nonlinear= TissueGrowth.plotStress2D_Quadrant(sol_nonlinear2[geo].u, sol_nonlinear2[geo].ψ, Stress_cmap, Stress_Range_Nonlinear, L"σ/E \; \text{[-]}", (300,300))
 
-save("Fig7_High_Hookean_Cell_Length.png", f_length_Hookean)
-save("Fig7_High_Hookean_Stress.png", f2_hookean)
+save("Fig6_High_Hookean_Cell_Length.png", f_length_Hookean)
+save("Fig6_High_Hookean_Stress.png", f2_hookean)
 
-save("Fig7_High_Nonlinear_Cell_Length.png", f_length_Nonlinear)
-save("Fig7_High_Nonlinear_Stress.png", f2_nonlinear)
+save("Fig6_High_Nonlinear_Cell_Length.png", f_length_Nonlinear)
+save("Fig6_High_Nonlinear_Stress.png", f2_nonlinear)

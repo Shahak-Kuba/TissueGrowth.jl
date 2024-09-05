@@ -163,11 +163,11 @@ function plotForceLawCompareStairs(data1, t, binSize)
         return count(value .== Lengths)
     end
     txtSize = 40;
-    tickSize = 35;
+    tickSize = 40;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(850, 850))
+        size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], width=650, height=650,
+    gaxmain = Axis(ga[1, 1], width=850, height=850,
                     xlabel="Length", xlabelsize = txtSize, xticklabelsize = tickSize,
                     ylabel="Count", ylabelsize = txtSize, yticklabelsize = tickSize)
     colors = [:darkorange, :red, :green, :purple, :blue]
