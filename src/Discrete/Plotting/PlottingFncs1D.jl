@@ -67,7 +67,7 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N, NoI)
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(1000, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, 1500, -10, 1000), 
+    gaxmain = Axis(ga[1, 1], width=650, height=650, limits=(0, 1500, -10, 2600), 
               xlabel=L"\text{x [μm]}", xlabelsize = txtSize, xticklabelsize = tickSize,
               ylabel=L"\text{y [μm]}", ylabelsize = txtSize, yticklabelsize = tickSize)
     CRange = crange
@@ -79,6 +79,10 @@ function plotResults1D(u, var, cmap, crange, cbarlabel, D, kf, m, N, NoI)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4) - 10, 3)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4), 3)
     plotCellTrajectory!(gaxmain, u, m, Int(N/4) + 10, 3)
+    plotCellTrajectory!(gaxmain, u, m, Int(N/2), 3)
+    plotCellTrajectory!(gaxmain, u, m, 3*Int(N/4) - 10, 3)
+    plotCellTrajectory!(gaxmain, u, m, 3*Int(N/4), 3)
+    plotCellTrajectory!(gaxmain, u, m, 3*Int(N/4) + 10, 3)
     #plotCellTrajectory!(gaxmain, u, m,  100, 3)
     Colorbar(f[1, 2], limits=CRange, colormap=cmap, size=30, 
         flipaxis=false, label=cbarlabel, labelsize = txtSize, ticklabelsize = tickSize)

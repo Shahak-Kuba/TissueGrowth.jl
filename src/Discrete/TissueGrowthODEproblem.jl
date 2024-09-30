@@ -44,7 +44,7 @@ function Growth_ODE2!(du,u,p,t)
         du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
                        Vₙ(uᵢ₋₁,u',uᵢ₊₁,kf,δt,growth_dir))'
         # Below is unstable normal vlocity
-         #du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
+        #du .= ((1/η) .* diag((Fₛ⁺(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force) + Fₛ⁻(u',uᵢ₊₁,uᵢ₋₁,kₛ,l₀,restoring_force)) * transpose(τ(uᵢ₊₁,uᵢ₋₁))).*τ(uᵢ₊₁,uᵢ₋₁) +
         #                Vₙ(uᵢ₋₁, u', uᵢ₊₁, kf,"inward"))'
     else
         if btype == "InvertedBellCurve"

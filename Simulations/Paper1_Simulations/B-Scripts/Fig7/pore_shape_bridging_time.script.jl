@@ -30,7 +30,7 @@ L₀ = ((l_max - l_min)/((kₛ/Kₛ)*((l_max^2 - l_min^2)/2 + l₀*(l_min - l_ma
 η = 1.0 
 growth_dir = "inward" # Options: "inward", "outward"
 domain_type = "2D"
-Tmax = 24 # days
+Tmax = 28 # days
 δt = 0.01
 btypes = ["square", "hex"]  #Options: ["circle", "triangle", "square", "hex", "star","cross"]
 dist_type = "Linear" #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
@@ -61,10 +61,11 @@ save("fig8_square_500.png", f1_nonlinear)
 save("fig8_hex_500.png", f2_nonlinear)
 
 
-####### 100μm side length square pores ############
+####### 750μm side length square pores ############
 # setting up simulation parameters
 N2 = 150
 R₀ = 423.1421876608172  # shape radius μm
+Tmax = 48
 
 # 2D simulations
 sol_nonlinear_750, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N2,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
@@ -80,6 +81,7 @@ save("fig8_hex_750.png", f2_nonlinear)
 # setting up simulation parameters
 N3 = 204
 R₀ = 564.1895835477563  # shape radius μm
+Tmax = 48
 
 # 2D simulations
 sol_nonlinear_1000, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N3,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,btypes,"nonlinear",dist_type,
@@ -93,40 +95,40 @@ save("fig8_square_1000.png", f1_nonlinear)
 save("fig8_hex_1000.png", f2_nonlinear)       
 
 ## simulations for hex when they share the same initial Density
-ρ₀ = 0.05
+#ρ₀ = 0.05
 
-R₀ = 282.095  # shape radius μm
-N_hex_500 = 96 # Int(floor(6*√((2/(3*√3))*π*R₀^2)/20))
+#R₀ = 282.095  # shape radius μm
+#N_hex_500 = 96 # Int(floor(6*√((2/(3*√3))*π*R₀^2)/20))
 
 
 # 2D simulations
-sol_nonlinear_hex_ρ_500, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N_hex_500,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,["hex"],"nonlinear",dist_type,
-                    prolif, death, embed, α, β, Ot, event_δt, seed, 31);
+#sol_nonlinear_hex_ρ_500, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N_hex_500,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,["hex"],"nonlinear",dist_type,
+#                    prolif, death, embed, α, β, Ot, event_δt, seed, 31);
 
-R₀ = 423.1421876608172   # shape radius μm
-N_hex_750 = 138 #Int(floor(6*√((2/(3*√3))*π*R₀^2)/20))
-
-# 2D simulations
-sol_nonlinear_hex_ρ_750, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N_hex_750,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,["hex"],"nonlinear",dist_type,
-                    prolif, death, embed, α, β, Ot, event_δt, seed, 31);
-
-
-R₀ = 564.1895835477563  # shape radius μm
-N_hex_1000 = 186 #Int(floor(6*√((2/(3*√3))*π*R₀^2)/20))
+#R₀ = 423.1421876608172   # shape radius μm
+#N_hex_750 = 138 #Int(floor(6*√((2/(3*√3))*π*R₀^2)/20))
 
 # 2D simulations
-sol_nonlinear_hex_ρ_1000, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N_hex_1000,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,["hex"],"nonlinear",dist_type,
-                    prolif, death, embed, α, β, Ot, event_δt, seed, 31);
+#sol_nonlinear_hex_ρ_750, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N_hex_750,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,["hex"],"nonlinear",dist_type,
+#                    prolif, death, embed, α, β, Ot, event_δt, seed, 31);
+
+
+#R₀ = 564.1895835477563  # shape radius μm
+#N_hex_1000 = 186 #Int(floor(6*√((2/(3*√3))*π*R₀^2)/20))
+
+# 2D simulations
+#sol_nonlinear_hex_ρ_1000, 🥔, 🌻 = TissueGrowth.GrowthSimulation(N_hex_1000,m,R₀,D,Kₛ,L₀,kf,η,growth_dir,domain_type,Tmax,δt,["hex"],"nonlinear",dist_type,
+#                    prolif, death, embed, α, β, Ot, event_δt, seed, 31);
 
 
 
 
-f = TissueGrowth.plotMultiAreaVsTime(sol_nonlinear_500[1].t,sol_nonlinear_1000[1].Ω,sol_nonlinear_1000[2].Ω,sol_nonlinear_750[1].Ω,sol_nonlinear_750[2].Ω,sol_nonlinear_500[1].Ω,sol_nonlinear_500[2].Ω,N3,N2,N1,kf)
+f = TissueGrowth.plotMultiAreaVsTime(sol_nonlinear_1000[1].t,sol_nonlinear_750[1].t,sol_nonlinear_500[1].t,sol_nonlinear_1000[1].Ω,sol_nonlinear_1000[2].Ω,sol_nonlinear_750[1].Ω,sol_nonlinear_750[2].Ω,sol_nonlinear_500[1].Ω,sol_nonlinear_500[2].Ω,N3,N2,N1,kf)
 save("fig8_area_compare.png", f)
 
-∇_500 = ((sol_nonlinear_500[1].Ω[end] - sol_nonlinear_500[1].Ω[1])/Tmax)/N1
-∇_750 = ((sol_nonlinear_750[1].Ω[end] - sol_nonlinear_750[1].Ω[1])/Tmax)/N2
-∇_1000 = ((sol_nonlinear_1000[1].Ω[end] - sol_nonlinear_1000[1].Ω[1])/Tmax)/N3
+#∇_500 = ((sol_nonlinear_500[1].Ω[end] - sol_nonlinear_500[1].Ω[1])/Tmax)/N1
+#∇_750 = ((sol_nonlinear_750[1].Ω[end] - sol_nonlinear_750[1].Ω[1])/Tmax)/N2
+#∇_1000 = ((sol_nonlinear_1000[1].Ω[end] - sol_nonlinear_1000[1].Ω[1])/Tmax)/N3
 
 
 # Time to bridge based on side length

@@ -20,7 +20,7 @@ N = 20; # number of cells
 m = 10; # number of springs per cell
 l₀ = 10.0;
 η = 1.0 ;
-δt = 0.01;
+δt = 0.0001;
 dist_type = "Linear"; #Options: ["Linear", "sigmoid", "2sigmoid", "exp",  "sine", "cosine", "quad", "cubic"]
 
 ## Cell Behaviours

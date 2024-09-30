@@ -162,7 +162,9 @@ function event_affect!(integrator)
             # converting back to spring index
             spring_index = idx*m - (m-1)
             #println("inserted at: ",idx)
-            insert!(u,spring_index,((circshift(u',1)'[:,spring_index] + u[:,spring_index])/2))
+            #insert!(u,spring_index,((circshift(u',1)'[:,spring_index] + u[:,spring_index])/2))
+            spring_index = idx*m - (m-1)
+            store_embedded_cell(u, spring_index, m, integrator.t)
             # Perform operations based on prolif occurrence if needed
  
 

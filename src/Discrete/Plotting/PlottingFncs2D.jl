@@ -15,7 +15,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
     for i in 1:Interface_Step:size(u,1)
-        plotInterface!(gaxmain, u, var, cmap, CRange, i, 5)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i, 7)
     end
 
     plot_cell_traj = false # User set
@@ -24,7 +24,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
-    show_initial_boundaries = true
+    show_initial_boundaries = false
     if show_initial_boundaries
         #plotting spring boundaries
         CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)
@@ -34,7 +34,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, N, m, NoI)
         end
     end
 
-    show_final_boundaries = true
+    show_final_boundaries = false
     if show_final_boundaries
         #plotting spring boundaries
         #CairoMakie.scatter!(gaxmain, [u[end][:, 1]; u[end][1,1]].data, [u[end][:, 2]; u[end][1,2]].data, color="grey", markersize=15)
@@ -63,7 +63,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, 
     CRange = crange
     Interface_Step = Int(floor(size(u,1)/NoI))
     for i in 1:Interface_Step:size(u,1)
-        plotInterface!(gaxmain, u, var, cmap, CRange, i, 4)
+        plotInterface!(gaxmain, u, var, cmap, CRange, i, 6)
     end
 
     plot_cell_traj = false # User set
@@ -72,7 +72,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, 
             plotCellTrajectory!(gaxmain, u, m, j, 3)
         end
     end
-    show_initial_boundaries = true
+    show_initial_boundaries = false
     if show_initial_boundaries
         #plotting spring boundaries
         CairoMakie.scatter!(gaxmain, [u[1][:, 1]; u[1][1,1]].data, [u[1][:, 2]; u[1][1,2]].data, color="grey", markersize=15)
@@ -82,7 +82,7 @@ function plotResults2D(u, var, cmap, crange, cbarlabel, axisLims, axisTicks, N, 
         end
     end
 
-    show_final_boundaries = true
+    show_final_boundaries = false
     if show_final_boundaries
         #plotting spring boundaries
         CairoMakie.scatter!(gaxmain, [u[end][:, 1]; u[end][1,1]].data, [u[end][:, 2]; u[end][1,2]].data, color="grey", markersize=15)
@@ -237,14 +237,14 @@ end
 
 function plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,N,kf)
     COMPARE = true
-    txtSize = 16;
-    tickSize = 16;
+    txtSize = 24;
+    tickSize = 24;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
-        size=(455, 400))
+        size=(650, 600))
     ga = f[1, 1] = GridLayout()
     gaxmain = Axis(ga[1, 1], 
               xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
-              ylabel="Ω-error [μm^2]", ylabelsize = txtSize, yticklabelsize = tickSize)
+              ylabel="Rel-Error (Ω)", ylabelsize = txtSize, yticklabelsize = tickSize)
 
     if !COMPARE
         t = LinRange(0,t₁[end],500)
@@ -253,12 +253,12 @@ function plotδtAreaResults(Ω₁,t₁,Ω₂,t₂,Ω₃,t₃,N,kf)
         Line1 = plotAreaVsTime!(gaxmain, t₁, Ω₁, :blue, :solid, "δt = 0.01")
         Line2 = plotAreaVsTime!(gaxmain, t₂, Ω₂, :red, :dash, "δt = 0.001")
         Line3 = plotAreaVsTime!(gaxmain, t₃, Ω₃, :black, :dot, "δt = 0.0001")
-        axislegend(gaxmain, merge = true, unique = true)
+        #axislegend(gaxmain, merge = true, unique = true)
         #Legend(f[1,2],[Line0,Line1,Line2,Line3], ["Analytic","δt = 0.01", "δt = 0.001","δt = 0.0001"])
     else
-        Line1 = plotAreaDiffVsTime!(gaxmain, t₁, Ω₁, N, kf, :blue, :solid, "δt = 0.01")
-        Line2 = plotAreaDiffVsTime!(gaxmain, t₂, Ω₂, N, kf, :red, :dash, "δt = 0.001")
-        Line3 = plotAreaDiffVsTime!(gaxmain, t₃, Ω₃, N, kf, :black, :dot, "δt = 0.0001")
+        Line1 = plotAreaRelErrorVsTime!(gaxmain, t₁, Ω₁, N, kf, :blue, :solid, "Δt = 1")
+        Line2 = plotAreaRelErrorVsTime!(gaxmain, t₂, Ω₂, N, kf, :red, :solid, "Δt = 0.01")
+        Line3 = plotAreaRelErrorVsTime!(gaxmain, t₃, Ω₃, N, kf, :black, :solid, "Δt = 0.0001")
         #Legend(f[1,2],[Line1,Line2,Line3], ["δt = 0.01", "δt = 0.001","δt = 0.0001"])
         axislegend(gaxmain, merge = true, unique = true, position = :lt)
     end
@@ -268,7 +268,12 @@ end
 
 function plotAreaDiffVsTime!(gaxmain, t, Ωₛ, N, kf, clr, style, name)
     Ωₐ = Ω_analytic(Ωₛ[1],N,kf,t)
-    CairoMakie.lines!(gaxmain, t, Ωₛ.-Ωₐ, color=clr, label=name, linewidth=4, linestyle=style)
+    CairoMakie.lines!(gaxmain, t, Ωₐ.-Ωₛ, color=clr, label=name, linewidth=4, linestyle=style)
+end
+
+function plotAreaRelErrorVsTime!(gaxmain, t, Ωₛ, N, kf, clr, style, name)
+    Ωₐ = Ω_analytic(Ωₛ[1],N,kf,t)
+    CairoMakie.lines!(gaxmain, t, ((Ωₛ.-Ωₐ)./Ωₐ), color=clr, label=name, linewidth=4, linestyle=style)
 end
 
 
@@ -308,35 +313,36 @@ function plotMultiSimResults2D(Solution, axislims, cmap, CRange)
     return f
 end
 
-function plotMultiAreaVsTime(t_discrete, Ω_large_square, Ω_large_hex, Ω_mid_square, Ω_mid_hex, Ω_small_square, Ω_small_hex, N_large, N_mid, N_small, kf)
+function plotMultiAreaVsTime(t_discrete_large, t_discrete_mid, t_discrete_small, Ω_large_square, Ω_large_hex, Ω_mid_square, Ω_mid_hex, Ω_small_square, Ω_small_hex, N_large, N_mid, N_small, kf)
     txtSize = 40;
     tickSize = 35;
     f = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0),
         size=(900, 900))
     ga = f[1, 1] = GridLayout()
-    gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(0,24,0,1500000),
+    gaxmain = Axis(ga[1, 1], height = 650, width=650, limits=(0,48,0,1250000),
                     xlabel="t [Days]", xlabelsize = txtSize, xticklabelsize = tickSize,
                     ylabel="Ω [μm²]", ylabelsize = txtSize, yticklabelsize = tickSize)
     
-    t = LinRange(0,t_discrete[end],500)
-
     # Small
+    t = LinRange(0,t_discrete_small[end],500)
     Ωₐ = Ω_analytic(Ω_small_square[1],N_small,kf,t)
     Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, L"\text{Analytic}", 7)
-    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete, Ω_small_square, :black, :dash, L"\text{Square Pore}", 6)
-    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete, Ω_small_hex, :blue, :dot, L"\text{Hex Pore}", 6)
+    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete_small, Ω_small_square, :black, :dash, L"\text{Square Pore}", 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete_small, Ω_small_hex, :blue, :dot, L"\text{Hex Pore}", 6)
 
     # Medium
+    t = LinRange(0,t_discrete_mid[end],500)
     Ωₐ = Ω_analytic(Ω_mid_square[1],N_mid,kf,t)
     Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, 7)
-    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete, Ω_mid_square, :black, :dash, 6)
-    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete, Ω_mid_hex, :blue, :dot, 6)
+    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete_mid, Ω_mid_square, :black, :dash, 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete_mid, Ω_mid_hex, :blue, :dot, 6)
 
     # Large
+    t = LinRange(0,t_discrete_large[end],500)
     Ωₐ = Ω_analytic(Ω_large_square[1],N_large,kf,t)
     Analytic_Sol = plotAreaVsTime!(gaxmain, t, Ωₐ, :red, :solid, 7)
-    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete, Ω_large_square, :black, :dash, 6)
-    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete, Ω_large_hex, :blue, :dot, 6)
+    Square_Sol_ = plotAreaVsTime!(gaxmain, t_discrete_large, Ω_large_square, :black, :dash, 6)
+    Hex_Sol_Hook = plotAreaVsTime!(gaxmain, t_discrete_large, Ω_large_hex, :blue, :dot, 6)
 
 
     #Legend(f[1,1],[Analytic_Sol,Square_Sol,Hex_Sol], ["Analytic Circle", "Discrete Square","Discrete Hex"])
